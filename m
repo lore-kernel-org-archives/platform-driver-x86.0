@@ -1,59 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.182.83.82
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795618192;
-	b=O38yVWPGr1FIYxMABWiELPIZQZy5BJGcxNGoP1DismrDd+gb3YTXCeo3qsdUZZ7CV+vr
-	 ckVHmKv7NTzO92Z+8id7AtljrdetFkwfmkvCQQUJB90yTFwKxGuBIrzL71f9kJHYUsCjY
-	 Ln2BoC7LUOooiDI2wkHCPeMQxFWBnHP/aN6c9elsYYHz9s2cXS5iGg0iUlBWl9E/cEo2j
-	 LxjRvUPz+aLueL8mXzUMaTU9aOrgmBzzqEPjaKG6Q0Gd23gaL9Xjtj7iSrJzXbiPSTlt9
-	 giZvHCYBfNhBr40dZSyD6ePzMquX8RRtKFsZ1QZVKFXuxNpVCpa9ev4z2X8Fzp7UCKw==
+	t=1795619363;
+	b=d8Jb3frR9F2sakTfds4BCjDoYhj2jcwsYX7JEvKyDilq9kgJwOgy+fTPi9mDjw6U8wXr
+	 zXlvzobc31ij0rZ9DDLcPNQv3nGNYE2Yyia7nQaS0Y5JBcxHhjEddsgidCpLB8nyPJSBp
+	 JnGRdJ9pcmvERzNA3vW4+XZWbMqkwEDHKaGwgrsXGAo3myHAKuyZaic1Krc72OfBDH95O
+	 sVWxbZ7eeVkhHilbBVRKTKj4JY6pj1Rj7b0iaNbcjY9MHufU22TRSZnCplMiVNNF0P4AJ
+	 X127fks2p5QcjP1QydHZ/SKoYXj6zyWRp1l4VIk0yQBbnsWhX2oojJgpF94qTJ9v9Bw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795618192;
-	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=PSYhMPPaL25zkyEFRSC0G+Y0s0EZao0UlPw7sGjAeYI=;
-	b=ibhout+S6hEvuhiR6ad2a50bZOU0r/OQvMggCgd1cr9yIgB1qMoVUzYvyFWJtAPmgG/y
-	 aOfM+LQGsX3Osk5DQMbafWifXQ+IzUDw2xit8zDmq1y0Gzqw60UBHfjX1qIv+87kMGvRy
-	 VfPbDU+6ncpwXihua1rs4gpDcxebhdqgtoF9/fpZyOgh9vuYHFxG+e4J4IP1Ee6N+er21
-	 Bi70xzV6SeGOgq/rDFU4v0WVplUQbhDLW3yfbkkPt53V6A9gpZMbaU3u1DAnxmjk+2bg2
-	 /pDr8ReBd6+LI9y1s1dOgQMxAJ9r0EeMJY7T72irVSLOQKfkN2dZjvvOsZEoVYDZCYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795619363;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=cw6WqeSI8Sbldj9sBKcSk0EfyCmtivDG/+cdqzNXI4U=;
+	b=fmKd3i5vSQ7nebgSdgNNy2MnPGC7hVLZC2hYEX56pU9OYsiYHTHUSUno6d6QEF99vwkL
+	 DvGnmGAkhsJY/vkySJzG5DI9zElBJpFCh+dp8LsLkafl5ZZ4AnQ6KphS+wmwMnveR8LJO
+	 aW4Y7txs2d48tF+ZFQPO5xmVbqMSCD2lK+a+BydlqhAOh8OE20LJRiXhrPDasNKK/vlej
+	 Dv8kaaksRkTKaANDczP8AVe9o1BpZgBoOK1c0FdnyfgHuCd0NkDKgEgHBZ/G1yfgKqqdO
+	 jGmIwWr013KRpS9obLhtQNA1+CHcm4ONbNQCtNigC+EEaGUd5FHCsJonjQWzRt0OxvA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zary.sk;
-	spf=pass smtp.mailfrom=zary.sk;
-	dkim=pass header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=knRXjlOw;
-	arc=none smtp.remote-ip=194.182.83.82
-Received: from mail.zary.sk (mail.zary.sk [194.182.83.82])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrXGqfgA;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734C606A31E;
-	Wed, 25 Nov 2026 14:49:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7734C606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=zary.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zary.sk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED71606A323
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:09:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=knRXjlOw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zary.sk; s=key1;
-	t=1795618182; bh=5opMLMUVE+CMapgYryb9t+WhoESFgiMBzdhvj2m+zPY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=knRXjlOwAHp6kI6UdVjpzEd0przfGylspPZuzHDMPpLhv9pm6CZ5fLR4ddkqfwITF
-	 ZCgjAQphwQJTHLK9gZGApIdEhMOHFLUDr9N9d5TU3FZ0mr2L+CU9UguwaPbbEAJgWJ
-	 tiwrHhVYY8r3JqVzt3OtdTsHhwndk2sHIA8/xMv45vD1n3n2g65koPWT/k/U3c90XV
-	 kohL1fH/oT0cFEF/Nkq6dlqX9LM/wuacIh/w1INQygr8Rym5eS5LpgyjeeQLto9nf/
-	 Y9QpR8rZ2HV0AGSDv/kLcn4Wc9N+mo+fv0FkUjaqhTpRBw2j7JycKCsR9zpPEER256
-	 5xFgGMC5B1nbA==
-Received: from gweb1.ggedos.sk (off-7.infotel.telecom.sk [212.5.213.7])
-	by mail.zary.sk (Postfix) with ESMTPSA id 136BEBED51;
-	Wed, 25 Nov 2026 15:49:42 +0100 (CET)
-From: Ondrej Zary <linux@zary.sk>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] Introduce Synology x86 NAS LEDs driver
-Date: Wed, 25 Nov 2026 15:47:34 +0100
-Message-ID: <20261125144936.1967956-1-linux@zary.sk>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HrXGqfgA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB7E1F000C0;
+	Wed, 25 Nov 2026 15:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795619362;
+	bh=cw6WqeSI8Sbldj9sBKcSk0EfyCmtivDG/+cdqzNXI4U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=HrXGqfgAjY8lerVmWZ2+YkIxO+l+HTvOhAw1DnAGn6Gk1TBKGvrNqJsSsgxmOznr9
+	 hQKHREjkviHw7tBDxXKjj7r7XINnTWKCgbG8C/MnQWiDLoQ5k1pUaw83JuKnD0jyXV
+	 fB6Ww+QsgCLA1XXfPOIe8O4NGegW63S3rygHNZuCEKHWbpW9rFYVrmWUFKSaiHXuue
+	 yII4A3GxnugTExhuWlKtYbKHK9f/3DB7pITH9HqviszmucYom893IO2N69e7FDbYtk
+	 tGZvPn7X9M3GcfEexcQgmK4nhs4vYT3aPrbKa4n8AHhLug61qOczElLSXjd1gdE/zR
+	 ChPOh/5AcQ+Dg==
+Message-ID: <1638fde5-80da-47b5-957f-1485ef9269d0@kernel.org>
+Date: Wed, 25 Nov 2026 16:09:19 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -63,284 +51,88 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Digma
+ CITI 1804 tablet
+To: Artur Bakirov <darkonline.android@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <20261125100819.337-1-darkonline.android@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20261125100819.337-1-darkonline.android@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add platform driver for Synology x86-based NAS devices to support HDD LEDs
-controlled by ICH9 GPIO pins.
+Hi,
 
-Only DS411+II is supported for now (DS411+ should be the same except CPU).
+On 25-Nov-26 11:08, Artur Bakirov wrote:
+> Add touchscreen info for the Digma CITI 1804 (CS1069EW) tablet,
+> an Intel Atom x5-Z8350 (Cherry Trail) tablet with a Silead MSSL1680
+> touchscreen.
+> 
+> The firmware, extracted from the Windows driver of the tablet, is
+> submitted to the gsl-firmware repository as gsl1680-digma-citi-1804.fw.
+> The same settings were tested with the i2c_touchscreen_props kernel
+> parameter on a 6.18 kernel: touch works across the whole panel and the
+> Windows logo works as home button.
+> 
+> Link: https://github.com/onitake/gsl-firmware/pull/269
+> Signed-off-by: Artur Bakirov <darkonline.android@gmail.com>
 
-Buttons and other LEDs are not supported by this driver because they're
-controlled by a PIC MCU (connected through serial port).
+Thanks, patch looks good to me:
 
-Signed-off-by: Ondrej Zary <linux@zary.sk>
----
-Changes in v4:
- - added DMI match for BIOS vendor and version
- - removed PCI device presence checking
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-Changes in v3:
- - descriptions changed to mention LEDs
- - GPIO swnodes are used instead of gpiod
- - improved PCI device presence checking
+Regards,
 
-Changes in v2:
- - fixed includes (order, added missing, removed kernel.h)
- - added missing DMI and PCI dependencies to Kconfig
- - added PCI device presence check details to changelog
- - used %pe for error message
+Hans
 
----
- drivers/platform/x86/Kconfig        |  16 +++
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/synology-x86.c | 200 ++++++++++++++++++++++++++++
- 3 files changed, 219 insertions(+)
- create mode 100644 drivers/platform/x86/synology-x86.c
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9ce384e0475e..64aa44c7f239 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1059,6 +1059,22 @@ config OXP_EC
- 
- source "drivers/platform/x86/tuxedo/Kconfig"
- 
-+config SYNOLOGY_X86
-+	tristate "Synology x86 NAS LEDs driver"
-+	depends on DMI
-+	depends on GPIOLIB
-+	depends on LPC_ICH
-+	depends on GPIO_ICH
-+	depends on LEDS_CLASS
-+	depends on PCI
-+	select LEDS_GPIO
-+	help
-+	  This driver provides support for the HDD LEDs on Synology x86 NAS
-+	  devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called synology-x86.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config P2SB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 229057234d00..a1806eb0efc9 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -166,3 +166,6 @@ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
- 
- # OneXPlayer
- obj-$(CONFIG_OXP_EC)			+= oxpec.o
-+
-+# Synology
-+obj-$(CONFIG_SYNOLOGY_X86)		+= synology-x86.o
-diff --git a/drivers/platform/x86/synology-x86.c b/drivers/platform/x86/synology-x86.c
-new file mode 100644
-index 000000000000..a3a42a4b2109
---- /dev/null
-+++ b/drivers/platform/x86/synology-x86.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Synology x86 NAS LEDs driver
-+ *
-+ * Inspired by platform/x86/meraki-mx100.c
-+ *
-+ * Copyright (C) 2026 Ondrej Zary <linux@zary.sk>
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/gpio/property.h>
-+#include <linux/mfd/lpc_ich.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/printk.h>
-+#include <linux/property.h>
-+
-+static const struct software_node synology_gpio_leds_node = {
-+	.name = "synology-leds",
-+};
-+
-+static const struct property_entry synology_hdd1_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:green:hdd1"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 16, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd1_green_led_node = {
-+	.name = "hdd1-green-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd1_green_led_props,
-+};
-+
-+static const struct property_entry synology_hdd1_amber_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd1"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 18, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd1_amber_led_node = {
-+	.name = "hdd1-amber-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd1_amber_led_props,
-+};
-+
-+static const struct property_entry synology_hdd2_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:green:hdd2"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 20, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd2_green_led_node = {
-+	.name = "hdd2-green-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd2_green_led_props,
-+};
-+
-+static const struct property_entry synology_hdd2_amber_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd2"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 32, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd2_amber_led_node = {
-+	.name = "hdd2-amber-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd2_amber_led_props,
-+};
-+
-+static const struct property_entry synology_hdd3_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:green:hdd3"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 33, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd3_green_led_node = {
-+	.name = "hdd3-green-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd3_green_led_props,
-+};
-+
-+static const struct property_entry synology_hdd3_amber_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd3"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 34, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd3_amber_led_node = {
-+	.name = "hdd3-amber-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd3_amber_led_props,
-+};
-+
-+static const struct property_entry synology_hdd4_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:green:hdd4"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 49, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd4_green_led_node = {
-+	.name = "hdd4-green-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd4_green_led_props,
-+};
-+
-+static const struct property_entry synology_hdd4_amber_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd4"),
-+	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 55, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node synology_hdd4_amber_led_node = {
-+	.name = "hdd4-amber-led",
-+	.parent = &synology_gpio_leds_node,
-+	.properties = synology_hdd4_amber_led_props,
-+};
-+
-+static const struct software_node *synology_swnodes[] = {
-+	&synology_gpio_leds_node,
-+	&synology_hdd1_green_led_node,
-+	&synology_hdd1_amber_led_node,
-+	&synology_hdd2_green_led_node,
-+	&synology_hdd2_amber_led_node,
-+	&synology_hdd3_green_led_node,
-+	&synology_hdd3_amber_led_node,
-+	&synology_hdd4_green_led_node,
-+	&synology_hdd4_amber_led_node,
-+	NULL
-+};
-+
-+static const struct dmi_system_id synology_systems[] __initconst = {
-+	{
-+		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
-+		.matches = {
-+			/* Synology did not put anything in DMI strings */
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-+			/* so match BIOS version and date */
-+			DMI_EXACT_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "080016 "),
-+			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
-+		},
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, synology_systems);
-+
-+static struct platform_device *synology_leds_pdev;
-+
-+static int __init synology_init(void)
-+{
-+	struct platform_device_info leds_info = {
-+		.name = "leds-gpio",
-+		.id = PLATFORM_DEVID_NONE,
-+	};
-+	const struct dmi_system_id *dmi;
-+	int err;
-+
-+	dmi = dmi_first_match(synology_systems);
-+	if (!dmi)
-+		return -ENODEV;
-+
-+	pr_info("Detected Synology NAS %s\n", dmi->ident);
-+
-+	err = software_node_register_node_group(synology_swnodes);
-+	if (err) {
-+		pr_err("failed to register software nodes: %d\n", err);
-+		return err;
-+	}
-+
-+	leds_info.fwnode = software_node_fwnode(&synology_gpio_leds_node);
-+	synology_leds_pdev = platform_device_register_full(&leds_info);
-+	err = PTR_ERR_OR_ZERO(synology_leds_pdev);
-+	if (err) {
-+		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
-+		goto err_unregister;
-+	}
-+
-+	return 0;
-+
-+err_unregister:
-+	software_node_unregister_node_group(synology_swnodes);
-+	return err;
-+}
-+module_init(synology_init);
-+
-+static void __exit synology_exit(void)
-+{
-+	platform_device_unregister(synology_leds_pdev);
-+	software_node_unregister_node_group(synology_swnodes);
-+}
-+module_exit(synology_exit);
-+
-+MODULE_AUTHOR("Ondrej Zary <linux@zary.sk>");
-+MODULE_DESCRIPTION("Synology x86 NAS Platform Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("LPC_ICH");
--- 
-Ondrej Zary
+
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index d83c387..606bdbb 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -369,6 +369,20 @@ static const struct ts_dmi_data dexp_ursus_kx210i_data = {
+>  	.properties	= dexp_ursus_kx210i_props,
+>  };
+>  
+> +static const struct property_entry digma_citi_1804_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1152),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-digma-citi-1804.fw"),
+> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +	{ }
+> +};
+> +
+> +static const struct ts_dmi_data digma_citi_1804_data = {
+> +	.acpi_name	= "MSSL1680:00",
+> +	.properties	= digma_citi_1804_props,
+> +};
+> +
+>  static const struct property_entry digma_citi_e200_props[] = {
+>  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
+>  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
+> @@ -1308,6 +1322,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "S107I"),
+>  		},
+>  	},
+> +	{
+> +		/* Digma CITI 1804 (CS1069EW) */
+> +		.driver_data = (void *)&digma_citi_1804_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Digma"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "CITI 1804 CS1069EW"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "J210Z"),
+> +		},
+> +	},
+>  	{
+>  		/* Digma Citi E200 */
+>  		.driver_data = (void *)&digma_citi_e200_data,
 
