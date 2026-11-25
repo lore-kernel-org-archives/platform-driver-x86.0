@@ -1,111 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795633532;
-	b=m2NgiwF88ckF+NT4n9xYX1D/ay8wSBixT13tOXub5zHSPcBDB6BNGqCu/6JDHB6wGiXD
-	 4BfZz+jkRbrth9vIsuvUD66DeOYD1xtYh1/DCSsMsiVdZvNtLLP+lY493NeMVHJMdMGNA
-	 FTCmSPCFs45RjX2N/YMNamMUunDmHe4gUvIhR1W0yCpBeu33/NVRIErGRIlxiRJuHQC5J
-	 jtmdQcvUatj0OFS4zlX78mbVmUC60GcgCDoebC4ut6fhRyuVzKrowyEHAByzKNXML4H4j
-	 5FXhpIHqfTVwKVQwe8Tkw54r0PNxvcIxXxQIeVK8Dh2Y/i1a6WEd0YMtif0sExELl1w==
+	t=1795633667;
+	b=IRGbJubkS2sA4sz71AsOaXrAeWIgHcorU3hHA5MH1sXEl5TzlXxUuEzTFyhaTg/6ihj1
+	 tHS/+HoavixJ8wwbzI14o6hQLNewGZrmigh8RjVQgvnj9ze7SAbpyai9t4iHfDOmb9X4y
+	 cqUPOeofGZfHjSnYbewZVpXVYmylNUMZPjUplIgTx8qrzFM3CDPF47y6vxdSKEXJyhnIo
+	 pZBHbTFkdWwdo4Bn21yJTl4BwMszQmdMDhh1FpXUH5TSby4H6t+2X7ekCGcqNLKZrdKM3
+	 UXtoVrF/hqlzemsxtRD8GNDH44SYaHWmmF1rzid+fc5ExxKpVFYQZYy6mDYnP6K+4eQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795633532;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=jqebKEg1feCnphN5CObC34DEFG5Z/zzvear+wR9jObc=;
-	b=glj+HhiFf8ZvSum0FF9AT9WM2KJhiHv/tuccHIvckoN+7jW+cz7Kz5knMSFuhwNAzuo2
-	 lqB5AsTRf3tsrjlUOIp2Nf5SOWKdtblWq4hDEqo9LWC2GwclJ4XygGk9z5UWtt3+ikCkU
-	 Y1tBcgWS1O2EeDuamPwxb/l88fG6I4wn1kcUC66n13++fOIjuBkLW2FzhJLIVSmjgBC+4
-	 JYDMJQZFybJusWTN4yzewu02tkyNmP35kyRjV0VJ3M01EbIyps28S7df5IDe4jP8XMmo9
-	 6z7cBmn/HIF1sU57b3NeVdereHgQQ26nXTO28AdRfe/9KtXF2l10QetJhMoS1OI7YAA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795633667;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=sKg8ZyMEEgOXaGd8usgF3WU02o1HXUcHjHUf4a0nWGw=;
+	b=dAVHMfiVbSmCaMiLhI1cg3/zIg7oolmX1cYgZPZPeNN9iIB9vEOf1h54JXAwJhly+jRG
+	 XMR5QGnn/LvVacWxAwk/+bapfDKWfPGh99INIrDq+sqK61uarUPUx1sLUiPgL+qxQ8iah
+	 IUHWyzz1sn+kD3qLTlBp7o4P4xNYVsoriY5tyfIOIs3DFiVUfLB0OB4pOi28XD0NEM1DC
+	 HHdvrP4+PVWBpfusjAlm6JwN4JvEPzIt+e8rYrs/xw764ZyTQfmmxsOoKZVIjXMvGeTK4
+	 /bOLOh8nmHBAA6qeBNrGQSCoJcgdqVhxTdUnoYChRNXd9Jrk2THHZI/iJGE6ScIbqhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=squebb.ca;
-	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=hs4NZCAT;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=phNy6UK8;
-	arc=none smtp.remote-ip=202.12.124.157
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sFWesse3;
+	arc=none smtp.remote-ip=74.125.82.42
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB27606A323
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 19:05:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2DB27606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AF5606A327
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 19:07:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62AF5606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=hs4NZCAT;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=phNy6UK8
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 85A5D7A065F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 14:05:31 -0500 (EST)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Wed, 25 Nov 2026 14:05:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795633531;
-	 x=1795719931; bh=jqebKEg1feCnphN5CObC34DEFG5Z/zzvear+wR9jObc=; b=
-	hs4NZCATCk7Ibn9ZpsJVPYKBrlUJOVGvg/c6N3qvglKHt5yPItSvgtNLmGsaeuED
-	ag92XC2oTWIxKGWwadbyLKd3XFeJI6yiCnU25KP5YsvVlr7vgy+LGUnzZ4F/Bdus
-	S6iFCdVOyPyXIm2zAxSvJo3I8whAEdXKKjLD6yEaLuPMGPTolKxxFthG2SF2lNPq
-	AEl4157NVN1X1ILZ1y6+T3aZvRxAHzjAf3e//ONfJpq2i2jmdxlo4vdzGi6Zt9BJ
-	s3MwW12y3C+hcROLBRwpZUk6R7xNJi96BPIWyhpwzeU1SK7A7WmF/dyEidx6hAy9
-	HNpnx/dHrCn8ryFUmBa9gQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795633531; x=
-	1795719931; bh=jqebKEg1feCnphN5CObC34DEFG5Z/zzvear+wR9jObc=; b=p
-	hNy6UK8d2pH+ZkbjjnPghZeqkUIpw5CkVsfWmkQjtdodsx2vjzVLCZLi5Q/lrl8h
-	F047RJGNR8xV8M8xqFlEF7/l8/XT0c0wSU9SmYfyIY91O7cfng/GACHl5StaXWDh
-	b10gA0jhApIiaRHp1DSTFMLtHAUC4XN3gkfig3I3xtRmqlGipcFJhpvLpYfVv7O2
-	av3neX5PpV0+TH5a0mm/FU4ZzkZOssRbdyMGJEdYgKZ9AWjW7o7BcJH2J5Yzmz/E
-	uSMkzlYVmLo7szU6oYxZ4VIYyFmXTAwITlZ5ROpU8ZZ8ktv4kn0oR+YEYJQr+WGD
-	hefxfDWp1rCN1DasxiDTA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795633531; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:DKthSWTVpQzZycPB09CC7nSki97U/jcVGULwXqyd7xKa+ce
-	2ihInOaEePkRYAZ9kqipS4z+rFwIxy0zthZpudWt7UMf8ktkib7qim5r3rHqcxlG
-	ZrV51sRba1fIVXSVuS85k7KGJBlIk/0hg9hr+4JdHmATckBz/Bnc7EpqynEJsOpL
-	WtW4fL7YZxFMI615IuuZb/WyjoN624tbbjIrx5pATZT0oRUyZxq1yyLrQOZpUT5S
-	/kR6wVa6aFk7uskHn62wLdkAbpODIGDZn/MFya5VddWg2JCFx+4LkzZBDLFFsK8p
-	hPZkubj8sKL4TgrTnGtpNTdzMsdV5p1aXpKSAkg==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:Fpb1wAMmxS/YZZO10doLsUJkJPBxWsqLY8y7HyomUpA=:s1OcFzzBfDO4sMcBDmIrvzPAXv8jy5dxrSlOzfNugNM=;
-X-ME-Sender: <xms:ejEHa42m4Y1LXCqP6aLBBIRhMf3gXgT99kLAg97Wtv4JgF3m6LM5pQ>
-    <xme:ejEHa95rQdCTFiq-uF7nsDKKQbZDIzVO7XoCEomOvNamaPG_la-HLsPks0ZtXR5r9
-    UMWJ0M-hNSvWpfuWQ9frACIyQI82y5w3gWR3jT1T0RgIAgCDLmK00sT>
-X-ME-Proxy-Cause: dmFkZTEPIE+b08sZQCMpCORU0B8x7ICkt/aAWJgPx8Ojwi+FutQSLIfRVEy0GbILDnq0xX
-    D+Q5LSiz1I99aw7XGloY1yt/WTJh8adGMf8o8x61lE4/ouo1cGovbObhbn8poLxr/uuPZ+
-    1vSFG1mE6pDiILlwYAgwA3ixk66XONcRN0Wy8xYukDHs4CtZw1ufU99LEJMjNhBKhEGD7y
-    G18e2u8HWr10dDyJQoMCx34JQ36jK+uPJasX0MD0iey07dYDrwkc+voRgHVwdoDKsxJoYI
-    i6i+2flCw0YsNc5YW/aXPEeGSTE/d/nHcEod0S/OtpiguBxjv8csqkhZR1GqQDdwmBUwDD
-    0FCFC6nmRbcTA3miOXshRgpAtCtxubb9TyX/Jf4uFthtfdVFH6Fzqy5THNm+667+B8OatY
-    88mVIuYgnirY9e/mhNU3tX8x5sOAxXZ4v10bxQl622kzTAyB+wHgdrxWknVdBNjVRbBg9N
-    6eiXqshAAj5X91NELU60Ck1qgnh2gtFzYtJK6Sf472nMY4zPrcTCdi1qz9z7DnLeRfmFrP
-    QG2zYtbU2DmbgJiXZZNOApk2792nrAg56207nizQEJ9KCy9gLrzH07vZ6MIYLmk2yyvFmw
-    oLNuDmrzS4rWgMloSFMljbY0qc7w9f4ZpHwq/xUhYVuqXL2U3bIQcwUNgRdA
-X-ME-Proxy: <xmx:ejEHa7UKIx8YnbD709RzwAt9rd-Utpxg9PsOTvioOYVJ7_3NXWGNFw>
-    <xmx:ejEHa_725z9qyahMwycbXHGrmnHOpt0KsWPPGIGRsnkiNXy28xyr2g>
-    <xmx:ejEHa5AAyk0s8s9OHO_aX8gPtfdARz9fIeC38skhGQbHw1l2LlUKEA>
-    <xmx:ejEHazdciEmZJ7UKyjTgxk6EGgIKWwsJa83pJS7wdMA3FUVsY3s_ng>
-    <xmx:ezEHayn3LcMXglLTHm-eWpn_a_YXZYBnmprLv3Y8eUQrtucs4YBe4UCn>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 681102C00085; Wed, 25 Nov 2026 14:05:30 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sFWesse3
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-1b50a4bd2f3so4033358c88.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 11:07:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795633666; x=1796238466; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sKg8ZyMEEgOXaGd8usgF3WU02o1HXUcHjHUf4a0nWGw=;
+        b=sFWesse3cL28V8jFgtWKa3sArLJ4cUGPF0a1k6zvtoIheXiQiv5m6nQpFjhjQtjnUs
+         0lP3pojglMhy+AKhtXLwRPasBn8iWb2/zwFHh/ZNTgUqil0PsHQcUp4kh5cPrW9ClEeL
+         SBABfdnKBjwA5PZYNa2zLx522WUpM0wiOOAEhFAsNqVIHuCdejxAXi5TyuqSrHNtJNuL
+         4UWrWZTTrO6I/JktPfRL0NjX+f17O6l6KxKZwfpc41OOaztXyiEWUv3ImSjvemOY11fz
+         H+fEGFLrFH/pP+oXWjMuwBWjgtaSdCPSCc33VyBnNk1lHlJFu2PDvdD5NLGbjMJi31BL
+         HBFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795633666; x=1796238466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sKg8ZyMEEgOXaGd8usgF3WU02o1HXUcHjHUf4a0nWGw=;
+        b=0yxtc0A5X7hQDSj2xAE+KEsYZn51h1Uv+awMmTA1fN2pdcgfCsNDL/sbPut126wjwf
+         WQgm5u5a+f65c2/yxh+UaQ3Rpvi2GBqfbYQC0gOkO57Hgs5//x66kYlT88bUQ6jVwNBg
+         zjQJUWbR7BeO+QnObjQpz1o+APF2UTYiMA0J0DUZrBPuWrGzHolmI8QI42Eva9vTdgzg
+         JEX+VH8FvrFvM1SDPYBqJE/Ir6XDLVYY+OmU6v99YJULgwAnxtwq7aaVRErtnT8qw0ti
+         yxYHICAK9eG9UHFM5cufe441PZ7qP5kmZb5gmjHFUXcBbRNzEF1rNCVoIYSP5sLar73U
+         pXUw==
+X-Forwarded-Encrypted: i=1; AL+hErHfa7g7/5NK8PGkrwEUjLaVTUJAZOMeqmlo5zrXmSLGDeon3uu7Y4WBRpS/AuSnPf/KkO1WraqKomBcGRdY/m5O7JAm@vger.kernel.org
+X-Gm-Message-State: APuU4Z+flDdCwPZWAV2M/c4rYjizQ2exLjVIKOF22V6aRpKLmxgGMMM8
+	jzAtrJW9tezgYegKUnKLR+ZwX/DVRQxf3nTP7YI/S0FC6/pFjjp7HKcS
+X-Gm-Gg: AZFdTZcdXOToF/HJBJvIjaWL1nlwbtdpHKOBGKFTYJWNgZkzMxuGzbssPD8A6+z5QdA
+	sdDqb5y1m1J4ERpVKLCKcHq2rU2MY1sDolzCV3eyBIhOPMnZGzcZtvehLwRVmQQJhGNSogu8ReB
+	/TThUvGsrILDDVPDMqxJE4XVat0D+FpCJfAKyNTP0JVf2Bl9ZzZsKsScIc+XyQG/zP8a0vc/jXn
+	6wwH1Q+CTt9gh0gtElIgd+urooW+HNbcMzUSYPTeyvQxGCnQ7DaxbcQEPkGSfbhZc8fB2dlH0tM
+	vTfWA7BymmbYzGCUrfoL5qJAsUvu4qAw74gH0/t1kNd9P2rclevYVwsL0/95ox+ipswsR+AEu1s
+	8hICkKLV9/nlOElyyznYQ6Js3nv8klftm4UaPVu/yIZJm5f4GI3oZel/u/eut0cxwTeCjWLtaB1
+	XYSFKXcgvBwojwmM+cMOp3IAQBk/nYhs+ZNa8Z1VOp2RF99mqlUtysKYOhDAjTDz3dXjsbUo7LT
+	ASW41lkQipuGAnuY15qVgTk0vXtB6se5Z0raamX7BDZc15PrEOm6oPtJaTS5VdRaNlFaBLhXFOZ
+	sjOBnq/T/O3/c6r8FeMdFb/Anwf3cI2XVYrktVaEXA==
+X-Received: by 2002:a05:7022:7f01:b0:1b2:6a01:f55e with SMTP id a92af1059eb24-1b56f39c712mr9624578c88.34.1795633666143;
+        Wed, 25 Nov 2026 11:07:46 -0800 (PST)
+Received: from a1-free ([2603:c021:8021:f000:0:1865:8c38:18fc])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5566c1142sm42584510c88.2.2026.11.25.11.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 11:07:45 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH 1/3] docs: python: abi_parser: Detect a symbol repeated on one file
+Date: Wed, 25 Nov 2026 19:07:40 +0000
+Message-ID: <20261125190742.2420486-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,114 +105,96 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: A0BCXEfO0Ufc
-Date: Wed, 25 Nov 2026 14:05:10 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Qiling Zhu" <kmatzkaczor244@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, "Rong Zhang" <i@rong.moe>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- "Lee Jones" <lee@kernel.org>, "Pavel Machek" <pavel@kernel.org>,
- "Griffin Kroah-Hartman" <griffin@kroah.com>, linux-leds@vger.kernel.org,
- "Vishnu Sankar" <vishnuocv@gmail.com>, "Vishnu Sankar" <vsankar@lenovo.com>,
- "Andrea Rabbaglietti" <rabbagliettiandrea@gmail.com>
-Message-Id: <2d83dea5-7751-473e-bc59-903eb6809ef6@app.fastmail.com>
-In-Reply-To: <20261125084644.137506-2-kmatzkaczor244@gmail.com>
-References: <20261125084644.137506-1-kmatzkaczor244@gmail.com>
- <20261125084644.137506-2-kmatzkaczor244@gmail.com>
-Subject: Re: [PATCH v4 1/6] platform/x86: thinkpad_acpi: Report auto keyboard backlight
- mode as off
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+check_issues() warns when a symbol shows up on more than one file, but
+it never looks at a symbol that two entries on the same file claim:
+"if len(files) == 1: continue" skips that case.
 
-On Wed, Nov 25, 2026, at 3:46 AM, Qiling Zhu wrote:
-> The EC keyboard backlight level 3, which selects the auto mode, is
-> passed to the LED classdev verbatim by kbdlight_sysfs_get().  The LED
-> then reports a brightness of 3 with max_brightness 2, both through the
-> brightness sysfs attribute and through brightness_hw_changed
-> notifications.
->
-> This is not only cosmetic.  According to a report on a ThinkPad X9-14
-> Gen 1, UPower 1.91.x treats the out-of-range value as invalid and stops
-> watching brightness_hw_changed, so the desktop no longer follows the
-> Fn+Space hotkey after auto mode has been entered.
->
-> The auto mode is not a brightness level.  Report it as 0, which is
-> within the exported brightness range, in a new helper,
-> kbdlight_level_to_brightness(), as ideapad-laptop does for its auto
-> mode.
->
-> Fixes: bb28f3d51ff5 ("thinkpad_acpi: Add support for keyboard 
-> backlight")
-> Reported-by: Andrea Rabbaglietti <rabbagliettiandrea@gmail.com>
-> Closes: 
-> https://lore.kernel.org/r/CAENjc+w0Rqy=kDSew7XtNJCSvyPiXPJ5faWdmCr5RGYFhpunCA@mail.gmail.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Qiling Zhu <kmatzkaczor244@gmail.com>
-> Reviewed-by: Rong Zhang <i@rong.moe>
->
-> ---
-> Mark Pearson's Reviewed-by was given on the v3 version of this patch,
-> which did the mapping inline in kbdlight_sysfs_get().  The helper was
-> added at Rong's request, so the tag is not carried over.
->
-> With this patch on its own, on kernels that still use the LED core
-> suspend/resume path, a backlight that went to sleep in auto mode comes
-> back off after resume; before, it came back in auto mode, since that
-> path wrote the unmapped value back.  The rest of this series restores
-> the level the EC had.
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 4f81855ad..31d3721bb 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -5102,6 +5102,9 @@ static struct ibm_struct video_driver_data = {
->   * Keyboard backlight subdriver
->   */
-> 
-> +/* EC level that selects the auto mode for the keyboard backlight */
-> +#define TPACPI_KBD_LIGHT_AUTO_LEVEL 3
-> +
->  static enum led_brightness kbdlight_brightness;
->  static DEFINE_MUTEX(kbdlight_mutex);
-> 
-> @@ -5135,6 +5138,15 @@ static int kbdlight_get_level(void)
->  	return status & 0x3;
->  }
-> 
-> +static int kbdlight_level_to_brightness(int level)
-> +{
-> +	/* Auto mode is not a brightness level; report it as off. */
-> +	if (level == TPACPI_KBD_LIGHT_AUTO_LEVEL)
-> +		return 0;
-> +
-> +	return level;
-> +}
-> +
->  static bool kbdlight_is_supported(void)
->  {
->  	int status = 0;
-> @@ -5194,7 +5206,7 @@ static enum led_brightness 
-> kbdlight_sysfs_get(struct led_classdev *led_cdev)
->  	if (level < 0)
->  		return 0;
-> 
-> -	return level;
-> +	return kbdlight_level_to_brightness(level);
->  }
-> 
->  static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
-> -- 
+The parser stores every entry under a key of its own, so a repeated
+symbol on one file is visible as two entries with the same file.
+Compare at that level and warn, and keep the cross-file case
+informational, because two drivers may expose an attribute with the
+same name for different devices, as sysfs-driver-hid-lenovo-go and
+sysfs-driver-hid-lenovo-go-s do.
 
-Still looks good :)
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+Verification: get_abi.py --dir Documentation/ABI validate used to
+print four warnings for the cross-file case and nothing for the
+repeated one.  It now prints four informational messages for the
+former and two warnings for the latter, at sysfs-driver-mlxreg-io
+lines 348 and 744 and at sysfs-driver-hid-lenovo-go lines 389 and
+566.
+
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+ tools/lib/python/abi/abi_parser.py | 47 +++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/tools/lib/python/abi/abi_parser.py b/tools/lib/python/abi/abi_parser.py
+index d7bb20ef3acc..519ccacbadca 100644
+--- a/tools/lib/python/abi/abi_parser.py
++++ b/tools/lib/python/abi/abi_parser.py
+@@ -554,28 +554,41 @@ class AbiParser:
+     def check_issues(self):
+         """Warn about duplicated ABI entries."""
+ 
+-        for what, v in self.what_symbols.items():
+-            files = v.get("file")
+-            if not files:
+-                # Should never happen if the parser works properly
+-                self.log.warning("%s doesn't have a file associated", what)
++        # Two entries on the same file that claim the same symbol are a
++        # copy-and-paste mistake.  The parser gives every entry a key of its
++        # own, so such a pair shows up as two entries here.
++        per_file = {}
++        for key, v in self.data.items():
++            if v.get("type") == "File":
+                 continue
+ 
+-            if len(files) == 1:
++            file_ref = v.get("file") or [None]
++            fname = file_ref[0]
++            if fname:
++                fname = fname[0]
++
++            for what in v.get("what", []):
++                per_file.setdefault((fname, what), []).append(v.get("line_no"))
++
++        for (fname, what), lines in sorted(per_file.items()):
++            if len(lines) < 2:
+                 continue
+ 
+-            f = []
+-            for fname, lines in sorted(files.items()):
+-                if not lines:
+-                    f.append(f"{fname}")
+-                elif len(lines) == 1:
+-                    f.append(f"{fname}:{lines[0]}")
+-                else:
+-                    m = fname + "lines "
+-                    m += ", ".join(str(x) for x in lines)
+-                    f.append(m)
++            self.log.warning("%s is defined %d times at %s: lines %s",
++                             what, len(lines), fname,
++                             ", ".join(str(x) for x in lines))
++
++        # The same symbol on more than one file is normal: two drivers may
++        # expose an attribute with the same name for different devices, as
++        # sysfs-driver-hid-lenovo-go and sysfs-driver-hid-lenovo-go-s do.
++        # Report it, but do not call it a problem.
++        for what, v in self.what_symbols.items():
++            files = v.get("file")
++            if not files or len(files) < 2:
++                continue
+ 
+-            self.log.warning("%s is defined %d times: %s", what, len(f), "; ".join(f))
++            self.log.info("%s is documented on %d files: %s", what,
++                          len(files), "; ".join(sorted(files)))
+ 
+     def search_symbols(self, expr):
+         """ Searches for ABI symbols."""
+
+base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+-- 
+2.53.0
+
