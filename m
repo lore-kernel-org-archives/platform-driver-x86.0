@@ -1,86 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795608600;
-	b=KfnA7y8FF4pe71wExOUep/IHb9niJKH4/MqW7nJgewuyC2lpXL+TeiXmrTCtXIKsTJKm
-	 i/yDREmjY6dMZg6pwnQjJqiw99lj3DSSvS6YGbDs9idXZ0t6RO+B37lpm0s27/OQvFL8v
-	 4wXeWkdYXesrKfwHz8SkksiGGIjyu3rVRaNi6p4nDzZ7KPpEN0xvEOG2a6YljtjbZ/72B
-	 MWbjyJjhdY0BqWZWUyPmXDF2ug8eyf/FQe2qFdKWjZ/0YIneZyNz6rpXFRgoK02t3aqdv
-	 4zfCmRsaxdgttPsE0eHQGRqtX+v5C6vNEGa8kADFK9cHx0UT2u0jzrySho1Tb2CtDhw==
+	t=1795611187;
+	b=ynDMmET68tSYARw9ZpUggBaGs88LqJTLNjVwHe+6DxQG/4sMbVHEpg1Z+WuKuEdj0HBx
+	 X0yq05/cmqMuBDyJajauVDfnGFhcSCkw5bUMeXxSEwDkZOmRlIDfpnpVzsFZJrjUdLtmW
+	 xyFGQ+R7GMRyTEy55a2jAhUck0t72HsOmOKrZZLqyPADlZISO4JPlcWuL8BlIKVDXXoQK
+	 fZtstjgHiPO+TXJiTIF/dTMqQGVShEsWI8kQiOxtV4crMsrYGEXQevdl8Il16YVk0FpXU
+	 E8aOcP23dbW4MjZvgmp4KYn1oESR8qNlnVVap+fR8eI842c+ZzsIGUd9d1Jm01jQLbg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795608600;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:
-	 Organization:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=8wBwtuJsGaQU0lzGZKmrRPCz1qceCGO9wyoK7OZ9yjk=;
-	b=CDkF/D3/uKSum4XJWwVJdsDVsQGI9GMM4H2VrsgDc6TX9zYBxNrgJOl0H0N+1W1f2cL0
-	 nmOh64n2w3JihmBjLhksFmRqLAmjPhF1frFY7NBO/Tqz2P3W4HY/MGQXdswLJd+EeNJ/9
-	 l7FpgtOAQzab59jbErNn3XrsLt/kp8JOPRFq0Y6/2lAUnwy1WV/5elFB34axQiIwpcyhX
-	 lkENYl6VxaZy8KrpVwhaXH9oaN+a50pHuGg2EHVaSeClHzJCL+3ecaVWSE/uMisXcv2Vz
-	 Siqtd8cv6DzEMFCHWZdfNyt0u2MrPRoCTUQUwxF0TUaTLdoxKR0Y3AY0ButR44hiMJw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795611187;
+	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=1eLgDqKy012q83IXxmUxT+2H0cryE4EVrABGEzNW6Nk=;
+	b=1w50f9BZXMenLvl5vclTdoLYX7i8qjxx+o3LB5vSTEEdqjBs3GIgUgJomf1F2IfVBQsN
+	 43nJ4cmZoP7+yLA1C+YewkgzTLtD64BZLhPy4dv/evYtzzl92pPDouyogGgN8V/4xKGp/
+	 boQvamTIBzu0ya82EAsjhUvP+aQ995k5lteG9oq2je1Zoqf3bJB4WBf/40gGsmdGeiwQG
+	 muvLJDOapfYzcXPWKxkYbdc8baJ4Rnh/N9wt7mcrz9Z3r3V3+S6cwN6BcgolfLCVOkv30
+	 1zZwYi7MiXVi6RNRLivUvxKzHMctodmlYzHKqcROqzP552qnjzVrcgdyBud49FbIIOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Jfd4e5ov;
-	arc=none smtp.remote-ip=198.175.65.19
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=kylinos.cn;
+	arc=none smtp.remote-ip=124.126.103.232
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6106F606A31E;
-	Wed, 25 Nov 2026 12:10:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6106F606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Jfd4e5ov
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795608601; x=1827144601;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OoZJcOqtwHtc1mXcC45OLAwJuS6buK8qaDHdK3nI8ZY=;
-  b=Jfd4e5ovt3d4U+ft9FZJ97FM53o4Dc+hF0f8DIBwRVtfc+UCIb4hZcIf
-   xiu3CvoEsWWB368ydHgLuwnS1ZVcvvTNdT0jQM/uTHh90NANVkZS4hULo
-   yVnv/7Oq8U1VfnAFtB/eo0xRMHydYv81zu+Y3VNhiLC6jEjAX9gi/1Lyi
-   rErBoLJ7YNSAgte01VrBuv+QWcklrEFz84TtbkpY2zatGBNLkx8H30Dvi
-   3A6TOxcS7cHHYEqJqF4c3QrovWdGUHUdSYZG6nf35FrRLVw3N2CpxYmx0
-   0VfjeSIcwuuGp9urxT1VAHYhYp3Lt7FF44qIZur1E/6I51LmsFHgm7exn
-   w==;
-X-CSE-ConnectionGUID: hSVMGeHpR+S1/5wTED9BTQ==
-X-CSE-MsgGUID: lv4afe04Raa6pefoI5CxZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4544980"
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="4544980"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 04:05:58 -0800
-X-CSE-ConnectionGUID: DPiA2P7zQ6KWQmBzWnrq3w==
-X-CSE-MsgGUID: 4+w6/FdIRkOrZ8Uy+4DoZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
-   d="scan'208";a="13877051"
-Received: from alekseim-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.36])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 04:05:52 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id CCD1911F920;
-	Wed, 25 Nov 2026 14:05:55 +0200 (EET)
-Date: Wed, 25 Nov 2026 14:05:55 +0200
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Sergey Lebedev <lsa.uz@pm.me>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Hao Yao <hao.yao@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bingbu Cao <bingbu.cao@amd.com>,
-	Fernando Rimoli <fernandorimoli11@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: int3472: Use actual clock frequency for
- DSM method
-Message-ID: <awbPI9LPXFUpBinZ@kekkonen.localdomain>
-References: <20261125090921.46652-1-lsa.uz@pm.me>
- <84ecba76-5fe7-4bb2-b18f-efc7cda2247c@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1068D606A336;
+	Wed, 25 Nov 2026 12:53:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1068D606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 230cb4fce8cf11f19a56ed5b684f684d-20261125
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:786433fc-ad2a-4098-ba3f-8ebdf90f9421,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:7db8b62,CLOUDID:2fdc30bc37c09a43f453b9d9a4162f52,BulkI
+	D:nil,BulkQuantity:0,SF:81|82|102|136|865|898,TC:nil,Content:0|15|50|99,ED
+	M:-3|-100,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 230cb4fce8cf11f19a56ed5b684f684d-20261125
+X-User: huxiaoying@kylinos.cn
+Received: from thinksys.. [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <huxiaoying@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 2006821591; Wed, 25 Nov 2026 20:52:56 +0800
+From: Tom Hu <huxiaoying@kylinos.cn>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Rong Zhang <i@rong.moe>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	xiaoying_hu@126.com
+Subject: [PATCH v2 1/2] platform/x86: thinkpad_acpi: Update charge_stop only after it was applied
+Date: Wed, 25 Nov 2026 20:52:51 +0800
+Message-Id: <20261125125252.38003-2-huxiaoying@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20261125125252.38003-1-huxiaoying@kylinos.cn>
+References: <6066c701-55c8-494f-9348-f9835b258b44@app.fastmail.com>
+ <20261125125252.38003-1-huxiaoying@kylinos.cn>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -90,43 +76,50 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84ecba76-5fe7-4bb2-b18f-efc7cda2247c@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Hans, Sergey,
+From: huxiaoying <huxiaoying@kylinos.cn>
 
-On Wed, Nov 25, 2026 at 12:16:08PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 25-Nov-26 10:09, Sergey Lebedev wrote:
-> > From: Hao Yao <hao.yao@intel.com>
-> > 
-> > The third argument (args[2]) to the _DSM method was hardcoded to 1,
-> > which selects 19.2MHz. A sensor whose SSDB asks for 24MHz therefore
-> > runs from 19.2MHz, and everything it derives from its clock runs at
-> > four fifths of the expected rate.
-> > 
-> > Pass the frequency from the SSDB instead, with 19.2MHz as the default.
-> > 1 selects 19.2MHz everywhere, but the value for 24MHz depends on the
-> > platform. Where the frequency field is one bit wide (Tiger Lake, Jasper
-> > Lake, Alder Lake, Raptor Lake) it is 0, and 3 would also set the clock's
-> > enable bit again when the clock is turned off. From Meteor Lake on the
-> > field is two bits wide and it is 3; 0 and 2 leave the clock unchanged
-> > there, as measured with an oscilloscope.
-> > 
-> > Fixes: e4543de8b6ff ("platform/x86: int3472: Evaluate device's _DSM method to control imaging clock")
-> > Signed-off-by: Hao Yao <hao.yao@intel.com>
-> > [Sergey: pick the 24MHz value per platform]
-> > Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
-> 
-> Thanks, patch looks good to me:
-> 
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+The charge_stop_threshold store writes the new value into the cached
+battery_info before the EC has accepted it.  If the ACPI call fails,
+the cache and the hardware disagree, and subsequent charge_start
+writes are validated against the stale-not-applied value.
 
-Thanks. I'll add Cc: stable when applying this, too.
+Move the cache update after a successful EC write and report -ENODEV
+on failure, matching the charge_start path.
 
+Reviewed-by: Rong Zhang <i@rong.moe>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 4f81855ad721..8fc5569131f6 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -9847,16 +9847,15 @@ static ssize_t tpacpi_battery_store(int what,
+ 			return -EINVAL;
+ 		if (value < battery_info.batteries[battery].charge_start)
+ 			return -EINVAL;
+-		battery_info.batteries[battery].charge_stop = value;
+ 		/*
+ 		 * When 100 is passed to stop, we need to flip
+ 		 * it to 0 as that the EC understands that as
+ 		 * "Default", which will charge to 100%
+ 		 */
+-		if (value == 100)
+-			value = 0;
+-		if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
+-			return -EINVAL;
++		if (tpacpi_battery_set(THRESHOLD_STOP, battery,
++				       value == 100 ? 0 : value))
++			return -ENODEV;
++		battery_info.batteries[battery].charge_stop = value;
+ 		return count;
+ 	default:
+ 		pr_crit("Wrong parameter: %d", what);
 -- 
-Regards,
+2.34.1
 
-Sakari Ailus
