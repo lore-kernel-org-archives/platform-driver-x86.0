@@ -1,60 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.118
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795581575;
-	b=p5jhR9py1Xe7V3jCnyofVPN//yPrfPrwjs+lIpWrdX6LONPu/FWCJ88dMjkjcRlGVCpM
-	 0CSm9aGY3XhNeSfKv2r0t71DUGov3nks6/uErP7cZuYbQL/l21ZQGIseKkqlkl6zz9nqG
-	 FoUSZE58C1wWw4OLKpofnaJx8h8CVT4PYE/S9pWfBzka/MiDH+qm0nMzbFK3Lm3apRiMm
-	 CUvUOcXBa8v/FXTzS1wqo+qhXYKcDA+siTC7z4LJEKTAyDt5S3znjlpmEH4UuKXSZh9od
-	 8kKZpHuP5Qp7VPYtzIisetCAv6wLqArbEzh0JGQMFwMKFhRyCZD4B+Ta02dqvy5qx7Q==
+	t=1795582531;
+	b=rb6ejrK+/fah4eqY+lpfjrU1ozhjap4jkNFokmejwRZp9Vj+yymfZSrHlZJwXxAAB6Rj
+	 ZDjBxPrIBZobt/bGW/9yT+Wb/UAviQO8xfISwpYKUAOo6Iyp5y3FFqG3ovo1cK3vVzjEM
+	 gIRKTVvvg2w+e09FHIPGcMTGXFyh0qQ51/2+ModL7E/xam3NiC3mDmUYyR3w4EcBTqNAd
+	 r7LjcaKQ0Xh+VXx+vIpMryzW1duPCdw1Gq4zBpUoSXLNdXHYS9/+bUIftyeyPNzmwXUJv
+	 dfspwyF7WCYP2K22HwPXTz3saHWEI0i/MkZLd0Ea1qEJGkiGqWdbZuiuMlgDh4ZDutg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795581575;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=fMZ7lRXEHR7EUwCxUlnL1wD1t+cuPsYhKC030vqE+YE=;
-	b=EVxdFqHlE5TqFrYvpR2P2h2gc5G7ro8gerzRkwCpjBkipISGhC71dLBmNDBFGdHW28B6
-	 e6A+74rPGFfPA3x+mpHW6NHvsmu0TeoagyEqTIFlvP1Aq6JpUw+au35Cmp72S5KNys9rD
-	 7RgfWFveqStw25+j3XUruE0s1KSaM8BHa4S48tZN8ZSYOCq1hyKqJeuy3ISPYesYpcOI0
-	 LwgJ5GkdwV+vlyNupyO/nu+CFUuCUgCtro2WXSGMZFlGD2v0DYE84sfMEygLemGyzhLtD
-	 UbUQ2ONpj766CG6knyYS9T9GVKQRx0ghW35rUfZfStk10OGoc8ofDrqk5yNt50C6gBw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795582531;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=Cx1Omfyaca82v5is2yCAZpsaBqeUc6p8sVzDBGAlWPs=;
+	b=MDZSMVrgj2Q0YKjXl1R8Fyng7RJ3Skx/II+k+Ee6VtawfeJK6FX4EZSr0X0dBu7ZmT/k
+	 hr9Yk1fn+AdQpTzqV5lvVBFatt7uqpBaIMiwTlNwx0oja6hwrfP/3NGSwzKUi6LSmpG0L
+	 csBfUTxxGNEd9ZhPBbRORnPEM1jk0Ko+DC0cCMU0TahQpTFdEUqCWP2c0mM5CXyBr9ReK
+	 /QZd1SJ59PiUfpKUH4IeiJ2mz1Z6x7L0YRL41PIPd1BXrv57SKEpUMc9Bt8cwXMeU2BVL
+	 JXvxSD/5+YxbDiAGDL9H6MEzX5BUpr9DrWQAtjTBN9U3JDp1HhAVwIfTV+68pWJejaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=protonmail.com;
-	spf=pass smtp.mailfrom=protonmail.com;
-	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=a5+6Usgk;
-	arc=none smtp.remote-ip=79.135.106.118
-Received: from mail-106118.protonmail.ch (mail-106118.protonmail.ch [79.135.106.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C3vWzSNt;
+	arc=none smtp.remote-ip=198.175.65.17
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBD3606A321
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 04:39:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCBD3606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B99606A321;
+	Wed, 25 Nov 2026 04:55:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6B99606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=a5+6Usgk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1795581572; x=1795840772;
-	bh=fMZ7lRXEHR7EUwCxUlnL1wD1t+cuPsYhKC030vqE+YE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=a5+6UsgkAneQAsP+lI/bDnxDQdFW+JBO4yBBcZfAcXDG/vSggZ3iMgYV85i55hpz3
-	 NOHgiRDaeL1hr+RlMQM7bwM5rP5hjMMI1zwvLec3gBXKnrl4m8SU3oLLb8l3dCby0L
-	 bT/ZK4tA8k96UKC/vmN7+bPKDUy78hQlZnLcRa8x6ul3wncHMnCXq8f5PekvFOogod
-	 YL0eEdGN6t3zj0ZNartAmEpVpdkJnebpM6tBcUIqem6xgwxjBAqOfZD1kaelSP3Gjw
-	 OdxCBvVoelbPYCx5SoiVGhh9ekgzM1HkJkXKCHj3OP4w6uPCA7xyrNelmslytXsaZu
-	 d3obnLPjLQslg==
-Date: Wed, 25 Nov 2026 04:39:26 +0000
-To: Fuwei Xie <12313607@mail.sustech.edu.cn>
-From: =?utf-8?Q?Eren_=C3=96zen?= <erenozen@protonmail.com>
-Cc: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Zheng Shuyang <yhshzh0@gmail.com>
-Subject: Re: [RFC PATCH v3 0/5] platform/x86: huawei-wmi: expose native firmware power profiles
-Message-ID: <hCsVvRfdJna6QMofi0p51idPd_JLLislzGzqFjePf9_91ayfS92LIselCT-narFk2u5zTRqLQsKFnz4bgRrNmjY5EKgq9UYj0n_CfmaCJjs=@protonmail.com>
-In-Reply-To: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn>
-References: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn>
-Feedback-ID: 19860221:user:proton
-X-Pm-Message-ID: b26fba8859e31b4dfe3c167fb5937d8f736cd6d9
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C3vWzSNt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795582530; x=1827118530;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mpdq3uSKN8ttNJvXd+YNSoqlifaG1JC4jLUHr6XomgY=;
+  b=C3vWzSNto22KUNIjdL+ESZynLHX15KFfrCczz2lMr8jX25fWmDu6cBFO
+   W769PwgWOpHxvv0UIOVu76qjbGHr21/mZDSOK9OjwkTFm2vHMnZmfA1/S
+   QvOcDqRWggTSsGpk1CgwZROCs3qoRFGoVOIovfMplF/53Emy2a5E3Hwm/
+   hC3wIL+lL3M2+fjhKFaZd45kUIOH5B32auRbiyIKqhk4yrs7+2r3xZo7J
+   RbUDciGj/jfdvEAfxv/5Xqxhw7Y504XssMibPPVmYESEde5nuhfX4lwOc
+   UdMODUMvtT9pQBFvmHahr1oTT5GaJCJzcl8eJ+7BzA3URyFd4ESUKVN7G
+   A==;
+X-CSE-ConnectionGUID: Nh2l1uTERr6ul4EB+qnsSw==
+X-CSE-MsgGUID: Rv4kM2fhR6y1Uyo0IIe+Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11976"; a="4446852"
+X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
+   d="scan'208";a="4446852"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2026 20:55:29 -0800
+X-CSE-ConnectionGUID: YJPP7F0sTCO4jA6G1nUPlw==
+X-CSE-MsgGUID: swp/MOFVTYu7DyJZn5r4Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
+   d="scan'208";a="12353210"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 24 Nov 2026 20:55:24 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xW52O-00000001Qsc-3UJF;
+	Wed, 25 Nov 2026 04:55:20 +0000
+Date: Wed, 25 Nov 2026 12:55:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@kernel.org>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Armin Wolf <W_Armin@gmx.de>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
+Subject: Re: [PATCH 4/4] platform/x86: clevo-laptop: register 5-step white
+ keyboard backlight LED device
+Message-ID: <20261125125051.uZKXewqY-lkp@intel.com>
+References: <20261122-clevo-laptop-v1-4-881debf4d4b0@gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -64,63 +99,44 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261122-clevo-laptop-v1-4-881debf4d4b0@gmail.com>
 
-Hi Fuwei,
+Hi Nick,
 
-Thanks for keeping the charge-mode patch in mind. I tried rebasing it
-onto v3 to see how the two fit together. Updating the calls for the new
-huawei_wmi_cmd() signature is straightforward, but two of v3's changes
-still compile fine and change what the charge-mode code does:
+kernel test robot noticed the following build errors:
 
-- huawei_wmi_cmd() now returns the number of data bytes on success, but
-  huawei_wmi_charge_mode_get() still does "if (err) return err;". With
-  only the calls updated, every successful \GBCM call would come back
-  as an error (a positive length), so probe would leave
-  charge_mode_available false and the driver would quietly fall back to
-  \SBTT, which is the bug the patch fixes.
+[auto build test ERROR on 4843f6873f7c4835e62f2c73ba0fd538e57a2f22]
 
-- The reply no longer starts with the status byte, so the mode and the
-  parameter move from ret[1]/ret[2] to data[0]/data[1].
+url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Dowsett-via-B4-Relay/platform-x86-clevo-laptop-add-minimal-WMI-driver-skeleton-and-Kbuild-plumbing/20261122-123538
+base:   4843f6873f7c4835e62f2c73ba0fd538e57a2f22
+patch link:    https://lore.kernel.org/r/20261122-clevo-laptop-v1-4-881debf4d4b0%40gmail.com
+patch subject: [PATCH 4/4] platform/x86: clevo-laptop: register 5-step white keyboard backlight LED device
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20261125/20261125125051.uZKXewqY-lkp@intel.com/config)
+compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+rustc: rustc 1.96.0 (ac68faa20 2026-05-25)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261125/20261125125051.uZKXewqY-lkp@intel.com/reproduce)
 
-With patch 4 the callers hold wmi_lock, so I also took the lock once in
-huawei_wmi_charge_mode_set() around both the \GBCM read and the \SBCM
-write. The getter ends up as:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/20261125125051.uZKXewqY-lkp@intel.com/
 
-static int huawei_wmi_charge_mode_get(struct huawei_wmi *huawei, u8 *mode, =
-u8 *param)
-{
-=09u8 data[0xff];
-=09int len;
+All errors (new ones prefixed by >>):
 
-=09len =3D huawei_wmi_cmd(huawei, BATTERY_CHARGE_MODE_GET, data, sizeof(dat=
-a));
-=09if (len < 0)
-=09=09return len;
-=09if (len < 2)
-=09=09return -ENODATA;
+>> error[E0223]: ambiguous associated type
+   --> drivers/platform/x86/clevo-laptop.rs:168:17
+   |
+   168 |         self: &<Self::Mode as led::Mode>::Device<'bound, Self>,
+   |                 ^^^^^^^^^^
+   |
+   help: if there were a trait named `Example` with associated type `Mode` implemented for `FixedColorLedOperations<'a, MAX_BRIGHTNESS>`, you could use the fully-qualified path
+   |
+   168 -         self: &<Self::Mode as led::Mode>::Device<'bound, Self>,
+   168 +         self: &<<FixedColorLedOperations<'a, MAX_BRIGHTNESS> as Example>::Mode as led::Mode>::Device<'bound, Self>,
+   |
 
-=09if (mode)
-=09=09*mode =3D data[0];
-=09if (param)
-=09=09*param =3D data[1];
-
-=09return 0;
-}
-
-With that, the charge-mode patch plus your five patches on top of the
-current for-next (61c0dac952b9) build cleanly in-tree with W=3D1 and
-sparse. I haven't run the combination on the CREM-WXX9 yet. I'm happy
-to send the whole rebased diff if it saves you time.
-
-Ilpo, since Fuwei plans to rebase on top of the charge-mode patch,
-would it work for you to take that one first? It still applies cleanly
-to for-next.
-
-I used Claude to work through the rebase and to draft
-this reply, I checked both.
-
-Thanks,
-Eren
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
