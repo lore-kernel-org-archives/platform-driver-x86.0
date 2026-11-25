@@ -1,88 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795648298;
-	b=IxZc1ziwb1MsySjoqrbflp7+EnJ+azCqQWOd7rTWNAIX/k20jz2/EXNvOmdYOaNzB04R
-	 Qqrfuyb1hSHlz+DfU+BhhLLvMFN6ZgSR6hLSzfWERAX+5I/wChU8/XqQGG2J6sXVnpxUf
-	 6/9wwLjUxaLS9Ye45p+jbGubf4H8HYdiDaTRJaceCTAlyAQw5DFEpYAg5vTwFG9TBbiY5
-	 dcC72Y1noVgS+Vi0MXupoS+p8bzX/6SKNB5EAZZWM5ENVHQ44/dESzJedGZKm+m8Fx9t5
-	 rEJhg6cs7Mx3JQarAVjwAaD89PfwZXW54S56qb4ZQOcDrAmqoDmtbaV1gwuHELy4epA==
+	t=1795648300;
+	b=v/jlUb2VJn6UH9c46TRc1Dq21untnRKVtO15XYYpnMRwWpPxqEH8XAvdt2UI+eZEHhjo
+	 n9hisiKPzy0kfh/m+ULBz6BjpYRw06T2XIeFsSXa4eIslw3lFNB7eJp0HlNcZxVxWelcY
+	 W9VdDp+7IMghQA9g+IN4RN7zAR86pHMMX1aGOq4HYG/d9Z0UNOwWX5qvgumHco7+9h245
+	 XxwV1QMtVeXp3b2I592iaXWmhGKDpqVSwqH4Y4rv5ERxu5TYwpZvtKioBpD5hkqPPxr+r
+	 B9Ee1nbdKI7z+08xMMGW8BEa3vWJNHQPIZec4mQAKI28EBcgA4JNPgaSrzPwPc63XJg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795648298;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
-	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=kOt4u6kmeqJwLnHO9krQOCVVCUBfYUR7mdfB8lBiBco=;
-	b=PXkQrM0N1eTwXTR9EqW8YlVoLWqiexQbTBlrjrA20GRWSv/mmBj3kz4XhLaIZJH8C6e9
-	 P1W9E9dV8dN7XkN8yv2q7D/h7d5t+7J6E6uFyn+jxRobD8uSA+y3FNb5pXJFCLLuRNHQM
-	 GjzAJgv3z1i2gkoAmNHa81AMnaA/zfiXKW7RWeZ6dXHa6mjd++x4Vxf9dZNK/qJbNjGBO
-	 Lxe10XYcMe0L9KyD9qwpOQYF9AD4v+orvRRSEBKC9O9Hqi+pgenR7/Q7HkqaJalv6ywpS
-	 3+OAYwZ5pemBgUHoz5ehkvbZXJXqF7ocsr/7SvrfguA8eJPT9ViCPEqhZPfQT0o0aIQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795648300;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=MP9QmMsbXTFQPJ9QU5BlnHOkG+ttWI/OWTZJkSNJFiM=;
+	b=ylw1+d7myzOjutlXCiNrKOds6xsJYdNDwf9kuDTaR7EtFD8IH2vRC/eIUajuE26SYuax
+	 MGnXIOjxM0Ltp+3VkTwpM/FwQkgVIPXqCYW1phA3tsv60K2sbh7f3vbrMHPUZTz833jem
+	 FmSIJ7XJrCp/2fb+hCI/igyyvd461XDR80/gjyru713TG9tuOpAVIiQdXOh4QCGvmwrkp
+	 ph7Hw5Gp0KdoOaJNeoPEOq+Zo6HTJ89EsP+k5V6tZ7V/UD1KKwpECAQGF0D7j/K8Uutc2
+	 rpjWQA3WJ9gJUU5O1X2cM/tPlRhUsideXPyUVMCY7zi3c62dlXrxERWO6s4lyl+7hBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Vt1dQngd;
-	arc=none smtp.remote-ip=74.125.82.169
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="jXIRUHO/";
+	arc=none smtp.remote-ip=192.198.163.13
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0321C606A331
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:11:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0321C606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95B2606A33B;
+	Wed, 25 Nov 2026 23:11:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B95B2606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Vt1dQngd
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-38431138772so8309574eec.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:11:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795648297; x=1796253097; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kOt4u6kmeqJwLnHO9krQOCVVCUBfYUR7mdfB8lBiBco=;
-        b=Vt1dQngd9PVZy95Eefs0BcOZV2rR9e4rTVBllCLhg4ChIUKR2raGYXgyz3pzp3rML7
-         VocROAwgqpzT7Vq00CHSgF5O7gIgNLtiBPKn9X8zwylfPDaSWQN1AaFyLU5ZYUdNIMNP
-         uEeGVQjRMTXvpUPXvp/hx14Z/PfJBw00hG5Ga6CaawXIofxAHNVMkMNPUPZDPeJt5s12
-         kvQ4fXIlWNiPJfdZ5R2zLJHB0I9Esi08SArw/7AinHveuoU4XdnR4oVt5P6xeMRsZhBl
-         Xj6IJ6hF+jDgTwrIxK/Wxtf6hNarT9pdT8YGUpe4nd3vFmSFmwIt572HIh9Sn0VEy0VE
-         97Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795648297; x=1796253097;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kOt4u6kmeqJwLnHO9krQOCVVCUBfYUR7mdfB8lBiBco=;
-        b=IFxi/D0xqrJSeYWnssGJezV/yskUNV+/R4hL4m6x/0JuY/FKisFpFT1mgulbFQveTX
-         WP+529Od4BaNDzwjnS0O8N3PCnVeVmGElO5+y6nJAcvEcloO69rgMwBUr9JchN3/y9lr
-         8fx/wOtGneE2CbfA5oQKdujWd5crY8jJBpGGCStm00AW3L2aPOA9LzIEtBXPwwMKOe6F
-         0AuwWqdaLa4l/OK6y13fwewf1QhxHkyab2vbF0lIpqds+uFuwprGMHUKUMcw0i9LTtk2
-         0F3ScLEdwaXw1BJhOoqtsElBYQPusfIGnEVAXRB9etYFpR1V5HN4Lv6J8GqYB0S8VYda
-         of1Q==
-X-Gm-Message-State: APuU4Z+6wgMUnQvv9EeGhZFanu0SRYWtTBzjXxjwqZb67P/QyqwpuOXJ
-	rV8F1oIsqTnAiUI8Fav6qlGz4LpOy5JYpkZJI0+XVM1qhFuldkYF5qceIoioEg==
-X-Gm-Gg: AZFdTZfFlkyqlRWsXK/rRRosgFiL+7/+0eJAipO2zvYu87gtfwNGPPey9JYqZ/eKWml
-	pldOpJF3QtCJWbrZWWTTag0LbF+lJyAHQYO9zWY14S2VOiRbpIeiALAjjsOlaniyIVYrRqppqCY
-	hyDPbyec27b4gV5a0HPWSKJXBQCVLPk51vAEsFrDJRkJoAztSH5BS4sVpsda5yTKzOjegg6lZ4w
-	ToOsmvOJ687CG2tIELD1vBMvb4AXQTtLx06GwTJ5lWAsQSmsE81l11WgBGOV6ZmT3VhuMo7wNpg
-	56Vz9dCBIL+PVKoXaTb9npyKeZqRVHZZX2SupElvuHQKB13xRJt3rUZ/wWqyBACZ4scdgVqbgGQ
-	UOqjpJ29LxWl3w5bfX2L2dccO1h1/irGPqzHm2vfcHYzpgtk9KTu6YFWgXSRPOo9dQAPokP2+bp
-	wgAVQRwfz9CX4weL9GNCKavFUSQO2RkPYKJTQ0IMOXnphzZgNDbOnGQva0PYZuvf0UYY28E7TnW
-	k7Nz4k1aS/wr7Z3lYEetWV0pwHvIsQxBKFB5k4pbkBwO9/GhnKp+86iy0z4MmUakktyK7RHLXPW
-	iDhKyloTGMUdCsCyaRVjIoQU+SZovbF+Hps+Fu+ksUmt71D3rmK4OcmaDKCMejhR8SwPlH1fsWx
-	h3uE9YoMBizCvmpK1AA==
-X-Received: by 2002:a05:7301:152f:b0:376:203e:7d7b with SMTP id 5a478bee46e88-3856c6b35b5mr21778101eec.2.1795648297132;
-        Wed, 25 Nov 2026 15:11:37 -0800 (PST)
-Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:f528:8797:fe51:9f7e])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567cafec4sm64430145eec.26.2026.11.25.15.11.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 15:11:36 -0800 (PST)
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Wed, 25 Nov 2026 15:11:14 -0800
-Subject: [PATCH 1/8] platform/x86: thinkpad_acpi: remove early exit in
- hotkey_kthread()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jXIRUHO/
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795648300; x=1827184300;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=7n4D/gGCRkctEY4AUuCZquiJxQ5vpZYZeGUMpBWFGEg=;
+  b=jXIRUHO/ssFFl5YsLTyTNBnqSvhxQhaRiD1BMMJH8uwRW0HwEEyxK6wn
+   JADGW5lZwdVwvFWK+VLqOC5DSFXHStTAz/nEh9ekq28MQ/XmQvy/4LhUt
+   JuUW21z2K4z0WL4LPn5b06FizyolEUCbA3XHSwLLABPuxVr865hE35Of2
+   B3H5R8pbG7jCpvzYV12auUTv1IZ1TBlRzpsLYoVXNJU7dh6X8E7FryRSi
+   iyHZP3qXHArEfeYL0nO6uVgjrFgUkTgNn+Os/gte1EX2tJIyrvHpe/nze
+   B/6Y7J6FGS6WQr7Sf7tYBRO30fXxilfAJ7vgkUmIlJ1yJ3N+nYbSpxEMO
+   g==;
+X-CSE-ConnectionGUID: lj3l4wcmSKCxBqIx9+WKhQ==
+X-CSE-MsgGUID: /aZ0lOlzQgqWDralN/lf6A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4515592"
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="4515592"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:11:39 -0800
+X-CSE-ConnectionGUID: xl8UzVBqTfGxfH/T0JCzSw==
+X-CSE-MsgGUID: kkEhdHpVTpOa9L248DYMyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="12309384"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:11:34 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	David Matlack <dmatlack@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 12/17] platform/x86: eeepc-laptop: Convert to pci_assign_unassigned_bus_resources()
+Date: Thu, 26 Nov 2026 01:09:11 +0200
+Message-ID: <20261125230925.2441-13-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261125230925.2441-1-ilpo.jarvinen@linux.intel.com>
+References: <20261125230925.2441-1-ilpo.jarvinen@linux.intel.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -92,50 +91,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261125-thinkpad-acpi-hotkey-poll-v1-1-6dee57519c2e@gmail.com>
-References: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
-In-Reply-To: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, Rong Zhang <i@rong.moe>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, 
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.17-dev
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-hotkey_kthread() starts with an early return when tpacpi_lifecycle is
-TPACPI_LIFE_EXITING. A kthread started with kthread_run() and stopped
-via kthread_stop() must not exit before kthread_should_stop() returns
-true, otherwise its task_struct can be freed before
-hotkey_poll_stop_sync() calls kthread_stop().
+The eeepc-laptop driver scans a single device and then attempts to
+assign its resources using pci_bus_assign_resources(). That function
+makes bridge window sizing disjoint from the assignment phase and is
+going to be removed.
 
-Remove the early return so hotkey_kthread() always waits for
-kthread_stop().
+Convert pci_bus_assign_resources() to
+pci_assign_unassigned_bus_resources() which is likely a no-op in this
+case as it looks like bridges are not involved here.
 
-Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for hot keys (v9)")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 1bccc21ee29b..a586113ab1a7 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -2451,9 +2451,6 @@ static int hotkey_kthread(void *data)
- 	unsigned int poll_freq;
- 	bool was_frozen;
- 
--	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
--		return 0;
--
- 	set_freezable();
- 
- 	so = 0;
-
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index 8a640c25830a..7394221cbad1 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -609,7 +609,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 		}
+ 		dev = pci_scan_single_device(bus, 0);
+ 		if (dev) {
+-			pci_bus_assign_resources(bus);
++			pci_assign_unassigned_bus_resources(bus);
+ 			pci_bus_add_device(dev);
+ 		}
+ 	} else {
 -- 
-2.56.1.839.g22a8290db9-goog
+2.47.3
 
