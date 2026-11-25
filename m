@@ -1,47 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795605372;
-	b=HE3Hdzs2frI5JBzljfCvgdFRtEDEFEwJ9cNjS4dK0gXsbtCaB4QJrN+GqdpaPLX6mC5C
-	 Qz5PY3KDi+vhgFk637ey7oGBTx1C3fhhKrGoesTNbAN2DGy0oeEx1TXPP25HXkjmKBuQ+
-	 vrSIehWNI8Jc4ly+O0sQUY1wrMfu/+ojWJE/9Nhp4aAjPW3j2dnxJr+lA8NSos6IB9tFz
-	 Lfu3FQtkLbP4fEGZcO0TfOyqHY+go82yFdNCAsmfYjdFGjYiyd11UnsQksoSBw7x4oj9P
-	 BuvisCp30W+qF3zlzN16V2/gpOHyKdG+eckObcXZGvUPlz1Dr2dOXWbxfGm87gaSWgg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795605372;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=vx7YNc78s95n9tQ4kGlT5XpPau9zDZptlxnEIpP/bA8=;
-	b=bkAzRRz1kQze1JlD3AIeJuyCYc6dRZJOedhVG2zDvqfuIUQT1hWY5JSARxCxfGP13ky+
-	 ynB9PGEwIX1vSTcnDGTB1cmEz0H3fFSMFK+b8no6ua5oUR1uz9s7sQpVm5B3RCg+0qTYT
-	 XAWDJROTjLiHb+LAr+af3Ua4Oeeez7vrK/knqQrQg3PCtBBbG+YlKbnrtVpUhcjwVtEOu
-	 S7FiN1BwCooS4gY0oP3tup7lJFII89psmJOY3YCy75uWKmtXRX5wkHk4PKl5BZufF6AU0
-	 gNI29ahW06oVStZj97+Qg/07PwcEguAB7MP5aKDPNgYJ0kqxo43aMy99mz+8hNqgTBw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NmXQ0rp0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795606297;
+	b=yG7u6jMPh5ci+ggvtJIKgFommPyI1Evd/xIEM97Kt+5XHxu4+Huc+lDCx/6ntcE0vqAU
+	 PrezbsMnef/UKA7pWBmvOH+iGs36hgOGYdBLdG0NEFZ86X7kxPyxBqOhpk6cK/5I5PFK2
+	 NhoFnkynrcq+G3KHBi0aU31f8Mlvquh7VVm9YFTKUU2KkoLIQR7iRxQt/4jjOKnwZ5uS1
+	 eLL24ICgvV4NLktIr15kidfiOneXpKR7grT+jERPn6s+S+6XN2wQY3FnbUaP3ahOeUSr1
+	 CflVjdHhVripAtBofJKifAA65BTt+gyE+fb2NrTg/3DdP9ZL7+N52WFRp4ppuyN+rbA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795606297;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=4rv5RycQxbT02dsjoESum80afWkEnUKBnp9w2kgGko8=;
+	b=3YFwEYuuXatWuMQo+njghFAxMU4iV25mHoI2tQHiHsEFszznYomJytKVpIp56SVyOBVT
+	 /fADGLBsUW+Frt7rvVn2sN18iX/x+dd+x7DqlGkaGqxYbHw1MMzwedDonkGIP6RwvYYLW
+	 Xiv+t7Myqz3OmXj7USRt/tN0VItOYA2WivhYXSGT10u22bVi7qqzYf/sACaKTunBooQR2
+	 Hxi4lgsULQnzLOfZh1OmbKjEdinFdj3qkHGARYP1QFRjjibkFgipSZlKz7wfjJ50QsyeE
+	 NUevE0E94r/xVXy1Azw5dQNTPCa60idiWROifWTNzD3fqxpg5zD/f8XRC6Wd7UbdJIw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=qo0QHzXU;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84895606A321;
-	Wed, 25 Nov 2026 11:16:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A21606A31E;
+	Wed, 25 Nov 2026 11:31:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89A21606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NmXQ0rp0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44C41F000D4;
-	Wed, 25 Nov 2026 11:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795605371;
-	bh=vx7YNc78s95n9tQ4kGlT5XpPau9zDZptlxnEIpP/bA8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=NmXQ0rp0GCmYIzoTBH1XYK61oKTsXtVzDFpEKL0QMRGNCRP4BTHt1YnQ7axvFIzpK
-	 SJKDwZ0HLTw7PgTA2uuaEutrmu2xqP0i6HxLOQJQ1vAupIHWukj1kz6/uaEpXt/ykp
-	 lmITD3IcKEyIwX6gqS7d6quiqTOU0Y4cmymUApZwXVkkJD6Ll7ESqYgYWTSW84oljt
-	 bF16GRsy60D7y4mX6QlpEqz12juE8FRbRlMxa+L+7rSKN+ow/1gQ5d5ahPvqPSEI35
-	 qEGpvi95lnfJsEp8CrkRxN2y+3qdjhYt96RjAx57fA4VNsnYTdX6DDkxsL30lOX/a/
-	 Mlzmh85IddnvQ==
-Message-ID: <84ecba76-5fe7-4bb2-b18f-efc7cda2247c@kernel.org>
-Date: Wed, 25 Nov 2026 12:16:08 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=qo0QHzXU
+ARC-Seal: i=1; a=rsa-sha256; t=1795606272; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jXMlpgv9i0GLXxT1SZDB+DoaP9UfM8Tz7eyHvyxwNe3KESSTgUlovOvBe9tPaQsYGIrICNNKQiKgjZE8rf6QfJfneHVfHlntpcLB9w5ZWOTGOML+v0/tYWxIKo7ACOhG7AYEhNtPiaiJpR+pUjUhksd5JNAlsAa7jr2lrLobNlw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795606272; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4rv5RycQxbT02dsjoESum80afWkEnUKBnp9w2kgGko8=; 
+	b=nKAm3B5mzMyyRlYmCcSvVTQMxtroi2L0UmANanjVKgH2o7sqXbrTuysYaPfRoK5lBMDXWujgtIh86EK2zjDakg6UQofN5S/nejdb2MUaLE44QDuqKrKkfUS2oo+AeTo5QJ2H/1Ayjhq7XFlKdxFT80XWMkGRgoKcp7bHM4SncPU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=qo0QHzXUDHlWZebW7EyErkqgyNWVqXY+MHkk8fuzx0VN6qpt4JzHXyfPi96S2AyppaQY7Md1B6TI2X0p4QDJ7OPiXUQrVEHDToa6Z7NT7OJGevrIOzc9cnvOC/jNKitPmeACl1NuRUQWIWyxlj5DRr6mP9zIkMcjRcV/xbfjcRUEcO65NwRYPzLp8GpvjVPMmtxpuHoWtli2kGyB2IlMXCDv2EOrPq2j9KOqa1IIG7d3nlFZf1nUtlcLuDADYdDrsNQmHwyMvIMSXcbcp2XqcKcrnS1Tsr6lnT3LrHm1i4ft6aXYpCRa+/ymwEtvKqITkEpFstb8rw/zdXjmw1hgGw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=4rv5RycQxbT02dsjoESum80afWkEnUKBnp9w2kgGko8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795606270046330.59459289497283;
+	Wed, 25 Nov 2026 03:31:10 -0800 (PST)
+Message-ID: <7bf18131ce00d8aeab1e01721dc0cd71972ea365.camel@rong.moe>
+Subject: Re: [PATCH v2 6/7] platform/x86: ideapad-laptop: Trigger the EC on
+ YMC events following Windows behavior
+From: Rong Zhang <i@rong.moe>
+To: Gergo Koteles <soyer@irl.hu>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+  "Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede
+ <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Ike Panhc <ikepanhc@gmail.com>, Andrew
+ Kallmeyer <kallmeyeras@gmail.com>
+Cc: Eduard Aliman <edialiman20@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mahir
+ Faisal	 <mahirfaisalantiq33@gmail.com>
+In-Reply-To: <84a3d94cc78ba0a26ed7b0af7cfcbde65433aa1e.camel@irl.hu>
+References: <20261125-ymc-82yl-v2-0-624bdcb3c50e@rong.moe>
+		 <20261125-ymc-82yl-v2-6-624bdcb3c50e@rong.moe>
+	 <84a3d94cc78ba0a26ed7b0af7cfcbde65433aa1e.camel@irl.hu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 19:26:02 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -51,147 +75,81 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: int3472: Use actual clock frequency for
- DSM method
-To: Sergey Lebedev <lsa.uz@pm.me>, Daniel Scally
- <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hao Yao <hao.yao@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Bingbu Cao <bingbu.cao@amd.com>,
- Fernando Rimoli <fernandorimoli11@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261125090921.46652-1-lsa.uz@pm.me>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20261125090921.46652-1-lsa.uz@pm.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Evolution 3.62.1-4 
+X-ZohoMailClient: External
 
-Hi,
+Hi Gergo,
 
-On 25-Nov-26 10:09, Sergey Lebedev wrote:
-> From: Hao Yao <hao.yao@intel.com>
-> 
-> The third argument (args[2]) to the _DSM method was hardcoded to 1,
-> which selects 19.2MHz. A sensor whose SSDB asks for 24MHz therefore
-> runs from 19.2MHz, and everything it derives from its clock runs at
-> four fifths of the expected rate.
-> 
-> Pass the frequency from the SSDB instead, with 19.2MHz as the default.
-> 1 selects 19.2MHz everywhere, but the value for 24MHz depends on the
-> platform. Where the frequency field is one bit wide (Tiger Lake, Jasper
-> Lake, Alder Lake, Raptor Lake) it is 0, and 3 would also set the clock's
-> enable bit again when the clock is turned off. From Meteor Lake on the
-> field is two bits wide and it is 3; 0 and 2 leave the clock unchanged
-> there, as measured with an oscilloscope.
-> 
-> Fixes: e4543de8b6ff ("platform/x86: int3472: Evaluate device's _DSM method to control imaging clock")
-> Signed-off-by: Hao Yao <hao.yao@intel.com>
-> [Sergey: pick the 24MHz value per platform]
-> Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+Thanks for testing.
 
-Thanks, patch looks good to me:
+On Wed, 2026-11-25 at 11:56 +0100, Gergo Koteles wrote:
+> Hi Rong,
+>=20
+> Thank you for taking care of this.
+>=20
+> On Wed, 2026-11-25 at 02:17 +0800, Rong Zhang wrote:
+> > Currently, the ideapad-laptop driver triggers the EC with YMC command
+> > 0x01, which seems to be randomly chosen with trial-and-error and turns
+> > out to be not a command for YMC events. While the devices in the DMI
+> > quirk table recognize it, some other devices do not, making the
+> > trigger_ec functionality a no-op.
+> >=20
+> > Lenovo's YMC driver for Windows (YMC.exe) emits YMC command 0x08/0x09 o=
+n
+> > fold/unfold YMC events, in which "unfold" means laptop mode and "fold"
+> > means other modes.
+> >=20
+> > Adopt the said sequence to make it work on all relevant devices. For th=
+e
+> > sake of caution, only emit YMC command 0x08 only for the known fold
+> > postures. For all other postures (including unknown ones), emit 0x09 to
+> > make sure the touchpad and keyboard are still functional.
+> >=20
+> > Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
+> > Closes: https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n8C=
+p3AzhVQ@mail.gmail.com
+> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Changes in v2:
+> > - Fix typos (thanks Mark Pearson)
+> > ---
+> >=20
+>=20
+> ...
+>=20
+> >  =09scoped_guard(mutex, &priv->vpc_mutex)
+> > -=09=09ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
+> > +=09=09ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, cmd);
+>=20
+> Unfortunately, the 14ARB7 does not emit a SW_TABLET_MODE after
+> triggering the ec with 8/9 or the fixed value of 8 or 9. It only works
+> with 1.
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Did you mean triggering the EC with 8/9 acts like a kill-switch on your
+device that blocks any *further* LENOVO_YMC_EVENTs? Can triggering the EC
+with 1 again makes it recover?
 
-Regards,
+>=20
+> However, it turns off the keyboard and touchpad when triggered by 8/9
+> or 1, as well as without any trigger.
 
-Hans
+So it seems that any YMC commands can synchronize the state of the
+keyboard and touchpad, but only 1 can actually "consume" the event.
 
+>=20
+> Perhaps the triggering should be handled on a per-model basis?
 
+I don't want to add too many complexities to the DMI quirk table and the
+module parameter.
 
-> ---
-> v3, sent by me as offered in the v2 thread, with Hao as the author:
-> - The 24MHz value is chosen per platform. On a Surface Pro 9 (Alder
->   Lake) Fernando Rimoli measured that 3 gives 19.2MHz and 0 gives 24MHz
->   [1]. coreboot's camera_clock_ctl.asl has a one-bit frequency field for
->   Tiger Lake, Jasper Lake and Alder Lake (which covers Raptor Lake) and
->   a two-bit one for Meteor Lake, Panther Lake and Nova Lake.
-> - The Fixes: tag and the note on 0 and 2 that Ilpo asked for.
-> - v2's Reviewed-by and Acked-by tags dropped, since the code changed.
-> 
-> Tested on a Surface Pro 11 (Lunar Lake), with the module built from
-> Ubuntu's 7.0 source, where this file is the same as in media-committers
-> next. The VD55G0, whose SSDB asks for 24MHz, streams at 59.14 fps as
-> its controls give, against 47.29 fps without the patch. The two 19.2MHz
-> sensors are unchanged. The Alder Lake branch has not run as posted.
-> 
-> v2: https://lore.kernel.org/all/20251208035122.2147678-1-hao.yao@intel.com/
-> [1] https://lore.kernel.org/all/20261026111012.33347-1-fernandorimoli11@gmail.com/
-> 
-> Tool use, per Documentation/process/generated-content.rst (Assisted-by
-> tags in commits were dropped in 7.4-rc1):
-> 
-> * My contributions to this series were prepared with Claude Code
->   (claude-opus-5-5); work by others in it is their own.
-> * This replaces any Assisted-by tags in earlier versions.
-> 
->  .../x86/intel/int3472/clk_and_regulator.c     | 39 ++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> index 9e052b164a1..47dc23c5184 100644
-> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> @@ -10,6 +10,9 @@
->  #include <linux/regulator/driver.h>
->  #include <linux/slab.h>
->  
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +
->  /*
->   * 82c0d13a-78c5-4244-9bb1-eb8b539a8d11
->   * This _DSM GUID allows controlling the sensor clk when it is not controlled
-> @@ -19,6 +22,40 @@ static const guid_t img_clk_guid =
->  	GUID_INIT(0x82c0d13a, 0x78c5, 0x4244,
->  		  0x9b, 0xb1, 0xeb, 0x8b, 0x53, 0x9a, 0x8d, 0x11);
->  
-> +/*
-> + * The third argument to the _DSM method selects the clock frequency. 1 is
-> + * 19.2MHz everywhere. 24MHz is 0 where the frequency field is one bit wide
-> + * (Tiger Lake, Jasper Lake, Alder Lake, Raptor Lake) and 3 where it is two
-> + * bits wide (Meteor Lake and later).
-> + */
-> +#define INT3472_DSM_CLK_FREQ_19M2	1
-> +#define INT3472_DSM_CLK_FREQ_24M	3
-> +#define INT3472_DSM_CLK_FREQ_24M_1BIT	0
-> +
-> +static const struct x86_cpu_id int3472_dsm_clk_freq_1bit_ids[] = {
-> +	X86_MATCH_VFM(INTEL_TIGERLAKE_L, NULL),
-> +	X86_MATCH_VFM(INTEL_TIGERLAKE, NULL),
-> +	X86_MATCH_VFM(INTEL_ATOM_TREMONT_L, NULL),
-> +	X86_MATCH_VFM(INTEL_ALDERLAKE, NULL),
-> +	X86_MATCH_VFM(INTEL_ALDERLAKE_L, NULL),
-> +	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT, NULL),
-> +	X86_MATCH_VFM(INTEL_RAPTORLAKE, NULL),
-> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_P, NULL),
-> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_S, NULL),
-> +	{}
-> +};
-> +
-> +static u32 skl_int3472_dsm_clk_freq(struct int3472_clock *clk)
-> +{
-> +	if (clk->frequency != 24000000)
-> +		return INT3472_DSM_CLK_FREQ_19M2;
-> +
-> +	if (x86_match_cpu(int3472_dsm_clk_freq_1bit_ids))
-> +		return INT3472_DSM_CLK_FREQ_24M_1BIT;
-> +
-> +	return INT3472_DSM_CLK_FREQ_24M;
-> +}
-> +
->  static void skl_int3472_enable_clk(struct int3472_clock *clk, int enable)
->  {
->  	struct int3472_discrete_device *int3472 = to_int3472_device(clk);
-> @@ -35,7 +72,7 @@ static void skl_int3472_enable_clk(struct int3472_clock *clk, int enable)
->  	args[1].integer.type = ACPI_TYPE_INTEGER;
->  	args[1].integer.value = enable;
->  	args[2].integer.type = ACPI_TYPE_INTEGER;
-> -	args[2].integer.value = 1;
-> +	args[2].integer.value = skl_int3472_dsm_clk_freq(clk);
->  
->  	argv4.type = ACPI_TYPE_PACKAGE;
->  	argv4.package.count = 3;
+Considering that triggering the EC with 1 does nothing on newer models,
+perhaps we can trigger the EC with 8,1/9,1 as long as the trailing 1
+recovers the event delivery.
 
+Thanks,
+Rong
+
+>=20
+> Best regards,
+> Gergo
