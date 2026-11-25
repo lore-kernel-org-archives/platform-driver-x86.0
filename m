@@ -1,78 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795649303;
-	b=IB9qeWK3lk86k3c+VXoVBNkqxuzNHx7755wE/OeqLBLwn6Sb5DYZeWOZ/PJH5phpjEUA
-	 sN3gIg0t+qm2v7+TPxbpZZm/itv4CWmsUe/fjhZXo3zuJ/3nIP24J1LTNDcThohHAoIaD
-	 6LDGu8e7ZpPhCLgOG/JERv645IHrk3Gy9RMaSEnuZ6pDyCCinyb49SCZPhxySTtBl5DlT
-	 pQxx6Ecyki50/HBR2KITrhdO/rf/xJ/vsYJ9Fsj4qB+xj5RTbj1Zelhuk+5vPyuOBbcYT
-	 cDwrlx2M6YxkeAlQeygznQNQNli8P45MTQvauHvNQnGLj1MoQ2EJ0XX7oTCk7ihoRhA==
+	t=1795649321;
+	b=Zc/mkYPZgllSTLO5/l7c3LRix/VhpJEmM2FX2ijSPEwJh5jphiSbNT+w4sZeQoAveajr
+	 es222QJAPHCp6ls5wTkChRrSObl/AjJqC4Q59O+yAqcrD0q/eqJidQTRMWDMi5clL/1fn
+	 sxP5MRG+P4E5gwOgtMKGE4h3Pvd4X45wKPogpDhgiXEv69U8EUtNHjSEYZMRX1FqKtpgq
+	 P2r46BnnnJeZmpKmvdlRA74zyGmcfc1FYOW/akbuu/866s+sFd578N3SewW3Xog/Ixpe6
+	 jFiTy6l/o0vxe8DbHwu21fOYGlfP5qYeZGC8o/TfE93eHoui9LOKf43SXTNjvCSbThA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795649303;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795649321;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:
 	 In-Reply-To:References:Subject:Message-Id:Date:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=WEzyNmdo9KVVo6P7hVY3A3Nk1m2HIc3texOdrqPC9h0=;
-	b=zvWxmVvDs+4g39FMARXkVo8QEZsS+YgdhyRzcdernE+plUWTOCVNJn6t5PRIsQWe2G/Z
-	 byrc5wvHahSKxXKvSAfHnJKoyurmkwbjCYAJZ1OHQhgKvka6bWWp2uyIho6zVjW4LJLCU
-	 CdEMPQ0awMAfdlHWsOzBAh9y8Vsku96Mh85imosr0wnhx4w9g+2L1WzxgSB1B4LZciWwP
-	 GnuXBOssB9urC8z/ZwptcjWlSqic+DQMXrhZFGtWdZYKRBN2Fb9reiNpmYg7OfCILRa1+
-	 2pvnlXf/ll6bLj36vNFKEayUMQIou3vsPyolaXzIjFqPcjIdjrVcGLG/slCmPXO/rJg==
+	bh=SYP6lfPeFWSP2++HKhm6SwHrewFpKVlzGh/7WBXkbSE=;
+	b=Sw8XCt155LOZehEQQj2XYrbuRa8+kc74LCyc2LMLmvnarYiWRP4xpi3WMx2Q3G/bZZTf
+	 e5Z7SKf4kQhQqlJSL9CJH+32Trdq/lBl8aIyA8WBOKzdE8BSinxuB6yqDLHjUg9Ltkubf
+	 t8x1nD7fYnudvWogJoxSdOQS01sb/45L7d81YrXXCDVNRJhd0Xo99LlNg1ogozSevTrM0
+	 Q8nBrEXiDp1bvIbFgxGn4OCeFKH49E6gDXRL95inuOcUmX6NuoKo39mx9QCYnb/sOO/RK
+	 Ne7eW7qTbO5YuA18ZKPKbNUcyLI4nPswGGnYvQTHIPI9KQ3I9jozoFMWchIWv5YwbNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ivcniLXM;
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LnYamxh7;
+	arc=none smtp.remote-ip=198.175.65.11
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9D606A331
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:28:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5AC9D606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33721606A31E;
+	Wed, 25 Nov 2026 23:28:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 33721606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ivcniLXM
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LnYamxh7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795649304; x=1827185304;
+  t=1795649321; x=1827185321;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=rpbWtkHJ/KqR5a1bZORP0S+f3x4andCkmbluOJIZzxs=;
-  b=ivcniLXMu/zGBSCqSGr34ArYEsU8n5wuKCtt0yHGlOai9RQdjCoA2yjN
-   HnRoNOnszTTOpQ8Cqlvv2q8u3ggOCebJlmuOwi57fExDbLACRH3voQpTy
-   W/sm4/goLiBzvLfwVlbJewrSW5QiyF7kyJuiGx0f34bWIXLYKdpj930kK
-   jX4KMVGIsaPoHPp9K8fZIoyaqrompzx2EHv3WlXdizaLIiMX7tcp1znej
-   oiqN1pm4CEK1TRWhZJnNrbyPLr8LSfGJrrIijE2NhDcrEYTabGoUjawNs
-   BKSnb60Zj/avm/13HGMc7e1GcFgx+1ViGm9ZjqKIPGosD8KSGZnpG9E9t
-   w==;
-X-CSE-ConnectionGUID: uwmYaiV0Q4aS3ToxY5eVJw==
-X-CSE-MsgGUID: h5ZlumenS2yuBmeuMwISPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4539588"
+  bh=d97WQeRKMr+7348RlaZUJO4IriUW5mBJn39qaoByShQ=;
+  b=LnYamxh7/1bNzwisjCkMrsv/uKolx9J8/BOxcXFYqSa79xLGNzXc5Uve
+   OimP9spqA4KIK565Sqs+K7udM7UMmoOkgBrQ+8YRsJq/3n62fIBu6FoEh
+   c5M0vXE4JRcu15XBb9imWar4fUi6yE3VGgcdOxCfoJPKh/OuigE+wpVZM
+   qNdH3ObB3YlJeKhKZdUA3l4nuaWVGb4g8RpM5F6T0Szh6JZBJ/eF6X7U1
+   +bTEkLj9wYslkTeNBQSQ2cI4YQmRgL1kubi+hDfr3XDbo2Vzk8/soq7RF
+   4eD3Uj+ykL/M4M5qBxxgt5bi/ddzq01cj6bEgZbz9XU4D5DHFELQC7xcZ
+   Q==;
+X-CSE-ConnectionGUID: pVVQfkeaQgGiA2itG9sSZQ==
+X-CSE-MsgGUID: rwyjqvlpTmG3MNfxcKU7zw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4436585"
 X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4539588"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:23 -0800
-X-CSE-ConnectionGUID: ggjWknxOTTip5wsf0v/mHQ==
-X-CSE-MsgGUID: 4W55myQJRfaW/daHOHF1uA==
+   d="scan'208";a="4436585"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:40 -0800
+X-CSE-ConnectionGUID: /tCpGy0bTPuLSQ7lSQAcmg==
+X-CSE-MsgGUID: y4WVKpJwSaakf+YoTaCZiw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="11869144"
+   d="scan'208";a="12311772"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.96])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:20 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 15:28:28 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, Jeff Hagadorn <jeff@aletheia.io>
-Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
- Derek John Clark <derekjohn.clark@gmail.com>, 
- =?utf-8?q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
- Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20261118052557.143089-1-jeff@aletheia.io>
-References: <20261118052557.143089-1-jeff@aletheia.io>
-Subject: Re: [PATCH] platform/x86: oxpec: Use the APEX charge registers on
- X2 Mini Pro
-Message-Id: <179564929546.9828.13919431875495486305.b4-ty@b4>
-Date: Thu, 26 Nov 2026 01:28:15 +0200
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, Antheas Kapenekakis <lkml@antheas.dev>, 
+ Benjamin Tissoires <bentiss@kernel.org>, Moad Tarrih <tarrihmoad@proton.me>
+Cc: Sercan GOKMEN <gokmensercan@gmail.com>, 
+ Burak Goncu <burakgon12@gmail.com>, Denis Benato <benato.denis96@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20261116-asus-wmi-kbd-readback-v5-1-f2f170836bf4@proton.me>
+References: <20261116-asus-wmi-kbd-readback-v5-1-f2f170836bf4@proton.me>
+Subject: Re: [PATCH v5] platform/x86: asus-wmi: Ignore unusable kbd
+ backlight WMI device on ROG Strix G814FP
+Message-Id: <179564930314.9828.13260879670237100649.b4-ty@b4>
+Date: Thu, 26 Nov 2026 01:28:23 +0200
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -86,16 +89,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 17 Nov 2026 21:25:57 -0800, Jeff Hagadorn wrote:
+On Mon, 16 Nov 2026 11:48:12 +0000, Moad Tarrih wrote:
 
-> The OneXPlayer X2 Mini Pro was added as oxp_fly because it ships the
-> same system board as the OneXPlayer APEX, which was oxp_fly at the time.
-> Commit 0ccdf9a1381c ("platform/x86: oxpec: Fix Apex charge limit
-> control") then gave the APEX its own board type, because its EC keeps
-> the charge limit and charge bypass at 0xE5/0xE6 rather than 0xA3/0xA4.
-> The X2 Mini Pro's EC does the same: values written to 0xA3/0xA4 read
-> back, but have no effect on charging, so the charge limit and
-> charge_behaviour are not enforced.
+> On the ASUS ROG Strix G18 G814FP, writing a level to the keyboard
+> backlight brightness in sysfs changes the LED brightness, but reading
+> it back always gives 0, and the read makes the Fn brightness keys
+> misbehave.
+> 
+> The firmware reports the keyboard backlight WMI device as present
+> without implementing it, and the backlight is actually driven by
+> hid-asus. DSTS(0x00050021) always returns 0x50000, which is level 0
+> with the presence bit set, regardless of the actual level, and every
+> DEVS(0x00050021) write is rejected as an unsupported method.
 > 
 > [...]
 
@@ -110,8 +115,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: oxpec: Use the APEX charge registers on X2 Mini Pro
-      commit: d30cf7b16234df677c264b19edc8278a518b7a09
+[1/1] platform/x86: asus-wmi: Ignore unusable kbd backlight WMI device on ROG Strix G814FP
+      commit: c53ca788e3a20b2319c3b6fbcada620b2299bb80
 
 --
  i.
