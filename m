@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795648894;
-	b=f4yXroAUsnNy1FlZv/ev/pCgasvU41YNtQB/4P1JnvBYlfSWLmYqDtsiXpmP/iqO87Ic
-	 4Zqa17g4khTbR5Hgzjk8TuNVT8lTkU25w0I7kb3dMEBRb3qp9+cmw2Mby29Ni3KzYom8v
-	 GPHbYuQNppN0B83lJZzHyk7EEVGP2ASeiW4HfpMX5TajdrNBqmL9hia4r/Mf8nsARuDrn
-	 vvgC+xLtPa8ev3UnhFkEPlPP7EZly/M+V1HF+owZYNn36znNryY8OVTbM/bb0m9KJ+pEs
-	 zu8Pm4lNf350Y0vwZyhGlY7ww4U0nAc5CxxuFavpoTzmOot7hDeR7qaZjlp6y0tV+9w==
+	t=1795648895;
+	b=pZmIID2j/VJqzm80ELfq1a7/t0Ncdz8z8ybZNUPCs2iBhwtStNdwR/XW6Y7EF9B1C5NB
+	 Aym8VSW/ZpZ78y5LMtVjx8iDCHhlfn/ZUY6rHLY+NgLMzU/cpJHwYaFE08Xz+fVvrPd4+
+	 0zYYx/uKLL0aiVkf1qzwH97Jx7J1ow+jMRh+Qt7QjB5wpPvy7VZtFS77doN14VsjnEnNS
+	 IqaNaPAYbQd5pdzk44yNsNpEMHr/b8SodvXim+YxtVI30TSkViTt+0GNKIGTSUe4kT4TG
+	 pXTAO6Dpf3c4PTGluOmiVR8EB+dJizwNrW0hmnH1Q9vEqnSuMGxvyNT9vdYPLClEF3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795648894;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795648895;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=gj9qMSHT+Mx/LydFpV6qogu9dyCtEpqGaRibxJJdMRU=;
-	b=fGLc7BkKIh6hPzCN4NqO3RuvziqM9OsYnBRXZLGty7sVA8qOENxC5AUP0UIcTB7kosLD
-	 RBnu96DNFaSz4MvRu2AJK5i4x5pgCxQTc9UkxJqeobaoE4Gj3ly8wL9sRnbY9XPobw61Y
-	 byHVxo193D1qaEJMOb45fz4OPb8ipFanXxi8LIjBW+2HUUDeVCu+NUR+9QmuHg9Sh+y2z
-	 x+G1567UxzW4Lcjaf6mgGXLHAPPZES2KRr9/57XvouiUfA8dttC+U48F4SOwj3NTm2T6u
-	 GA5O2Z8LhNVCGlc6EeDsO8kpp66+5OQDcQkDR4rSLZiS1pgazXMtNwbuvvnyJPVrrNg==
+	bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
+	b=JZWaARMIkgqAv9KtOzOOE+boQ6oQ9cenOA2VdUeYmZPauSHDyoirjvcJSNf9suiXNW53
+	 ICGZ/DzMBYpykRC8uJNolpIPYkLnso7UDY8GqTev0NRrkMytxTkKN6zsiYl/2HL/Ih87g
+	 UjNTtj9bS0aW42SuF08PD+nUEKdstT4ONe/PErb7zd7D/2OT674MW9uOUKb4G+RaH7KXu
+	 FlbX3vOLLXcGvOuMzJUHrW/oZarXkhe4peUJZw7BqNMGR+z/okyjuexOcl0xEf1VV690Y
+	 Vw/8Y0VELF3gr+7t2FLfDHsufYpAWUPtA5mIgb98MeSTVR5AXeqsNyOaZ69lKOObaIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Hd+TBogV;
-	arc=none smtp.remote-ip=209.85.210.176
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EduQ3it1;
+	arc=none smtp.remote-ip=209.85.210.178
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCE0606A336
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:21:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9DCE0606A336
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E77606A32E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:21:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C3E77606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Hd+TBogV
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-8b58d6f67a5so3238169b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:21:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EduQ3it1
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-8ca6a12efd9so2175677b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 15:21:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795648893; x=1796253693; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795648894; x=1796253694; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gj9qMSHT+Mx/LydFpV6qogu9dyCtEpqGaRibxJJdMRU=;
-        b=Hd+TBogVQCZQ0QxyAJE9K3LubfJJ8SKyDOF6Pb7z/3tawizgA103BN7DnTi2QHz3GN
-         rbFrADJ5Q/5sTmKUA7O+LrcdY85+at4ht1qDUiGtjdBrTTZm0I8Ity3HPHCdseV4dqvP
-         ATMQiPrAfaWnkyQDhXSgBPJtwIAB/yOie8PGcPYyz3UWhuTL/fblj2bvrquqshtnyoz4
-         7G6nBGltJcJWOMyWkm+fNy+3KwCj8y1Fa7IrwuR05Y9vsNkY67UM4sosD9uJbhtFtXwa
-         8lsMha1upkbl4V5irEARJWX+oSUYkbjCC/W8bsaSYh7WJlTtPor9YUnCAcA8GdFzonDW
-         c1Bg==
+        bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
+        b=EduQ3it10AvwcrGZFygvafX4/s08ajPrZ9AFWJASWXvAkNzzb6C0JwTNLauQAZEn57
+         8sbshVnuB/Bzlup5YhWPh4OyOTkWtrbgapT+9XioRGKoKAcSZrIIB/byvCoU8fz1Yv8M
+         0QADQwsC0vX7O0DKa1loHDk/wjHyrCBaMU/w6QggYVd/3eoZi0nmGJP+dyOZjoysWKdA
+         Z2U+OxVTDohfsxXfQ5g59D2w1+RWJx4Ao2LG0fnBHQn8yFkmRE21KMr/i7f6dF8oII3N
+         JVLrPACYEgQVor8fpl+BLLAKFX6U5yvuggCsm+/ulZgS2RPv6P6l/woNPtSFvs3sTj5I
+         XSOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795648893; x=1796253693;
+        d=1e100.net; s=20260707; t=1795648894; x=1796253694;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gj9qMSHT+Mx/LydFpV6qogu9dyCtEpqGaRibxJJdMRU=;
-        b=HeVyh6vahlNiQHa0HDsH/T23IlPin5zki5e1L+zeWd0t19h1OPDgbm1W5dxWC2lmQl
-         +hEaMscdfDeRfz3v64jdBCPVwJJtvVwC6E06LWaZrkn0OhbBzznXQ+bxfRtyIyoSKH0M
-         VENYwWtK1TLuDu57oHZ+r3cVg3TPKRoSCLunOyGThfkxsZw0g49D6qSBYLjH7aIX7fuR
-         boScquUbpQpVSK9lhlbwvAnhJcTak6ZsxPzq3GtbT9wc0B51SE5OGEBErgfj6l72cjh1
-         gIakyHadvbc3t/czuQ3FTjMMlM0NS4OkJxELTd4Y09tjbmo6FzXFr1+5zRW2Tkd/XGPv
-         WBcw==
-X-Gm-Message-State: APuU4Z+vdiomARb1ayGDdI3UvMg7OO4eUuFPNCzKHB1ir5MO0kDr1NlC
-	EuvGfGkfnTGa4bZjFXO6gIRoIx2ASi5BRsu0DpiHLkJlipmCMf6B02K8
-X-Gm-Gg: AZFdTZfQxR2CJXr3Qb8Vz0ubWBGFN1L+gVS/w+f2zfR0HcMiJJzwHH8j+71G+8Ih8hD
-	KHQLKdCwc2BPRdQveYXEX7Cfo24u3o8u5iYYcW7wOrtdj+341GrFsvGzVC7e3qz9gz7QeJkAdGF
-	LpzFtN+kPc8NqxiWPtn9tivgepqRodtyFH+FXJ4ircgbE6XMVbbEq2PeLNyBWvbdVqkJZ9W4o77
-	T2adn/S5XGUgvY3aGkLBXLbDySKIIovTy8swq7jaalm0IOrWwtdjIbju4IdB6feJZDbHnXLM8aF
-	P/kqRRtSCuBQSW37twHV/yU28cLPPa5AWGip9NF5cR3r79OToreiJCLJkXV4Z0lErJnOKEGtN30
-	0Q9XaBGRLnXCav+C6U1MCGKwQNMxv/SXQNANNZmPqp9oUeamJiV2SBq2DAZOll0gGwacL9R5h2n
-	JbvZ2XJID4lLhoYhSAy3evNPJGPpgrxmPmU+UbVB9oTdPPy1o3B9IQprsY521Gx3cHAIMhKU5WT
-	NTja4VCnEXG5turLUqnJTBKsL9EAAkTkdUV1jBVFR85VDY28FCmEs/4l/kzsghUOLQ45+NmB20h
-	LQSgMMFIgixq7iVC0nNh1Jt2SOoplIqzQxT8dguX7ko2aU8fr9YUWQ03bzkE5BAOND0/CLAh3Za
-	nfRxO1t+QC2tE182KiIdUIxq7z92WfuEuBk2Om36gTyxzylr3DY8zT/R47Ncu+lgbjeqQBpRA9Y
-	Bl1j1PiXq5EE+p7I0bjhzxAWY=
-X-Received: by 2002:aa7:88d4:0:b0:898:22b4:c8c8 with SMTP id d2e1a72fcca58-8c8794b8edemr17587263b3a.2.1795648892877;
-        Wed, 25 Nov 2026 15:21:32 -0800 (PST)
+        bh=pCW63ny83XiZTDhtRYPG7u2cPmHKUXsowEsKPqJdTRw=;
+        b=BVfoKdaprWCBOmnIVj8zyV9TNUDrq4AN8hOaQL1LcOslBm3M+u5mhocBEmqaXS9aTM
+         PEhtuCaqDjh3qA58Cg8N0PwXc9HMM0P1CZzCYo9B99L0jHRyh+5ucQ7gALfofeRmMVW/
+         avhjGPWggIGg4BR6A3WvXbhj4er35C8k0FKpeKZNBYj0i44PnQxeBxmjF52nF6Jd462v
+         TyYT41edchOctG2moZ3yO/HHC3AOsqiw2H8xwmlp+IM27RyKlYzxqCQxMvg8+WFJCfd/
+         PO5Z76Shph0hre/iRf750heBW2YlACE+3fLoAK5cX9G2mJYfSjipj9oeLAOh458nJghO
+         h5Mg==
+X-Gm-Message-State: APuU4Z/ysyQOT0vv2XTDWksKo8zhNtCGNsLZR1siDFhgjvc9Voe3r4Wd
+	Hl6Cj3cIxBVIARlvD4CXDxra3+PMuuoD0NXXG8Dsa2cgBYQB7Zi5PvLg
+X-Gm-Gg: AZFdTZfQfRcK00TOpS/wvZlmNQkph1tgPf3LmKRcoC4zfkZRUNzTthgpbVKPEHzU4TL
+	LLgQ2nie5aIQ1tgvcAbc1Ikz0jQQ8ah4/6bB+WneORnNbdgen+o2qRJ1K1iv2i+AAVosW2gWzE3
+	CR+lPKzmEO4xCo1CPZ0uuq+Uxnj/XfjLO80wO5dVKVwKaJE9lrHMCaZj4Y1ihLcszukt7qAeCRO
+	CsgD8x5l+gEtanloIL1CE7UgRi1f/pepd4+JM5MLAKTJliNkNRusFHMLulD+C04BCj11Mzf0shq
+	3B355+MFox3mjhXBTkYeGfeMY+rmV+Fu5tA3Oko3ey6KMaRv+LaV+JNq65L7iUMmXEQBivmR/Ut
+	lOG5gJoLQReK0KspMNun2+47VMuI3OX2xgmznlw9BJprS0RXPR5C31LYb6ipwFX6gVqDBpvA+QX
+	S5trfW0HsvVF/tLyXxpcC0FexoaTjS3eSIH21kgiSt8CXzK0xSC2MSxplGeJQ86GM6xWYjh3dUD
+	nKKaESQWxXMJp0db0v0pN5Xky8WauAF4oS0qVggqPy/BoHXb4JUsPGQZTE6NcynCC/zh/7cXgO5
+	8v3Mg9qI2piIq4tn9jeqXLz4/nmKaK8OvckX9I7p4QPVlTG/ynhvU0RNDV+1MJUoUKZYjrj/z1F
+	s0A7cgetJo4obc7Sk9SAsegmaKmxoMgsREsq/lbwDlsky/wXJ2x4vFBGD46K3KTYQT/+h5d8O1w
+	4UJCCs1Yom28xkZ2XbTfHD55o=
+X-Received: by 2002:a05:6372:a748:b0:3e1:885f:b4ab with SMTP id adf61e73a8af0-4014a27e905mr15369180637.8.1795648894120;
+        Wed, 25 Nov 2026 15:21:34 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c873b25bfasm9864471b3a.46.2026.11.25.15.21.31
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c873b25bfasm9864471b3a.46.2026.11.25.15.21.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 15:21:32 -0800 (PST)
+        Wed, 25 Nov 2026 15:21:33 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: Matthew Garrett <mjg59@srcf.ucam.org>,
 	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
@@ -88,9 +88,9 @@ To: Matthew Garrett <mjg59@srcf.ucam.org>,
 	Gabriele Mazzotta <gabriele.mzt@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] platform/x86: dell-laptop: Don't use an unread keyboard state at init
-Date: Wed, 25 Nov 2026 15:21:08 -0800
-Message-ID: <78b2d044b90dfae5dca66c5eed5cbdfeccc1f4e1.1795648586.git.rosenp@gmail.com>
+Subject: [PATCH v3 3/3] platform/x86: dell-laptop: Make the charge end threshold unsigned
+Date: Wed, 25 Nov 2026 15:21:09 -0800
+Message-ID: <d46ed46896f3712e8a5368f9c2d8ef1bbc36f815.1795648586.git.rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <cover.1795648586.git.rosenp@gmail.com>
 References: <cover.1795648586.git.rosenp@gmail.com>
@@ -105,55 +105,43 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kbd_init_info() ignores the return value of kbd_get_state(). If the
-call fails, the uninitialized state on the stack is used to set
-kbd_previous_level and kbd_previous_mode_bit, which are later sent to
-the BIOS when triggers are enabled or the backlight is turned back on.
+charge_control_end_threshold_store() passes a pointer to an int to
+kstrtouint(), which only builds because the kernel disables
+-Wpointer-sign, and makes the following "end < 0" check dead code.
 
-kbd_get_info() has already succeeded at that point, so a failure here
-may well be transient and is not a reason to give up on the keyboard
-backlight. Start from level 0 and the off mode instead: the code below
-then picks level 1 and the first supported mode, as it already does
-when the backlight is off at boot.
+Declare end as unsigned int to match kstrtouint() and drop the dead
+check. kstrtouint() already rejects negative input, so the accepted
+range is unchanged.
 
-Fixes: 02b2aaaa57ab ("platform: x86: dell-laptop: Add support for keyboard backlight")
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
-v3: unchanged
-v2: fall back to level 0 / off mode instead of returning the error
+v3: make end unsigned int and drop the dead check instead of switching
+    to kstrtoint(); retitled (review feedback)
+v2: unchanged
 
- drivers/platform/x86/dell/dell-laptop.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/platform/x86/dell/dell-laptop.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index c1a51bf95c25..eca348497ac3 100644
+index eca348497ac3..1e2867f182c8 100644
 --- a/drivers/platform/x86/dell/dell-laptop.c
 +++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -1455,7 +1455,7 @@ static inline int kbd_init_info(void)
- 	    dell_smbios_find_token(KBD_LED_AC_TOKEN))
- 		kbd_timeout_ac_supported = true;
+@@ -2380,12 +2380,13 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
+ 		struct device_attribute *attr,
+ 		const char *buf, size_t size)
+ {
+-	int ret, end;
++	unsigned int end;
++	int ret;
  
--	kbd_get_state(&state);
-+	ret = kbd_get_state(&state);
+ 	ret = kstrtouint(buf, 10, &end);
+ 	if (ret)
+ 		return ret;
+-	if (end < 0 || end > 100)
++	if (end > 100)
+ 		return -EINVAL;
  
- 	/* NOTE: timeout value is stored in 6 bits so max value is 63 */
- 	if (kbd_info.seconds > 63)
-@@ -1472,8 +1472,13 @@ static inline int kbd_init_info(void)
- 	 */
- 	kbd_info.modes &= ~BIT(KBD_MODE_BIT_ON);
- 
--	kbd_previous_level = kbd_get_level(&state);
--	kbd_previous_mode_bit = state.mode_bit;
-+	if (ret == 0) {
-+		kbd_previous_level = kbd_get_level(&state);
-+		kbd_previous_mode_bit = state.mode_bit;
-+	} else {
-+		kbd_previous_level = 0;
-+		kbd_previous_mode_bit = KBD_MODE_BIT_OFF;
-+	}
- 
- 	if (kbd_previous_level == 0 && kbd_get_max_level() != 0)
- 		kbd_previous_level = 1;
+ 	ret = dell_battery_set_custom_charge_end(end);
 -- 
 2.56.1
 
