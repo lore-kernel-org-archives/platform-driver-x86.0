@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795643151;
-	b=dXwKWmVxMaleGiTLUxuksildIl138hnFesfy2Hxt08esuQQipDpCDpZiZqooAE05W1yp
-	 fOLWPMmcEaSiy1p4zIYhuEO2IGnuiUdjcislV09/D3lWHhFnlotWXmwQI94fVymAolY/x
-	 Is9qmeDbQ3YdJFr48di8V4dbuF3KzI68/YUospiFN2IRLCEvo++9Dxh165KFdbjfNZUNs
-	 AmBkneQduTAAYfSZN2Rh5YZC4z2gw0xg9weUbR3e01q0Nrd32oSPm9vHpIksP0rPAHH5X
-	 222JQegyufDPkWaC6f7zv3OhSaRCZzpieVbXmBr/NcOfsnDamM98xGsQwcmZt2TMDMg==
+	t=1795643187;
+	b=MzMBf1VpzzEzfAaEMapQuPHXD1sJVqoj+LDLVouBCJcmxq9SX4Fo90aCVBnG8h47YSny
+	 fPc8q1l0sZwrc8yD9ohVPGW6oarh+mr/xRMZ1xfWCnuucuxD1WzWnqfTrIguLM4a2zDZO
+	 c931/fuHUuqkPsECbTFYR/mzb/m8kH+54WRiaxOM1Z/LuyMEUQYOL/MxIigxdJQMt6B7X
+	 dx75fz8NHXVkLIxZJqktEa/KEB8aLPSie8wXUPW6ol+K47aTSHJRntUr9kSjtFg2fxMv9
+	 h68LcY8wmI0/iAiKaHsgY1hY9+DvK2jZs2nAMBaTpt3tMSe4WlxYEIr6ed6TPyKlOoA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795643151;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795643187;
 	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:Content-Language:In-Reply-To:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=7+oajNl0F9lMsPdwVpR2/5jEoIJMB/r1VG0BoU0DFQw=;
-	b=EFbTjHd+6RxSibpGBX/4KiK3R79g8AnNnxCXJeMHnOdp8k3uZDlniSukGys4DFhg3ClP
-	 Fxy+6hewu+kQN/1pCEGuMFwEQI3G8APHDzelZBX6CGIQJpeLp6bwwJ9GpQQietOrohQIx
-	 TwHBEjQ/+c6sRFygHwmOJ3aNr1PcBJNnuvxM0/4mVk8mRWSJoetiqLTCGydJ4V5iyDc/l
-	 FAGiq1XLG92Ta2DppniOIrS3rvg3QEJAfEYSJv5kJp7TVPh6jUPxBpbEkxgCZrAhyfjJw
-	 6tpoZx0q3LAi7UuFQflv6N2jwNfVXh/EpCErY1qoe6CmgbbqQNcS4lh5HkjYjtZJm8A==
+	bh=sKGIq+btLwQ1Z2Nr5Fhq2wgssMh/R3J6vidIxhGeHDA=;
+	b=sSwBksuRyJBSMCMDS6RbRnTEkKTepH4lH3UlJksfr54e4LGibxEPPkw6NGA3OOSjgVX7
+	 nrtK7rI/wG9geboDafEwY8HvHe5r2dNZdZz8HizJ9q7QzSqqKyJ5+ZvMr+n2Ic4cytNB3
+	 8h3/1oUt5tup6eyb2yWWI4hb64efihb8s7N0oP1p4oVD7hhN4Bx8ShOLFFO5gyTNgnJP1
+	 CDSAYlnVqHLoMe42BVX9R/yPjcpU2ZVDVDHUPH4dxOXBlKFGUFfcvn0yjwTdaCmjBBnTB
+	 me3VhHkvPrATA2DAzUXN3AxWpjavHMwzDgNsaL8zsYOJjazgcHZGE34U2KTCcojjHcA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a/7EB7Q+";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gPDZu7hl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AAB606A31E;
-	Wed, 25 Nov 2026 21:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EA0606A31E;
+	Wed, 25 Nov 2026 21:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a/7EB7Q+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D681F000C4;
-	Wed, 25 Nov 2026 21:45:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gPDZu7hl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9308A1F000C6;
+	Wed, 25 Nov 2026 21:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795643151;
-	bh=7+oajNl0F9lMsPdwVpR2/5jEoIJMB/r1VG0BoU0DFQw=;
+	s=k20260515; t=1795643187;
+	bh=sKGIq+btLwQ1Z2Nr5Fhq2wgssMh/R3J6vidIxhGeHDA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=a/7EB7Q+uwg+vbOlS7Xv/O3Fkpse4c6rtUYVgd0HSJiBEloJnVE/hnvnXYnDXq4fj
-	 psWoWL38WcVFvwWDsistpcPDMLa94URZDqsWPUgO3syGU/YFKkeQk43u4XplJRQvJI
-	 FMBKP5l91QEgUWJXglQMFN2f0gcKfMrsBWRScV/+jAzgdU1aVfvNJZHzoV4Ro94I54
-	 UOqZJjra5jkpGWVWsUmuPFg5hUdX2oDnnU6K0rb3i/JJI1Kkuvoj9G2louTZNNMwZb
-	 QKZH+mkmFijDGWlqG8ADC9rN9t1XbWu2FsLuq8/iee++Q6FDaz4uHN4qDBHz+mj4t8
-	 YfhBBYP1K+hEQ==
-Message-ID: <edf25f83-2e1d-4f3f-b263-75d8adc978a5@kernel.org>
-Date: Wed, 25 Nov 2026 22:45:39 +0100
+	b=gPDZu7hlMCcYvLcY7ml5FrSK6dQiOgJwMpHETbh5/v2jJjapoY6+mdfOSOWIUYW+y
+	 xXBALBF7gp+5wNhFItKfxJBkW7Uisnt5zIyCEPURZXH+DyfOEFAdIbQ/4QhPbahw9P
+	 Fl6PGUc0fhdjtzPpR7aFzaVJJDlOZPRr5uFhnXAOdPdVmNn+gyIguy0qiTrm5xqCQk
+	 1FhED0CKA7y1rt5WMGPSo6n0VhfsPg7Gw8OAfYhgbgZ043UkPftfrTn/inap0V5IS0
+	 TYY0o41CEDihxaTN/b9tfBRpcJqZxsCO4tiQI29TnoXoOpoWvd1NMlAwm4g9OPhzs+
+	 axVrEVf9F8u+g==
+Message-ID: <67c6c65f-0958-44fc-b258-f33857f1cc17@kernel.org>
+Date: Wed, 25 Nov 2026 22:46:23 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -52,8 +52,8 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: mahua-lenovo-thinkpad-t14s-gen7:
- Sort the TLMM states by pin number
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: mahua-lenovo-thinkpad-t14s-gen7:
+ Describe the Embedded Controller
 To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Sebastian Reichel
  <sre@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -63,25 +63,30 @@ To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Sebastian Reichel
  Bjorn Andersson <andersson@kernel.org>,
  Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abelvesa@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
+ platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 References: <20261123-t14s-gen7-ec-v2-0-3420a6202366@oss.qualcomm.com>
- <20261123-t14s-gen7-ec-v2-3-3420a6202366@oss.qualcomm.com>
+ <20261123-t14s-gen7-ec-v2-4-3420a6202366@oss.qualcomm.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20261123-t14s-gen7-ec-v2-3-3420a6202366@oss.qualcomm.com>
+In-Reply-To: <20261123-t14s-gen7-ec-v2-4-3420a6202366@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
 On 23-Nov-26 10:35, Abel Vesa wrote:
-> The TLMM pin states of the T14s Gen 7 are ordered by node name, while
-> Qualcomm board files order them by the GPIO they configure. Sort them
-> by pin number so that new states have an obvious place to go.
+> The ThinkPad T14s Gen 7 has its embedded controller at 0x28 on QUP
+> i2c9 (ACPI \_SB.IC10). It uses a different command protocol than the
+> Gen 6 one, so describe it with the Gen 7 compatible. Its interrupt is
+> GPIO 66, as on the Gen 6, but the firmware describes it as edge
+> triggered, active low. Using a level trigger makes the handler fire
+> continuously while the EC holds the line low, with no event pending.
 > 
-> No functional change.
+> This provides the EC hotkeys, LEDs and keyboard backlight.
 > 
 > Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
 Thanks, patch looks good to me:
 
@@ -94,157 +99,50 @@ Hans
 
 
 > ---
->  .../qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts   | 102 ++++++++++-----------
->  1 file changed, 51 insertions(+), 51 deletions(-)
+>  .../qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts   | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts b/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
-> index 26d6d8285e04..9bda86f82a99 100644
+> index 9bda86f82a99..7e7e9b861899 100644
 > --- a/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
 > +++ b/arch/arm64/boot/dts/qcom/mahua-lenovo-thinkpad-t14s-gen7-lcd.dts
-> @@ -987,6 +987,12 @@ &tlmm {
->  			       <44 4>,  /* TPM */
->  			       <139 1>; /* TZ trigger */
+> @@ -735,6 +735,24 @@ ptn3222_fpr: redriver@4f {
+>  	};
+>  };
 >  
-> +	tpad_default: tpad-default-state {
-> +		pins = "gpio3";
+> +&i2c9 {
+> +	clock-frequency = <400000>;
+> +
+> +	status = "okay";
+> +
+> +	embedded-controller@28 {
+> +		compatible = "lenovo,thinkpad-t14s-gen7-ec";
+> +		reg = <0x28>;
+> +
+> +		interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		pinctrl-0 = <&ec_int_n_default>;
+> +		pinctrl-names = "default";
+> +
+> +		wakeup-source;
+> +	};
+> +};
+> +
+>  &lpass_vamacro {
+>  	pinctrl-0 = <&dmic01_default>;
+>  	pinctrl-names = "default";
+> @@ -1007,6 +1025,12 @@ edp_bl_reg_en: edp-bl-reg-en-state {
+>  		bias-disable;
+>  	};
+>  
+> +	ec_int_n_default: ec-int-n-state {
+> +		pins = "gpio66";
 > +		function = "gpio";
 > +		bias-disable;
 > +	};
 > +
->  	edp_bl_en: edp-bl-en-state {
->  		pins = "gpio18";
+>  	kybd_default: kybd-default-state {
+>  		pins = "gpio67";
 >  		function = "gpio";
-> @@ -1001,6 +1007,12 @@ edp_bl_reg_en: edp-bl-reg-en-state {
->  		bias-disable;
->  	};
->  
-> +	kybd_default: kybd-default-state {
-> +		pins = "gpio67";
-> +		function = "gpio";
-> +		bias-disable;
-> +	};
-> +
->  	edp_reg_en: edp-reg-en-state {
->  		pins = "gpio70";
->  		function = "gpio";
-> @@ -1008,24 +1020,32 @@ edp_reg_en: edp-reg-en-state {
->  		bias-disable;
->  	};
->  
-> +	hall_int_n_default: hall-int-n-state {
-> +		pins = "gpio92";
-> +		function = "gpio";
-> +		bias-disable;
-> +	};
-> +
-> +	wcn_sw_en: wcn-sw-en-state {
-> +		pins = "gpio94";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +
-> +	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
-> +		pins = "gpio116", "gpio117";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +
->  	edp0_hpd_default: edp0-hpd-default-state {
->  		pins = "gpio119";
->  		function = "edp0_hot";
->  		bias-disable;
->  	};
->  
-> -	hall_int_n_default: hall-int-n-state {
-> -		pins = "gpio92";
-> -		function = "gpio";
-> -		bias-disable;
-> -	};
-> -
-> -	kybd_default: kybd-default-state {
-> -		pins = "gpio67";
-> -		function = "gpio";
-> -		bias-disable;
-> -	};
-> -
->  	pcie4_default: pcie4-default-state {
->  		clkreq-n-pins {
->  			pins = "gpio147";
-> @@ -1049,29 +1069,6 @@ wake-n-pins {
->  		};
->  	};
->  
-> -	pcie5_default: pcie5-default-state {
-> -		clkreq-n-pins {
-> -			pins = "gpio153";
-> -			function = "pcie5_clk_req_n";
-> -			drive-strength = <2>;
-> -			bias-pull-up;
-> -		};
-> -
-> -		perst-n-pins {
-> -			pins = "gpio152";
-> -			function = "gpio";
-> -			drive-strength = <2>;
-> -			bias-disable;
-> -		};
-> -
-> -		wake-n-pins {
-> -			pins = "gpio154";
-> -			function = "gpio";
-> -			drive-strength = <2>;
-> -			bias-pull-up;
-> -		};
-> -	};
-> -
->  	pcie6_default: pcie6-default-state {
->  		clkreq-n-pins {
->  			pins = "gpio150";
-> @@ -1095,24 +1092,27 @@ wake-n-pins {
->  		};
->  	};
->  
-> -	tpad_default: tpad-default-state {
-> -		pins = "gpio3";
-> -		function = "gpio";
-> -		bias-disable;
-> -	};
-> +	pcie5_default: pcie5-default-state {
-> +		clkreq-n-pins {
-> +			pins = "gpio153";
-> +			function = "pcie5_clk_req_n";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
->  
-> -	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
-> -		pins = "gpio116", "gpio117";
-> -		function = "gpio";
-> -		drive-strength = <2>;
-> -		bias-disable;
-> -	};
-> +		perst-n-pins {
-> +			pins = "gpio152";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-disable;
-> +		};
->  
-> -	wcn_sw_en: wcn-sw-en-state {
-> -		pins = "gpio94";
-> -		function = "gpio";
-> -		drive-strength = <2>;
-> -		bias-disable;
-> +		wake-n-pins {
-> +			pins = "gpio154";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
->  	};
->  
->  	wwan_reg_en: wwan-reg-en-state {
 > 
 
