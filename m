@@ -1,79 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795595948;
-	b=z4EZnbUKf/vfZNQPVEcMMyXZRS1YNEiZYIAP8Ovo5rh9+6h9E5IE2SNblfi/NJm+t6lZ
-	 1lbw0cUEm8gJy7M0qTt/eAtltIhDQMj5ObdKaXKbV0f4VxfJCg3UTfUxcIwStf5zBGW9e
-	 vTGQphqlZfPXmW8GnmnUrqhHdTRgDKmbG+PPhTdQWHOx39iMG+tlXS1H1W+AzipZ9ap4w
-	 lzKc4DqEjRBacnQm7sCSYMbJmxr9MHB+ZyWHWyqFHioq005T0oAc7MyO2SV/YOG50Zz58
-	 zgf1lM2tLUMhMeVW45dCoLlpqql1UW03xGycuZDsVG+9xd5APGHZAsGhuv8rkW+NrJw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795595948;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=qfA2Dw6Bb9D+l4mpSP6ybvAv3Lt3lFerk/3mZjSZ324=;
-	b=o1NAdGL+l/OPME+8OKIdfWncHAoq2IYN+BSJEEjmXT2QBkaSUx/x4sI0Y4m+evHXmtN0
-	 i++Q8lm2Lsnm89gF8zEAJjCtaIJzJeQ7vf3WdNeNMc6pxHabrqoTR4lcbaMxQ2Zsg1Koc
-	 lSoaIX2u7zmNIUmSKAV1UrlpAC4A6OxSA9qPWPgq7hULAMVM/WHCiJDklgKEsNCkSJPxQ
-	 avICRiKrCGM+2fa3iMHSPfdTqivcoXOeKyw/ehZpso0vM9FuLtXc86v8vS442R0e1DAzC
-	 CFwyVsxEv62J+guIr5fIENaeisOtbfb5KR3qGUWxh7e4zdh8Kr6FUAahfkBpT7q9seQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="M8n/ZIWC";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84018606A31E;
-	Wed, 25 Nov 2026 08:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M8n/ZIWC
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795595947;
-	b=qK57074u+UIxZTm5xnKbKUXrD48AM6SY64uUXy4mxozwIFJH/WDh+7493bxVOZiAcw7t
-	 ygI+ewUwEWIGbHK9ZBfDZvUtxtOG0oeth3GC0JSi68Xs0nFE0t3AmckXK30w9b6fr0yB2
-	 H6mc61YifsfnyUrs0Ku81HA+IxY1l4yGm6KOxh1I7I0DHYQ1NSybMqQRwgLBu1vI56qbe
-	 vpSI+DJELVPytjUeN41k5VnkaaGGcjQOKuJ8yK3AejN50Cz3bB1I7e/CkOwYyL88DKw5A
-	 ayzpuk57LkplAM3ib+U1LdN6d09sHI3XPLHXKt08cWWhTb63xzzJL/Dc+eGkuOcBu4w==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795595947;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=qfA2Dw6Bb9D+l4mpSP6ybvAv3Lt3lFerk/3mZjSZ324=;
-	b=nNxqPZobBKWZJgcKgU2vcEfdRsoTfCAblNxM1KTwIF8zXbe8wwbPgGxY/IqcJhalM+TU
-	 PgcCbJi6KmoNGek8v74V6h6kksY6ZlKQCRwVOddJZtRCRw5ujvoNqT0THGxuk/i7PHNed
-	 /YL72ZHFAHxsnMFQ04KqGj1QUCW3hTyM3ZZYtQtoPoAzELcLGG6L5rDUXHT3wn07EnWha
-	 abR08yzHKVj0bsKgbx4V8cYi0isjm0nTyakRAuSLvwE+XSCFvp24AG4UcRWtzdba92ddu
-	 SmdwexRQduYE55rbKn5LaKKF+LYu5yhxUGNNCgbPVGpzCL/XJjLtlxOK2imVogEwB9w==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.116
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795596196;
+	b=DB68iEYR126tMv1CC7UeRcXStUynwJkNb9+1/gQ574ACHDgXemGo0VeVJvL+3xZCY2Oo
+	 EK/WRYq95dfbMlJrWjffe0fquq9kvs7rzlCKoeNhy0pNegPLO0BJkMtcjSDm4g+FeprPk
+	 3tZo4C0eXWAJZ+UMy8OCNjjqlKbBf2pATZ2idUQgVR63HZ7lXVolrb39ZVviIAxO8NlfM
+	 cIA5iHtPgP3wHs1nR8P9LQ2ykb9eBR2lICn8nZumi/SE8Eu1uN+0qnBVNSYdQKUgTg9bl
+	 Q4Q/GdwN75OsEjIFD00U9WcWAlCcHYh1oYBSLjXZbcTJ81oDz/0r+0GxJsYcV1Uc4fA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795596196;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=T0aV6xwlGfZKCz7sxzaw0UTzhGMaPZfXP9O3SvQDRzo=;
+	b=tb1acPGfl7nyectyhm6yj2vBblgjRxazWKcFic2miTrVcQPcXHlCmgThd/I1d66FHm9H
+	 eou3L8KRrKmVv2Der3lR8Lb1unuQJavNyYvRMgF1ZJSKgBcSGfFlsvy6fLzfRRcszDr0x
+	 u8jR7Fws3w0oqnq4goI+Io4RBtqTLySYHegkGyXgbpDUUUgpYn/NmmKCPyOiK8l83btAd
+	 ujRwGWLOIFMqoVCkYNB6oA8RWT4PV8CVcvWpZDGYZZ3tVElLyx5HOMCAmKYZ2c+E6Zj7E
+	 /xROiRpgMxLaVSg+v9n/7vFBF8/rYo8fxy4UqwHGPlcg/qoogcnIqvK5hJ6KpZjg/tw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=protonmail.com;
+	spf=pass smtp.mailfrom=protonmail.com;
+	dkim=pass header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=Bpw8OkhB;
+	arc=none smtp.remote-ip=109.224.244.116
+Received: from mail-244116.protonmail.ch (mail-244116.protonmail.ch [109.224.244.116])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id AAA231F000D2;
-	Wed, 25 Nov 2026 08:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795595947;
-	bh=qfA2Dw6Bb9D+l4mpSP6ybvAv3Lt3lFerk/3mZjSZ324=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=M8n/ZIWCsbtazfxz2HMu/SHEGW53wqsUKdTJNRB43AJ9GbOCXaTMEgbhpQgo8ZanP
-	 MJJwkoCK8rSTofjVaRpUSuwF03C3NRTzmGA/Y7cIA7T7wkot0gvkbsaWZ2wfQk5aWd
-	 pNje7Od/ZKWae1MiH5HWj98a9wHeHFaTtbMcoBybmOQyE3BXfdsjYcz9j/6yhnrMj6
-	 bfxqARmc8m6KtJkJ3uMa9JgCcBYErtcnDg8NcsxlflZoi4BPoZ3velJTrk7p8wpHgt
-	 l9oAA9UR1axZKpgLPGl7unYs1DCCkY56/59tvMcJ91J8T0embSOI9R9hks3xbyRCtP
-	 h9D8xh+1cM+jg==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 276DF4CD45;
-	Wed, 25 Nov 2026 08:39:00 +0000 (UTC)
-From: the-catman via B4 Relay <devnull+thecatman12.proton.me@kernel.org>
-Date: Wed, 25 Nov 2026 10:39:00 +0200
-Subject: [PATCH] platform/x86: hp-wmi: Add support for HP OMEN 16-ae0xxx
- (8CC0)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BB3606A683
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 08:43:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 05BB3606A683
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.a=rsa-sha256 header.s=protonmail3 header.b=Bpw8OkhB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1795596193; x=1795855393;
+	bh=T0aV6xwlGfZKCz7sxzaw0UTzhGMaPZfXP9O3SvQDRzo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Bpw8OkhB4Y+8LuoCHZBYhKU4C1NE1FOxPh0yn3WUoBDs2bRis/6Z+vbRphad+X98B
+	 4gnbyKxr/YnFikcSBVpUArD7aGo5AC4dE2S7ufRbS/ubGcI5lE9O/8M3pXCP1w7QxH
+	 RfBSkRh+aCgrHWdw1joINZXJsDrXQggmiL3WlsoZMhD5/Wbthaes1tC4HkJ0/8aAtr
+	 EwgrQ4uGXlOrzi8ztrvOTbanw/r2nx5QdaZG6GpjhhwIZ13amyR/b9WoWTqjz2FIlT
+	 VbXmyxCCe/ZGZo8hF4C5OJFRZCVJumJiIDKyJPJWoUk9grYzyGYuWZ88Mp6kxrDLOv
+	 vEfI7mHlqPDkw==
+Date: Wed, 25 Nov 2026 08:43:07 +0000
+To: Fuwei Xie <12313607@mail.sustech.edu.cn>
+From: =?utf-8?Q?Eren_=C3=96zen?= <erenozen@protonmail.com>
+Cc: ilpo.jarvinen@linux.intel.com, hansg@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, yhshzh0@gmail.com
+Subject: Re: [RFC PATCH v3 0/5] platform/x86: huawei-wmi: expose native firmware power profiles
+Message-ID: <QXyyjD0WtiiXyud6K1vZI9r7jScmkJsS_FC-tqfI1IeLF359IrJjxdfRd_9tC_x6AH_y2RV4hFu6cpOWhw5HgQqfSmgS_9LXuf6Fl9VPipU=@protonmail.com>
+In-Reply-To: <CCE496207C6C15CE+20261125074048.50842-1-12313607@mail.sustech.edu.cn>
+References: <4F34E5193B4633F6+20261124172651.37716-1-12313607@mail.sustech.edu.cn> <hCsVvRfdJna6QMofi0p51idPd_JLLislzGzqFjePf9_91ayfS92LIselCT-narFk2u5zTRqLQsKFnz4bgRrNmjY5EKgq9UYj0n_CfmaCJjs=@protonmail.com> <CCE496207C6C15CE+20261125074048.50842-1-12313607@mail.sustech.edu.cn>
+Feedback-ID: 19860221:user:proton
+X-Pm-Message-ID: b2c10bd715acfd7f2da76285830889f90fc40f98
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,84 +64,215 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261125-master-v1-1-e1d881b3b9d6@proton.me>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ6DIBCF4auYWZcE0EHwKsbFOI4tC7UF2zQx3
- r2kLr+Xl/+ALClKhq46IMkn5ritBeZWAT9ovYuKUzFYbZ0xFtVCeZek2nacfe1YkBjK+Zlkjt9
- /qB8uJ3m9S2+/Rhgpi+JtWeLeVc6wnogD2jHU2nvfhNpNGpkltOiQkH2guYHhPH9WGe7dpAAAA
- A==
-X-Change-ID: 20261125-master-77bf836ce5ac
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- the-catman <thecatman12@proton.me>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795595939; l=2098;
- i=thecatman12@proton.me; s=20261125; h=from:subject:message-id;
- bh=M0yFpvmo2x5mUnBrp9FOVjlBIXzYzVqyJCYqNxofh8c=;
- b=65A/lvkz+js5Gg3beosykTNyR3Ezg/8o30lRw64I7BgvJAbFbG0IRJBylL04uuRt0TOhQK1s0
- TqV2K+kTh2tC/7Wgmsc80rd1llV/Sz51l6eHwfDEGVcOGONyhFsgy6d
-X-Developer-Key: i=thecatman12@proton.me; a=ed25519;
- pk=JZyk9fkPTWRMiA5uAyXbspvMRf6+lV/HhmhAgXXUfNs=
-X-Endpoint-Received: by B4 Relay for thecatman12@proton.me/20261125 with
- auth_id=1635
-X-Original-From: the-catman <thecatman12@proton.me>
-Reply-To: thecatman12@proton.me
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: the-catman <thecatman12@proton.me>
+Hi Fuwei,
 
-The HP OMEN 16-ae0xxx (board ID 8CC0) has the same WMI interface as
-other Victus S boards, but requires quirks for correctly switching
-thermal profile (similar to HP Omen 16-wf1xxx, board ID 8C78).
+On Wed, Nov 25, 2026 at 03:40:44PM +0800, Fuwei Xie wrote:
+> Thanks for trying this out and for catching the silent fallback to
+> \SBTT. I'd appreciate a copy of the diff you tested.
 
-Without an entry, the driver falls back to the generic HP thermal
-profile path, whose query fails on this board
-("hp_wmi: query 0x4c returned error 0x6"), so no platform profile is
-registered and the EC can't be switched out of its default mode from
-Linux.
+Sure, it's below. Since my last mail I've also run it on the CREM-WXX9
+(BIOS 2.32): built out of tree against the Fedora 7.3.4-300 kernel and
+loaded in place of the stock module, on top of your five v3 patches:
 
-Add the DMI board name to the hp_wmi_feature_boards[] table and map it
-to omen_v1_board_params.
+- the thresholds read back correctly in charge modes 1 and 2, and as
+  0/100 in modes 0 and 4 (mode 3 not re-run),
+- the original bug case works: writing 75/80 while the EC is in
+  smart-charge mode 4 puts it back in mode 1 with 75/80,
+- writing 0/100 and the power_supply start/end attributes work,
+- reloading the module in mode 1 and in mode 4 reports the right
+  values, and the kernel log shows nothing beyond the usual probe
+  messages (no lockdep on this kernel, though).
 
-Tested on an HP OMEN 16-ae0xxx (i7-14700HX, RTX 4070 Laptop GPU,
-BIOS F.14): the platform profile registers with low-power, balanced
-and performance, the profile read back from the EC matches the
-selected one, fan RPMs are readable, and switching profiles changes
-the CPU power limits programmed by the firmware (MSR PL1/PL2 of
-55/130 W in low-power and balanced, 130/130 W in performance).
+It also builds in-tree on for-next 61c0dac952b9 with W=3D1 and sparse. I
+didn't re-measure the charging current this time; the EC side is the
+same as with the original patch, and I checked the \GBCM and \GBTT
+state after every step instead.
 
-Signed-off-by: the-catman <thecatman12@proton.me>
----
-Tested on Ubuntu's 7.0.0-44 kernel with the equivalent pre-rework entry
-(victus_s_thermal_profile_boards[] -> omen_v1_thermal_params), which
-matches what omen_v1_board_params selects in for-next.
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The diff is against for-next 61c0dac952b9 with your five v3 patches
+applied. Compared with my v1 patch, only the charge-mode calls changed:
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 16cfac5..376e8a1 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -325,6 +325,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
- 		.driver_data = (void *)&victus_s_board_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8CC0") },
-+		.driver_data = (void *)&omen_v1_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D26") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
+- huawei_wmi_charge_mode_get() takes the huawei pointer, returns
+  negative errors from huawei_wmi_cmd(), requires at least two data
+  bytes, and reads the mode and the parameter from data[0] and data[1].
+- huawei_wmi_charge_mode_set() holds wmi_lock across the \GBCM read
+  and the \SBCM write.
+- huawei_wmi_battery_get() takes wmi_lock around its own \GBCM read.
+- the probe check calls huawei_wmi_charge_mode_get() under wmi_lock.
 
----
-base-commit: 61c0dac952b9308884936d05cce97565a5c89af4
-change-id: 20261125-master-77bf836ce5ac
+As before, I used Claude for the rebase, the test script and to draft
+this mail; I've reviewed the diff and checked the results against the
+test log.
 
-Best regards,
--- 
-the-catman <thecatman12@proton.me>
+Thanks,
+Eren
 
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawe=
+i-wmi.c
+index ff80050..f8b449d 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -38,6 +38,8 @@
+ enum {
+ =09BATTERY_THRESH_GET=09=09=3D 0x00001103, /* \GBTT */
+ =09BATTERY_THRESH_SET=09=09=3D 0x00001003, /* \SBTT */
++=09BATTERY_CHARGE_MODE_GET=09=09=3D 0x00001603, /* \GBCM */
++=09BATTERY_CHARGE_MODE_SET=09=09=3D 0x00001503, /* \SBCM */
+ =09FN_LOCK_GET=09=09=09=3D 0x00000604, /* \GFRS */
+ =09FN_LOCK_SET=09=09=09=3D 0x00000704, /* \SFRS */
+ =09MICMUTE_LED_SET=09=09=09=3D 0x00000b04, /* \SMLS */
+@@ -68,6 +70,7 @@ struct huawei_wmi {
+ =09struct wmi_device *wdev;
+ =09struct notifier_block profile_notifier;
+ =09bool battery_available;
++=09bool charge_mode_available;
+ =09bool fn_lock_available;
+=20
+ =09struct huawei_wmi_debug debug;
+@@ -413,11 +416,93 @@ static void huawei_wmi_leds_setup(struct device *dev)
+=20
+ /* Battery protection */
+=20
++/*
++ * Newer firmware also implements \GBCM and \SBCM ("battery charge mode").
++ * \GBCM returns the charge mode in byte 1, a parameter of unknown meaning
++ * in byte 2 and a pair of thresholds in bytes 3 and 4, and \SBCM takes th=
+e
++ * same four values in bytes 2 to 5 of its argument. Thresholds set throug=
+h
++ * \SBCM are also returned by \GBTT, but \SBTT does not update the ones
++ * returned by \GBCM. huawei_wmi_cmd() strips the status byte, so the mode
++ * and the parameter end up in data[0] and data[1].
++ *
++ * In charge modes 1 to 3 the EC does not charge above the end threshold
++ * returned by \GBTT, and a 0/0 pair means that charging is not limited.
++ * In charge modes 0 and 4 it charges past the end threshold. \SBTT,
++ * which turns a 0/100 request into 0/0, switches the EC to charge mode 4
++ * ("smart charge") in that case, and a later \SBTT write does not
++ * necessarily switch it back. So write the thresholds through \SBCM in
++ * charge mode 1 instead.
++ */
++#define HWMI_CHARGE_MODE_THRESHOLDS=091
++#define HWMI_CHARGE_MODE_PRESET_LAST=093
++
++static int huawei_wmi_charge_mode_get(struct huawei_wmi *huawei, u8 *mode,=
+ u8 *param)
++{
++=09u8 data[0xff];
++=09int len;
++
++=09len =3D huawei_wmi_cmd(huawei, BATTERY_CHARGE_MODE_GET, data, sizeof(da=
+ta));
++=09if (len < 0)
++=09=09return len;
++=09if (len < 2)
++=09=09return -ENODATA;
++
++=09if (mode)
++=09=09*mode =3D data[0];
++=09if (param)
++=09=09*param =3D data[1];
++
++=09return 0;
++}
++
++static int huawei_wmi_charge_mode_set(struct huawei_wmi *huawei, int start=
+, int end)
++{
++=09union hwmi_arg arg;
++=09u8 param;
++=09int err;
++
++=09guard(mutex)(&huawei->wmi_lock);
++=09err =3D huawei_wmi_charge_mode_get(huawei, NULL, &param);
++=09if (err)
++=09=09return err;
++
++=09if (start =3D=3D 0 && end =3D=3D 100)
++=09=09end =3D 0;
++
++=09arg.cmd =3D BATTERY_CHARGE_MODE_SET;
++=09arg.args[2] =3D HWMI_CHARGE_MODE_THRESHOLDS;
++=09arg.args[3] =3D param;
++=09arg.args[4] =3D start;
++=09arg.args[5] =3D end;
++
++=09return huawei_wmi_cmd(huawei, arg.cmd, NULL, 0);
++}
++
+ static int huawei_wmi_battery_get(struct huawei_wmi *huawei, int *start, i=
+nt *end)
+ {
+ =09u8 data[0xff];
+ =09int len;
+=20
++=09if (huawei->charge_mode_available) {
++=09=09u8 mode;
++=09=09int err;
++
++=09=09scoped_guard(mutex, &huawei->wmi_lock)
++=09=09=09err =3D huawei_wmi_charge_mode_get(huawei, &mode, NULL);
++=09=09if (err)
++=09=09=09return err;
++
++=09=09/* The thresholds are not used in the other charge modes. */
++=09=09if (mode < HWMI_CHARGE_MODE_THRESHOLDS ||
++=09=09    mode > HWMI_CHARGE_MODE_PRESET_LAST) {
++=09=09=09if (start)
++=09=09=09=09*start =3D 0;
++=09=09=09if (end)
++=09=09=09=09*end =3D 100;
++=09=09=09return 0;
++=09=09}
++=09}
++
+ =09scoped_guard(mutex, &huawei->wmi_lock)
+ =09=09len =3D huawei_wmi_cmd(huawei, BATTERY_THRESH_GET, data, sizeof(data=
+));
+ =09if (len < 0)
+@@ -433,6 +518,10 @@ static int huawei_wmi_battery_get(struct huawei_wmi *h=
+uawei, int *start, int *en
+ =09if (end)
+ =09=09*end =3D data[len - 1];
+=20
++=09/* A 0/0 pair means that charging is not limited. */
++=09if (huawei->charge_mode_available && end && !*end)
++=09=09*end =3D 100;
++
+ =09return 0;
+ }
+=20
+@@ -444,6 +533,9 @@ static int huawei_wmi_battery_set(struct huawei_wmi *hu=
+awei, int start, int end)
+ =09if (start < 0 || end < 0 || start > 100 || end > 100)
+ =09=09return -EINVAL;
+=20
++=09if (huawei->charge_mode_available)
++=09=09return huawei_wmi_charge_mode_set(huawei, start, end);
++
+ =09arg.cmd =3D BATTERY_THRESH_SET;
+ =09arg.args[2] =3D start;
+ =09arg.args[3] =3D end;
+@@ -607,6 +699,17 @@ static void huawei_wmi_battery_setup(struct device *de=
+v)
+ {
+ =09struct huawei_wmi *huawei =3D dev_get_drvdata(dev);
+=20
++=09/*
++=09 * Only trust the \GBCM status if the firmware actually implements the
++=09 * methods, in case the HWMI dispatcher of some model reports success
++=09 * for unknown functions.
++=09 */
++=09if (acpi_has_method(NULL, "\\GBCM") && acpi_has_method(NULL, "\\SBCM"))=
+ {
++=09=09scoped_guard(mutex, &huawei->wmi_lock)
++=09=09=09huawei->charge_mode_available =3D
++=09=09=09=09!huawei_wmi_charge_mode_get(huawei, NULL, NULL);
++=09}
++
+ =09huawei->battery_available =3D true;
+ =09if (huawei_wmi_battery_get(huawei, NULL, NULL)) {
+ =09=09huawei->battery_available =3D false;
 
