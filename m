@@ -1,57 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=79.135.106.120
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795597779;
-	b=xvFwI2PecFC4X0jZ9cEOLdRISrv3JI9YstkhiPDBaiYJWp8R0kjGnfLFOKLmyiHbGPm/
-	 rrGOsLrwFaFm0hVtMqebn/2qCMr2MBdfPDcoebGmaOzFatmdOClVLuoGiJn+B5RGL+yMz
-	 362EEMmR+cpjabp3+4J6TpTxjyTYsA31ViTE81hAYn2Q81DRoIg2SeJrpa+IWurlHTXbq
-	 xkTlReBx61aCtORHq0uyGqDjWVG+IzJxOOVE/8FOEhpgYsupzkQZmBkci/QCzbOzLepdk
-	 4uEyqX8YC7NP+7uUusQ3B/EgxwRpQTG3t3znMgC5j4DZU5mThBGFe9ihK43p/HLtIJg==
+	t=1795598018;
+	b=dwOR3ysjQBnj4Ng7LIByMU/OavdHnTUtIoP0N330Qt67Ox/vudnSAlNc3KJUihrO3VsO
+	 XWTHbjt5oHlI0knc8t9+YDMJTgLFXdyHOZLpjqpUqSDZK0FwEEEqDIUOCRvkMA79woNeZ
+	 zADu8P514728RTn9fZ24gQdXMPzbsm+KFa9EpiaYzlfFSO95uR+54TnwHmg5/xJhqNZZq
+	 QqDLz8isRDwiFuAJzCoo+NSsVGHvUVa5Nq6xD63GrPBMJMCSS5/201hyySDCe7G694HMg
+	 eArfTsQ6i8YTnhyNKoTgSdFK/EU+MptYQYj5Ttm9uRCWMddlP4PhMQk6Gm44yc1SSkA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795597779;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=atA20MoJCKOu8hezGD9x11s/X5t0L0tiUzUV7Xg5yA0=;
-	b=CJ9MgwhNr3vMybXNsRWYRidJIR2sj1Iew9ivsUdi+A031FRGEDTiQcF3VhZJdAxqsTBY
-	 b8/sZbpfSIlW3cxwh3BIuTdY+1Ik97VOA7H8UiD8Jn5XRiADwN2O8TE6LmU35bxLmKIvM
-	 NEzqFDg26fiaOrI27Q595wIPzmNh9AQRwinl/ktrPgZi14uHWw1iQeWyJaGYu9Hng8Uy4
-	 I1P9SHOiFmP10h516g1P1QQUX8UASbTJZ+ogKfyXRh7uytDC8omRG9GrnvJgALAwj0EsD
-	 BBZZN/KyOL9xG6FGU/9oNU9Zs6Mru7RGrklvbFovoAa195XYAW7eYEGZEb4mMm8Oj5w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795598018;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=Zz0pHGwefJCrqkhvFa/1jGyqdPSvI5JqWgz77macx9I=;
+	b=peBfOJIh3Q+0wfERxSE7dCr9+mdQeJw/9mfg0SsmO+xsMFebUvpK7KNXOwBIPoeq3Wd5
+	 p7gE5G0JMD3l67FV7zJI7uXP98dj90WSAa5kSDi4ryaHx7ZwZm3YUPWi+EgIf0kI/j8pO
+	 efEgt4pUfFdmplNHRNsM/qXJlE2UzWU2V5rjW5Eg6oKoVSLpsizKUD3wxcT5ZwocUo8aC
+	 5477Ob4tOcw0JHIQySRx8RwxQn7WwP9jh/p+TxKa8NcNFPOY1m6cznCafmQVlXpZm7vQF
+	 BE2qJe1bTMNXUpzj/UM8iiMQu2l7En0nYjuZIORNTB9LnVe5TJrD8uMSGHmddpmfbkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=pm.me;
-	spf=pass smtp.mailfrom=pm.me;
-	dkim=pass header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b="rQhU9a2/";
-	arc=none smtp.remote-ip=79.135.106.120
-Received: from mail-106120.protonmail.ch (mail-106120.protonmail.ch [79.135.106.120])
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=fKbpflYN;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=EIh6NEl9;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCCF606A31E;
-	Wed, 25 Nov 2026 09:09:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FCCF606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C889606A32A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 09:13:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C889606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.a=rsa-sha256 header.s=protonmail3 header.b=rQhU9a2/
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1795597776; x=1795856976;
-	bh=atA20MoJCKOu8hezGD9x11s/X5t0L0tiUzUV7Xg5yA0=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=rQhU9a2/ZrgHQcCSn7A+tDJRx7mN2T8RvxF6JMmcj9/9MflOI4cpPhTwZ6Acu8zq6
-	 zFkedFpYp5HFS0fOSoDbq5JBSOuCMygSfDtHuhcTPEwanrI7tru6tZkK7AA8LpHvg2
-	 IMy2nJU+hHe6OkUi3ID7jHfkzOthET3Q1iotYlzqHW0vaPsa2yCT4G5hr1zjudGMBR
-	 G62G5FWE1lVnZ6TcT0J28bvHCv1yfrZ5VB44eYCWFhZG2zhNYFL9lbEIJaRvEVBAoH
-	 15WB84B2Q8GAdA92PPPjQWO12pyVinAdaM+fQmcQUNdk6Gfa5I+UkNZGpZaa8gM4nm
-	 5yx4qu7AkEU7A==
-Date: Wed, 25 Nov 2026 09:09:28 +0000
-To: Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Hao Yao <hao.yao@intel.com>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bingbu Cao <bingbu.cao@amd.com>, Fernando Rimoli <fernandorimoli11@gmail.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] platform/x86: int3472: Use actual clock frequency for DSM method
-Message-ID: <20261125090921.46652-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: 30ca2397b51263ce57e2d4ad33e31b19f083b272
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=fKbpflYN;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=EIh6NEl9
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AP68baX1860444
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 09:13:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Zz0pHGwefJCrqkhvFa/1jGyqdPSvI5JqWgz77macx9I=; b=fKbpflYN2Li6SwsW
+	x+0dVOscZ6J/P88HrREvH7MGuODuqPalnXAOpCuBvPZ59ShYGzNDBtRLAOJmjRQV
+	53NMD+0JkdIne0+qz6/U4VXo5SlyMzCC0FOTbWMmz8wR21AhwmHk+AdUBGKiFqa9
+	pf3+PWllITR6Z/IVb7E30EDoXgrDACWfusmEbECbkjR0l06FRmRoYIHe/cW3tBwv
+	/6B0GJDa6W+SoJ0lCYczbd2nrrwJ6BzAdx8wJBiAQJJzsh2jjLu4Ov5Xcso9jhDA
+	RoTpwZGAZd7VI0B4qsDJlCS2BkLJNp59fqLsqlTVog/JiyyCSsKqHoxmbIAfb2JW
+	fUF1Tw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j5nu69pwm-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 09:13:33 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-94964828890so69580785a.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 01:13:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1795598012; x=1796202812; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Zz0pHGwefJCrqkhvFa/1jGyqdPSvI5JqWgz77macx9I=;
+        b=EIh6NEl9BDJk2OrN+wNY1uC2Fe7oSAIlvrYTEtxZdFnQdXpp3qdiLRZqumcTyrr2/M
+         0gm2aAhoYF867nZbN0wyLYRcUy4vnuCRbkqbj07z8StnFOlB+0Za5jb3tyM8g5Ks1peN
+         kbWN7T+R9AwxCecBy/Qq4cdUFYdEykiYuhd8qMFk9vLtnyIFh4vr+soFx5WSmFfy9vu0
+         m3dHj9yjJZjJvQ6ZSmf0Y5R/R2TExTXRYSSnfweY+kT9MGik6BSlcnJkiuCCl+NFrobD
+         gghoXfOFxW3IYciie6NP8FYbZfaAjOStF/5kThZxzoCksyXFo5Br6EczF1TfG2TjU+fm
+         nH+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795598012; x=1796202812;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Zz0pHGwefJCrqkhvFa/1jGyqdPSvI5JqWgz77macx9I=;
+        b=niQyOdrh503hMrKTCNSUrJU2blYptaOBSvUg+9m204lEYPgiO3EDQcs1r98U7HzyMk
+         HcqUbcJDGhHyHVX4W4cejzHBAo5uSPXVPq7bo3AdoyEIZZVG3+VKJDEpZbdOAkG4wQP7
+         CcA7n1zI2eP2j1pcwbfFRk69GmwbCUFX50i3ArD+iz+LudueKfNDSUBrktWZxWC+RPL6
+         q8xWegK1mpG4TPYHF/1LwV/cnow3ZSxnxXWKNhdOEm9gcGwKGvWZnYfjLOmNX9tkyxnE
+         yfuidlGU4shCbVueXmLcCarsSthmjKvZviDllz+0NguDYn2iIei6LEQ2R8O6o+YQrzwj
+         s+ig==
+X-Forwarded-Encrypted: i=1; AL+hErGxYqyx79zMi4t4VPlvqJuCTfpOQBTqeRm0jiXI04+mbXBt8N6nXBUsP6fhUSrjPU7wfd1D0X/q0/Jxi9rXdp6NS6A9@vger.kernel.org
+X-Gm-Message-State: APuU4Z+E7UM34Ece8QU002vEb2SOqMGeUIHV6LiPOTog4W77xG9cEvkD
+	kNU//vvuK/VV8QljCAxVsC68xf0c0wofJWsfeG8GaNeb925A4BbsSDTEAwan0Q08u8035GOjNaE
+	Pgq9YaUvWkvNjTDBl6xgwrJbxmYdCYJXOGTDENGcXAAN55aYBOo+m1xQDCF+XexnXYgJXCG/+NC
+	DW
+X-Gm-Gg: AZFdTZdf3FcfRwQH36YpOyS2kJtiLtJ2XEvZFfP1+W/MHFh7KSu1hJwmzMrJVsSdEzQ
+	PQhTVr39ENDIfeY+I+pKxAtyHQUqF3Q0BgOB8/GFmxH4wYkmFpEcFkgXNAD0nsf+Sj4NpsCcYCv
+	Bg/cJnm+rNZs8Qne5miJzR5CD3xNKFNEDCXZTwWI/bI4YYVwskn1FlueJ0RxRQcr/B/ftCpODHF
+	SxHh3s6y0v7zp7kV87jWT9uIA5bzWTo2d6EeCp3npsm3nuxPcRVAlXYAUmhpea+wLNF15J3GPe+
+	6y/E3wN7FO0oy4DihBeeAxHM6kOBVUF/Fwn4l1z1tbwRC8wKHXky1fsFGJvMDw+CHSd3lIgEa9a
+	AmZWtQFCCR8yCjfPv7tBVUvYC2N7kPnBiY44ircJQimFMPE/i7Kh4zxKMn+O4/iBmtStOt+w=
+X-Received: by 2002:a05:620a:864c:20b0:949:728b:51f with SMTP id af79cd13be357-949bab797a6mr2845919585a.6.1795598012592;
+        Wed, 25 Nov 2026 01:13:32 -0800 (PST)
+X-Received: by 2002:a05:620a:864c:20b0:949:728b:51f with SMTP id af79cd13be357-949bab797a6mr2845917385a.6.1795598012173;
+        Wed, 25 Nov 2026 01:13:32 -0800 (PST)
+Received: from [192.168.226.72] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6ba3710601esm7951603a12.27.2026.11.25.01.13.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Nov 2026 01:13:31 -0800 (PST)
+Message-ID: <25657ef3-3bbc-4d70-bc80-e368eda447bb@oss.qualcomm.com>
+Date: Wed, 25 Nov 2026 10:13:27 +0100
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -61,129 +116,67 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: mahua-lenovo-thinkpad-t14s-gen7:
+ Sort the TLMM states by pin number
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>,
+        Sebastian Reichel
+ <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abel Vesa <abelvesa@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20261123-t14s-gen7-ec-v2-0-3420a6202366@oss.qualcomm.com>
+ <20261123-t14s-gen7-ec-v2-3-3420a6202366@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20261123-t14s-gen7-ec-v2-3-3420a6202366@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 9oBBlJCkAyylYmwzYMUkQvQSdIc-YRa6
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI1MDAzNiBTYWx0ZWRfX5z/AkqFJFEyR
+ rtKFKlQdi4Il/r/X0AiG7hF8EfR0QeTkUC7lGLWLNPMxwXH1LKejkEDvYYdSHdrYKTeeHsxt0bl
+ 1jY29opFo2451Jn3PHC/E3uoMWDcNNI=
+X-Proofpoint-GUID: 9oBBlJCkAyylYmwzYMUkQvQSdIc-YRa6
+X-Authority-Analysis: v=2.4 cv=Vra2kO2n c=1 sm=1 tr=0 ts=6b06a6bd cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=EUspDBNiAAAA:8 a=IcN9rPl5bsQiho1bYRUA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI1MDAzNiBTYWx0ZWRfX2EXTTQCNpVcM
+ Kgweiy1aP+Ldx2CnQmLUtZI0LSlroNx4fP2Y5VjmXlOHnEjQdNAWQsCkvCki5dnHsp2HCSOIWLE
+ 5hzBVyHSabE3GPUmXsZugP+FODHjeAO3eG7pbkzgdOWfVFd3mxgp2EKKlpC7a2by7pfhnhnZ4Wt
+ Z55HUsQbmp70yvQ1cxkuvFGe9dkNgO68yP9DcrcXLh1f13tmt0X50W6GSjry9B970qZY5owF33A
+ QmqPBWWc0bRp2eatevVMQPJBwcSD2YyD4AxIlnebRK4OpKXN0zpVQAj9NewBHKS3PG/cmVbreGt
+ +lsvgIlRLdmgB/41eSwWgq1bDcBdKUrb4/vyfm4mLgkQ7pPEkj2ZhZ+IgiO4M+Qa/y3gdNmSGdv
+ MlTQkZSaHOTZVMxWEn8sNesIJlZHs0kdchWf1i30GkZySl3DlAH/ateEqGaQzRfBcYBMwcWfoTj
+ eaeJDhqTXRMN4f9MktQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-25_02,2026-11-23_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0 phishscore=0
+ bulkscore=0 spamscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611250036
 
-From: Hao Yao <hao.yao@intel.com>
+On 11/23/26 10:35 AM, Abel Vesa wrote:
+> The TLMM pin states of the T14s Gen 7 are ordered by node name, while
+> Qualcomm board files order them by the GPIO they configure. Sort them
+> by pin number so that new states have an obvious place to go.
+> 
+> No functional change.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+> ---
 
-The third argument (args[2]) to the _DSM method was hardcoded to 1,
-which selects 19.2MHz. A sensor whose SSDB asks for 24MHz therefore
-runs from 19.2MHz, and everything it derives from its clock runs at
-four fifths of the expected rate.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Pass the frequency from the SSDB instead, with 19.2MHz as the default.
-1 selects 19.2MHz everywhere, but the value for 24MHz depends on the
-platform. Where the frequency field is one bit wide (Tiger Lake, Jasper
-Lake, Alder Lake, Raptor Lake) it is 0, and 3 would also set the clock's
-enable bit again when the clock is turned off. From Meteor Lake on the
-field is two bits wide and it is 3; 0 and 2 leave the clock unchanged
-there, as measured with an oscilloscope.
-
-Fixes: e4543de8b6ff ("platform/x86: int3472: Evaluate device's _DSM method =
-to control imaging clock")
-Signed-off-by: Hao Yao <hao.yao@intel.com>
-[Sergey: pick the 24MHz value per platform]
-Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
----
-v3, sent by me as offered in the v2 thread, with Hao as the author:
-- The 24MHz value is chosen per platform. On a Surface Pro 9 (Alder
-  Lake) Fernando Rimoli measured that 3 gives 19.2MHz and 0 gives 24MHz
-  [1]. coreboot's camera_clock_ctl.asl has a one-bit frequency field for
-  Tiger Lake, Jasper Lake and Alder Lake (which covers Raptor Lake) and
-  a two-bit one for Meteor Lake, Panther Lake and Nova Lake.
-- The Fixes: tag and the note on 0 and 2 that Ilpo asked for.
-- v2's Reviewed-by and Acked-by tags dropped, since the code changed.
-
-Tested on a Surface Pro 11 (Lunar Lake), with the module built from
-Ubuntu's 7.0 source, where this file is the same as in media-committers
-next. The VD55G0, whose SSDB asks for 24MHz, streams at 59.14 fps as
-its controls give, against 47.29 fps without the patch. The two 19.2MHz
-sensors are unchanged. The Alder Lake branch has not run as posted.
-
-v2: https://lore.kernel.org/all/20251208035122.2147678-1-hao.yao@intel.com/
-[1] https://lore.kernel.org/all/20261026111012.33347-1-fernandorimoli11@gma=
-il.com/
-
-Tool use, per Documentation/process/generated-content.rst (Assisted-by
-tags in commits were dropped in 7.4-rc1):
-
-* My contributions to this series were prepared with Claude Code
-  (claude-opus-5-5); work by others in it is their own.
-* This replaces any Assisted-by tags in earlier versions.
-
- .../x86/intel/int3472/clk_and_regulator.c     | 39 ++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drive=
-rs/platform/x86/intel/int3472/clk_and_regulator.c
-index 9e052b164a1..47dc23c5184 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -10,6 +10,9 @@
- #include <linux/regulator/driver.h>
- #include <linux/slab.h>
-=20
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
- /*
-  * 82c0d13a-78c5-4244-9bb1-eb8b539a8d11
-  * This _DSM GUID allows controlling the sensor clk when it is not control=
-led
-@@ -19,6 +22,40 @@ static const guid_t img_clk_guid =3D
- =09GUID_INIT(0x82c0d13a, 0x78c5, 0x4244,
- =09=09  0x9b, 0xb1, 0xeb, 0x8b, 0x53, 0x9a, 0x8d, 0x11);
-=20
-+/*
-+ * The third argument to the _DSM method selects the clock frequency. 1 is
-+ * 19.2MHz everywhere. 24MHz is 0 where the frequency field is one bit wid=
-e
-+ * (Tiger Lake, Jasper Lake, Alder Lake, Raptor Lake) and 3 where it is tw=
-o
-+ * bits wide (Meteor Lake and later).
-+ */
-+#define INT3472_DSM_CLK_FREQ_19M2=091
-+#define INT3472_DSM_CLK_FREQ_24M=093
-+#define INT3472_DSM_CLK_FREQ_24M_1BIT=090
-+
-+static const struct x86_cpu_id int3472_dsm_clk_freq_1bit_ids[] =3D {
-+=09X86_MATCH_VFM(INTEL_TIGERLAKE_L, NULL),
-+=09X86_MATCH_VFM(INTEL_TIGERLAKE, NULL),
-+=09X86_MATCH_VFM(INTEL_ATOM_TREMONT_L, NULL),
-+=09X86_MATCH_VFM(INTEL_ALDERLAKE, NULL),
-+=09X86_MATCH_VFM(INTEL_ALDERLAKE_L, NULL),
-+=09X86_MATCH_VFM(INTEL_ATOM_GRACEMONT, NULL),
-+=09X86_MATCH_VFM(INTEL_RAPTORLAKE, NULL),
-+=09X86_MATCH_VFM(INTEL_RAPTORLAKE_P, NULL),
-+=09X86_MATCH_VFM(INTEL_RAPTORLAKE_S, NULL),
-+=09{}
-+};
-+
-+static u32 skl_int3472_dsm_clk_freq(struct int3472_clock *clk)
-+{
-+=09if (clk->frequency !=3D 24000000)
-+=09=09return INT3472_DSM_CLK_FREQ_19M2;
-+
-+=09if (x86_match_cpu(int3472_dsm_clk_freq_1bit_ids))
-+=09=09return INT3472_DSM_CLK_FREQ_24M_1BIT;
-+
-+=09return INT3472_DSM_CLK_FREQ_24M;
-+}
-+
- static void skl_int3472_enable_clk(struct int3472_clock *clk, int enable)
- {
- =09struct int3472_discrete_device *int3472 =3D to_int3472_device(clk);
-@@ -35,7 +72,7 @@ static void skl_int3472_enable_clk(struct int3472_clock *=
-clk, int enable)
- =09args[1].integer.type =3D ACPI_TYPE_INTEGER;
- =09args[1].integer.value =3D enable;
- =09args[2].integer.type =3D ACPI_TYPE_INTEGER;
--=09args[2].integer.value =3D 1;
-+=09args[2].integer.value =3D skl_int3472_dsm_clk_freq(clk);
-=20
- =09argv4.type =3D ACPI_TYPE_PACKAGE;
- =09argv4.package.count =3D 3;
---=20
-2.54.0
-
-
+Konrad
