@@ -1,70 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795616202;
-	b=tFkcjobOCz9SNEA79JH0yZlLe/ugKa9sLVB4XMcMmmU17LQYXQcIiD2/2BEHTLScjdkD
-	 0YYjH/3+deD82TT4YY3XcCNIZfn0RTZsMltwSy8N+OhCv8rJWxvnWu20LOQuP0L3KGi9q
-	 0+iIMHGzk2Z4njZkFh4zU91TDkjywTVQrAib/43DcBObYiXYpyTc2bnpRmK5rb9TD6Ot2
-	 v6Wt9LW39jMbRoEa3eRWQB4alDKNC9c2seRy2qzMa+uN/BtfcWzbXkD3ZGHZqS7lWaSLN
-	 U/EFm4nO/4kqXn4uYZ2aTu3XRgtBv8GomFHF/D5BVjLkBNhR2YzxIGAWGsjq2VvSDiw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795616202;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=ArhpYEDQE8ZdviwwTBn7vEa0W+QU2k77BuW8nuPQq3w=;
-	b=HxfZBkJjCpYKMowUSECkOzdd6Ygbhn8BUq7cwrLVLXa2dTYCis8fdtFY/Csa97FDALXx
-	 NGxe9pcMr4lP44ctD5IbD6RpQkLq8e9gM9GGjfFmxwUMPOa+D5wI/vWx037Zp9Rmd/68w
-	 BMLSLO/MCdzZbgTc5557KDbv98KIOptuejowYzD7MyERs1cRE5S7uShbhgFiNWjHeLwgP
-	 RxjXndlUHwAKmvEfGVIB+uoqn8A0hCwzJOu4u+oGQsJrxYEcJngb12qLQb1o/yZZ1a6Qt
-	 SLQnAMHdAIfE1vBDOfMuNtVXtlHI1CD0i3nTL2DQi9fFIXeyv1WzWKVVkCWD4hythrQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=b575YmPJ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.180.112
-Received: from sender6-pp-f112.zoho.com (sender6-pp-f112.zoho.com [165.173.180.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.182.83.82
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795618192;
+	b=O38yVWPGr1FIYxMABWiELPIZQZy5BJGcxNGoP1DismrDd+gb3YTXCeo3qsdUZZ7CV+vr
+	 ckVHmKv7NTzO92Z+8id7AtljrdetFkwfmkvCQQUJB90yTFwKxGuBIrzL71f9kJHYUsCjY
+	 Ln2BoC7LUOooiDI2wkHCPeMQxFWBnHP/aN6c9elsYYHz9s2cXS5iGg0iUlBWl9E/cEo2j
+	 LxjRvUPz+aLueL8mXzUMaTU9aOrgmBzzqEPjaKG6Q0Gd23gaL9Xjtj7iSrJzXbiPSTlt9
+	 giZvHCYBfNhBr40dZSyD6ePzMquX8RRtKFsZ1QZVKFXuxNpVCpa9ev4z2X8Fzp7UCKw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795618192;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=PSYhMPPaL25zkyEFRSC0G+Y0s0EZao0UlPw7sGjAeYI=;
+	b=ibhout+S6hEvuhiR6ad2a50bZOU0r/OQvMggCgd1cr9yIgB1qMoVUzYvyFWJtAPmgG/y
+	 aOfM+LQGsX3Osk5DQMbafWifXQ+IzUDw2xit8zDmq1y0Gzqw60UBHfjX1qIv+87kMGvRy
+	 VfPbDU+6ncpwXihua1rs4gpDcxebhdqgtoF9/fpZyOgh9vuYHFxG+e4J4IP1Ee6N+er21
+	 Bi70xzV6SeGOgq/rDFU4v0WVplUQbhDLW3yfbkkPt53V6A9gpZMbaU3u1DAnxmjk+2bg2
+	 /pDr8ReBd6+LI9y1s1dOgQMxAJ9r0EeMJY7T72irVSLOQKfkN2dZjvvOsZEoVYDZCYw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=zary.sk;
+	spf=pass smtp.mailfrom=zary.sk;
+	dkim=pass header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=knRXjlOw;
+	arc=none smtp.remote-ip=194.182.83.82
+Received: from mail.zary.sk (mail.zary.sk [194.182.83.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C54A606A31E;
-	Wed, 25 Nov 2026 14:16:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C54A606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734C606A31E;
+	Wed, 25 Nov 2026 14:49:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7734C606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=zary.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zary.sk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=b575YmPJ
-ARC-Seal: i=1; a=rsa-sha256; t=1795616138; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=DQtsjak1355PYkKTSTgonjsIaTisM+uJ/IVo38EpCFLdvmTwsZq9k2ktr/M1mbbVXqOhunSLj6YtSmXDsRz1dwuaVdKOZ/AvuoF1NjyIblFn8SqRvpMBLmLI/Cj5ejL56SrnezsfjPBQkLdx8u6ypmjEErQd1v4xqDHq2XjTP0k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795616138; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ArhpYEDQE8ZdviwwTBn7vEa0W+QU2k77BuW8nuPQq3w=; 
-	b=AA3zfSX6erEFVAyEABB8fXqa5W+gPcMjyHGEG0QmfPh6NNTLAkyHUQ1XaY004PNxmqMPbh3IBWGe7wpIDFZ42Zoz9I4u0RIHniuEjz7c4Br7AZ1ALDGZnR2jIFjCRQwN+HrKLh3q3oQts7IsgEKvcfLAHgN97A7xdt/HSf3zeYI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=b575YmPJVWOYsFd0vh6s6ZlbQNRAaQ1xYC/SiGf28IMiyxgnFNmkHzJAo4NDH82drrlUnui83WcrqHSk5fmQwodBm7Zo5eG4NBGE6GaEuFSAbMZtrpn1Fi0AZ9+U/GaWg3BuB6hPC0p1A6Scp40FTbxnx+cXUwH/zf5rusS0Zc4D8N+9dEdTSBWbbOf4f8btE0Tv+DvT6A6p14p0DIfQv44hlCDXh0zz/VtWUM59xuVygMiB9d3tAKlObtHZSVTXXjrwFq5ibjOksv62Yeoz305xDcvMWkrj6o6sak87sX1muethf/b9M9ytzhW2PdG8Y9HDSOXlIUfupcFTlHGICg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=ArhpYEDQE8ZdviwwTBn7vEa0W+QU2k77BuW8nuPQq3w=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 1795616136432245.25563832862883;
-	Wed, 25 Nov 2026 06:15:36 -0800 (PST)
-Message-ID: <8aceee902d146619d2d5b92b84942baeb27d111f.camel@rong.moe>
-Subject: Re: [PATCH v2 2/2] platform/x86: thinkpad_acpi: Default
- charge_stop to 100 when unsupported
-From: Rong Zhang <i@rong.moe>
-To: Tom Hu <huxiaoying@kylinos.cn>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, 	linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J . Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- xiaoying_hu@126.com
-In-Reply-To: <20261125125252.38003-3-huxiaoying@kylinos.cn>
-References: <6066c701-55c8-494f-9348-f9835b258b44@app.fastmail.com>
-	 <20261125125252.38003-1-huxiaoying@kylinos.cn>
-	 <20261125125252.38003-3-huxiaoying@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 22:10:23 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=zary.sk header.i=@zary.sk header.a=rsa-sha256 header.s=key1 header.b=knRXjlOw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zary.sk; s=key1;
+	t=1795618182; bh=5opMLMUVE+CMapgYryb9t+WhoESFgiMBzdhvj2m+zPY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=knRXjlOwAHp6kI6UdVjpzEd0przfGylspPZuzHDMPpLhv9pm6CZ5fLR4ddkqfwITF
+	 ZCgjAQphwQJTHLK9gZGApIdEhMOHFLUDr9N9d5TU3FZ0mr2L+CU9UguwaPbbEAJgWJ
+	 tiwrHhVYY8r3JqVzt3OtdTsHhwndk2sHIA8/xMv45vD1n3n2g65koPWT/k/U3c90XV
+	 kohL1fH/oT0cFEF/Nkq6dlqX9LM/wuacIh/w1INQygr8Rym5eS5LpgyjeeQLto9nf/
+	 Y9QpR8rZ2HV0AGSDv/kLcn4Wc9N+mo+fv0FkUjaqhTpRBw2j7JycKCsR9zpPEER256
+	 5xFgGMC5B1nbA==
+Received: from gweb1.ggedos.sk (off-7.infotel.telecom.sk [212.5.213.7])
+	by mail.zary.sk (Postfix) with ESMTPSA id 136BEBED51;
+	Wed, 25 Nov 2026 15:49:42 +0100 (CET)
+From: Ondrej Zary <linux@zary.sk>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] Introduce Synology x86 NAS LEDs driver
+Date: Wed, 25 Nov 2026 15:47:34 +0100
+Message-ID: <20261125144936.1967956-1-linux@zary.sk>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -74,60 +63,284 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-4 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Tom,
+Add platform driver for Synology x86-based NAS devices to support HDD LEDs
+controlled by ICH9 GPIO pins.
 
-On Wed, 2026-11-25 at 20:52 +0800, Tom Hu wrote:
-> From: huxiaoying <huxiaoying@kylinos.cn>
->=20
-> When the EC does not provide GET_STOP, stop_support stays clear and the
-> cached charge_stop is never probed, so it remains 0.  charge_start is
-> still validated against that value, which rejects every level above 0
-> even though the start threshold is supported.
->=20
-> Default the cached charge_stop to 100 in tpacpi_battery_probe().  The
-> store path already limits charge_start to [0, 99], so the
-> `value > charge_stop` cross check can then never trigger when no stop
-> threshold is known, and stop_support does not have to be consulted in
-> that path.  A successful GET_STOP probe overwrites the default with the
-> value reported by the EC.
->=20
-> Suggested-by: Rong Zhang <i@rong.moe>
+Only DS411+II is supported for now (DS411+ should be the same except CPU).
 
-A Suggested-by: tag is usually followed by a Link: tag.
+Buttons and other LEDs are not supported by this driver because they're
+controlled by a PIC MCU (connected through serial port).
 
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> Reviewed-by: Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Ondrej Zary <linux@zary.sk>
+---
+Changes in v4:
+ - added DMI match for BIOS vendor and version
+ - removed PCI device presence checking
 
-The tag is corrupted.
+Changes in v3:
+ - descriptions changed to mention LEDs
+ - GPIO swnodes are used instead of gpiod
+ - improved PCI device presence checking
 
-Thanks,
-Rong
+Changes in v2:
+ - fixed includes (order, added missing, removed kernel.h)
+ - added missing DMI and PCI dependencies to Kconfig
+ - added PCI device presence check details to changelog
+ - used %pe for error message
 
-> Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 8fc5569131f6..0c27e0b74b48 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -9698,6 +9698,14 @@ static int tpacpi_battery_probe(int battery)
->  =09memset(&battery_info.batteries[battery], 0,
->  =09=09sizeof(battery_info.batteries[battery]));
-> =20
-> +=09/*
-> +=09 * If the EC does not provide GET_STOP, stop_support stays clear and
-> +=09 * charge_stop is never probed.  Default it to 100 (no upper limit)
-> +=09 * so that the cross check in tpacpi_battery_store() does not reject
-> +=09 * every charge_start value.
-> +=09 */
-> +=09battery_info.batteries[battery].charge_stop =3D 100;
-> +
->  =09/*
->  =09 * 1) Get the current start threshold
->  =09 * 2) Check for support
+---
+ drivers/platform/x86/Kconfig        |  16 +++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/synology-x86.c | 200 ++++++++++++++++++++++++++++
+ 3 files changed, 219 insertions(+)
+ create mode 100644 drivers/platform/x86/synology-x86.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9ce384e0475e..64aa44c7f239 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1059,6 +1059,22 @@ config OXP_EC
+ 
+ source "drivers/platform/x86/tuxedo/Kconfig"
+ 
++config SYNOLOGY_X86
++	tristate "Synology x86 NAS LEDs driver"
++	depends on DMI
++	depends on GPIOLIB
++	depends on LPC_ICH
++	depends on GPIO_ICH
++	depends on LEDS_CLASS
++	depends on PCI
++	select LEDS_GPIO
++	help
++	  This driver provides support for the HDD LEDs on Synology x86 NAS
++	  devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called synology-x86.
++
+ endif # X86_PLATFORM_DEVICES
+ 
+ config P2SB
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 229057234d00..a1806eb0efc9 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -166,3 +166,6 @@ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
+ 
+ # OneXPlayer
+ obj-$(CONFIG_OXP_EC)			+= oxpec.o
++
++# Synology
++obj-$(CONFIG_SYNOLOGY_X86)		+= synology-x86.o
+diff --git a/drivers/platform/x86/synology-x86.c b/drivers/platform/x86/synology-x86.c
+new file mode 100644
+index 000000000000..a3a42a4b2109
+--- /dev/null
++++ b/drivers/platform/x86/synology-x86.c
+@@ -0,0 +1,200 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Synology x86 NAS LEDs driver
++ *
++ * Inspired by platform/x86/meraki-mx100.c
++ *
++ * Copyright (C) 2026 Ondrej Zary <linux@zary.sk>
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/dmi.h>
++#include <linux/err.h>
++#include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
++#include <linux/mfd/lpc_ich.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/printk.h>
++#include <linux/property.h>
++
++static const struct software_node synology_gpio_leds_node = {
++	.name = "synology-leds",
++};
++
++static const struct property_entry synology_hdd1_green_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:green:hdd1"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 16, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd1_green_led_node = {
++	.name = "hdd1-green-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd1_green_led_props,
++};
++
++static const struct property_entry synology_hdd1_amber_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd1"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 18, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd1_amber_led_node = {
++	.name = "hdd1-amber-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd1_amber_led_props,
++};
++
++static const struct property_entry synology_hdd2_green_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:green:hdd2"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 20, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd2_green_led_node = {
++	.name = "hdd2-green-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd2_green_led_props,
++};
++
++static const struct property_entry synology_hdd2_amber_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd2"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 32, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd2_amber_led_node = {
++	.name = "hdd2-amber-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd2_amber_led_props,
++};
++
++static const struct property_entry synology_hdd3_green_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:green:hdd3"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 33, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd3_green_led_node = {
++	.name = "hdd3-green-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd3_green_led_props,
++};
++
++static const struct property_entry synology_hdd3_amber_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd3"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 34, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd3_amber_led_node = {
++	.name = "hdd3-amber-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd3_amber_led_props,
++};
++
++static const struct property_entry synology_hdd4_green_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:green:hdd4"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 49, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd4_green_led_node = {
++	.name = "hdd4-green-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd4_green_led_props,
++};
++
++static const struct property_entry synology_hdd4_amber_led_props[] = {
++	PROPERTY_ENTRY_STRING("label", "synology:amber:hdd4"),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 55, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node synology_hdd4_amber_led_node = {
++	.name = "hdd4-amber-led",
++	.parent = &synology_gpio_leds_node,
++	.properties = synology_hdd4_amber_led_props,
++};
++
++static const struct software_node *synology_swnodes[] = {
++	&synology_gpio_leds_node,
++	&synology_hdd1_green_led_node,
++	&synology_hdd1_amber_led_node,
++	&synology_hdd2_green_led_node,
++	&synology_hdd2_amber_led_node,
++	&synology_hdd3_green_led_node,
++	&synology_hdd3_amber_led_node,
++	&synology_hdd4_green_led_node,
++	&synology_hdd4_amber_led_node,
++	NULL
++};
++
++static const struct dmi_system_id synology_systems[] __initconst = {
++	{
++		.ident = "DS411+",	/* DS411+II is the same with faster CPU */
++		.matches = {
++			/* Synology did not put anything in DMI strings */
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
++			/* so match BIOS version and date */
++			DMI_EXACT_MATCH(DMI_BIOS_VENDOR, "American Megatrends Inc."),
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "080016 "),
++			DMI_EXACT_MATCH(DMI_BIOS_DATE, "05/21/2012"),
++		},
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(dmi, synology_systems);
++
++static struct platform_device *synology_leds_pdev;
++
++static int __init synology_init(void)
++{
++	struct platform_device_info leds_info = {
++		.name = "leds-gpio",
++		.id = PLATFORM_DEVID_NONE,
++	};
++	const struct dmi_system_id *dmi;
++	int err;
++
++	dmi = dmi_first_match(synology_systems);
++	if (!dmi)
++		return -ENODEV;
++
++	pr_info("Detected Synology NAS %s\n", dmi->ident);
++
++	err = software_node_register_node_group(synology_swnodes);
++	if (err) {
++		pr_err("failed to register software nodes: %d\n", err);
++		return err;
++	}
++
++	leds_info.fwnode = software_node_fwnode(&synology_gpio_leds_node);
++	synology_leds_pdev = platform_device_register_full(&leds_info);
++	err = PTR_ERR_OR_ZERO(synology_leds_pdev);
++	if (err) {
++		pr_err("error registering platform device: %pe\n", synology_leds_pdev);
++		goto err_unregister;
++	}
++
++	return 0;
++
++err_unregister:
++	software_node_unregister_node_group(synology_swnodes);
++	return err;
++}
++module_init(synology_init);
++
++static void __exit synology_exit(void)
++{
++	platform_device_unregister(synology_leds_pdev);
++	software_node_unregister_node_group(synology_swnodes);
++}
++module_exit(synology_exit);
++
++MODULE_AUTHOR("Ondrej Zary <linux@zary.sk>");
++MODULE_DESCRIPTION("Synology x86 NAS Platform Driver");
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS("LPC_ICH");
+-- 
+Ondrej Zary
+
