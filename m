@@ -1,62 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795607176;
-	b=jiBMRa31cN2ZGlVG8HTu5+BkVZb59cnnGFNcYU8qHZ2xjkdB9hMvZ8h7xss1U4JXvezt
-	 aznM3kBjUqA1khg1+JfZkRG1onTK7Bfu+AISFnRn0hHfFA8Ml1f9MWmH3zda/qwVVxeXF
-	 FNeEOZR9sE4uth+a9I5TZhtHRwnmTZGJ6XBlM5/xYKpp41sHgNyciOFwfHNWpqj0u9lPV
-	 cBhWLmkTsAbD8X4k0gKDCS8lD3tz8ZPgoOYct6mUR2thIX0ngIGTJBC7UDwWNI/ScQGTl
-	 ofAT8Xn3Dv6Zz3Ry+jN/thwlewMmkH2fqZkx0UB9+gkCTF9lAifaiaaSL4y2ln4RKTA==
+	t=1795608600;
+	b=KfnA7y8FF4pe71wExOUep/IHb9niJKH4/MqW7nJgewuyC2lpXL+TeiXmrTCtXIKsTJKm
+	 i/yDREmjY6dMZg6pwnQjJqiw99lj3DSSvS6YGbDs9idXZ0t6RO+B37lpm0s27/OQvFL8v
+	 4wXeWkdYXesrKfwHz8SkksiGGIjyu3rVRaNi6p4nDzZ7KPpEN0xvEOG2a6YljtjbZ/72B
+	 MWbjyJjhdY0BqWZWUyPmXDF2ug8eyf/FQe2qFdKWjZ/0YIneZyNz6rpXFRgoK02t3aqdv
+	 4zfCmRsaxdgttPsE0eHQGRqtX+v5C6vNEGa8kADFK9cHx0UT2u0jzrySho1Tb2CtDhw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795607176;
-	h=DMARC-Filter:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:User-Agent:
-	 MIME-Version;
-	bh=DpArIvxr3KOunlhtH1Io/OL1G52P9Bdd6eSpDcy8nJ8=;
-	b=Uze0slBMKsEYVXC9bUtr5QvI5aChqRlSG721h3AB4zWoCKbmNGvrd5sAWRyOGXn/keWg
-	 VDcelJnK8qpUCN8NNo0QKPLWpEqIFmjVcUQw7BHWNX4YwLV11TFQuq4LPcz21kjpWpNvN
-	 Dfc1zG3mDt710BlLJzMJl3znyY82/YhF3vQMTNQkXdDjGldMINWN07MndXEtv9AZAay58
-	 lqJ6uG3sJUBFA+SzHSdVWq5QDIcp2FXvg3mDCSLNF8op0nvZovlS09965vJ/TSpvMu1lu
-	 6ai5sLvBcrxJZNJdYRyiAkEirtvIbF9MuukXZdWcMtiTR2GL2BEDmeA6gIvGxKy/Z4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795608600;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:
+	 Organization:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=8wBwtuJsGaQU0lzGZKmrRPCz1qceCGO9wyoK7OZ9yjk=;
+	b=CDkF/D3/uKSum4XJWwVJdsDVsQGI9GMM4H2VrsgDc6TX9zYBxNrgJOl0H0N+1W1f2cL0
+	 nmOh64n2w3JihmBjLhksFmRqLAmjPhF1frFY7NBO/Tqz2P3W4HY/MGQXdswLJd+EeNJ/9
+	 l7FpgtOAQzab59jbErNn3XrsLt/kp8JOPRFq0Y6/2lAUnwy1WV/5elFB34axQiIwpcyhX
+	 lkENYl6VxaZy8KrpVwhaXH9oaN+a50pHuGg2EHVaSeClHzJCL+3ecaVWSE/uMisXcv2Vz
+	 Siqtd8cv6DzEMFCHWZdfNyt0u2MrPRoCTUQUwxF0TUaTLdoxKR0Y3AY0ButR44hiMJw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=irl.hu;
-	spf=pass smtp.mailfrom=irl.hu;
-	arc=none smtp.remote-ip=95.85.9.111
-Received: from irl.hu (irl.hu [95.85.9.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Jfd4e5ov;
+	arc=none smtp.remote-ip=198.175.65.19
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 4C6D9606A326;
-	Wed, 25 Nov 2026 11:46:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C6D9606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b695b0.dsl.pool.telekom.hu [::ffff:81.182.149.176])
-  (AUTH: CRAM-MD5 soyer@irl.hu, SSL: TLS1.3,256bits,ECDHE_RSA_AES_256_GCM_SHA384)
-  by irl.hu with ESMTPSA
-  id 000000000008120F.000000006B06CA85.00015913; Wed, 25 Nov 2026 12:46:13 +0100
-Message-ID: <005f13d17c178db0ee3f76344a0c1f1a07f89a00.camel@irl.hu>
-Subject: Re: [PATCH v2 6/7] platform/x86: ideapad-laptop: Trigger the EC on
- YMC events following Windows behavior
-From: Gergo Koteles <soyer@irl.hu>
-To: Rong Zhang <i@rong.moe>,
-  Mark Pearson <mpearson-lenovo@squebb.ca>,
-  "Derek J. Clark" <derekjohn.clark@gmail.com>,
-  Hans de Goede <hansg@kernel.org>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Ike Panhc <ikepanhc@gmail.com>,
-  Andrew Kallmeyer <kallmeyeras@gmail.com>
-Cc: Eduard Aliman <edialiman20@gmail.com>,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-  Mahir Faisal <mahirfaisalantiq33@gmail.com>
-Date: Wed, 25 Nov 2026 12:46:05 +0100
-In-Reply-To: <7bf18131ce00d8aeab1e01721dc0cd71972ea365.camel@rong.moe>
-References: <20261125-ymc-82yl-v2-0-624bdcb3c50e@rong.moe>
-			 <20261125-ymc-82yl-v2-6-624bdcb3c50e@rong.moe>
-		 <84a3d94cc78ba0a26ed7b0af7cfcbde65433aa1e.camel@irl.hu>
-	 <7bf18131ce00d8aeab1e01721dc0cd71972ea365.camel@rong.moe>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6106F606A31E;
+	Wed, 25 Nov 2026 12:10:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6106F606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Jfd4e5ov
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795608601; x=1827144601;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OoZJcOqtwHtc1mXcC45OLAwJuS6buK8qaDHdK3nI8ZY=;
+  b=Jfd4e5ovt3d4U+ft9FZJ97FM53o4Dc+hF0f8DIBwRVtfc+UCIb4hZcIf
+   xiu3CvoEsWWB368ydHgLuwnS1ZVcvvTNdT0jQM/uTHh90NANVkZS4hULo
+   yVnv/7Oq8U1VfnAFtB/eo0xRMHydYv81zu+Y3VNhiLC6jEjAX9gi/1Lyi
+   rErBoLJ7YNSAgte01VrBuv+QWcklrEFz84TtbkpY2zatGBNLkx8H30Dvi
+   3A6TOxcS7cHHYEqJqF4c3QrovWdGUHUdSYZG6nf35FrRLVw3N2CpxYmx0
+   0VfjeSIcwuuGp9urxT1VAHYhYp3Lt7FF44qIZur1E/6I51LmsFHgm7exn
+   w==;
+X-CSE-ConnectionGUID: hSVMGeHpR+S1/5wTED9BTQ==
+X-CSE-MsgGUID: lv4afe04Raa6pefoI5CxZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4544980"
+X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
+   d="scan'208";a="4544980"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 04:05:58 -0800
+X-CSE-ConnectionGUID: DPiA2P7zQ6KWQmBzWnrq3w==
+X-CSE-MsgGUID: 4+w6/FdIRkOrZ8Uy+4DoZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
+   d="scan'208";a="13877051"
+Received: from alekseim-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.36])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 04:05:52 -0800
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id CCD1911F920;
+	Wed, 25 Nov 2026 14:05:55 +0200 (EET)
+Date: Wed, 25 Nov 2026 14:05:55 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Sergey Lebedev <lsa.uz@pm.me>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@amd.com>,
+	Fernando Rimoli <fernandorimoli11@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: int3472: Use actual clock frequency for
+ DSM method
+Message-ID: <awbPI9LPXFUpBinZ@kekkonen.localdomain>
+References: <20261125090921.46652-1-lsa.uz@pm.me>
+ <84ecba76-5fe7-4bb2-b18f-efc7cda2247c@kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -66,88 +90,43 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84ecba76-5fe7-4bb2-b18f-efc7cda2247c@kernel.org>
 
-Hi Rong,
+Hi Hans, Sergey,
 
-On Wed, 2026-11-25 at 19:26 +0800, Rong Zhang wrote:
-> Hi Gergo,
->=20
-> Thanks for testing.
->=20
-> On Wed, 2026-11-25 at 11:56 +0100, Gergo Koteles wrote:
-> > Hi Rong,
-> >=20
-> > Thank you for taking care of this.
-> >=20
-> > On Wed, 2026-11-25 at 02:17 +0800, Rong Zhang wrote:
-> > > Currently, the ideapad-laptop driver triggers the EC with YMC command
-> > > 0x01, which seems to be randomly chosen with trial-and-error and turn=
-s
-> > > out to be not a command for YMC events. While the devices in the DMI
-> > > quirk table recognize it, some other devices do not, making the
-> > > trigger_ec functionality a no-op.
-> > >=20
-> > > Lenovo's YMC driver for Windows (YMC.exe) emits YMC command 0x08/0x09=
- on
-> > > fold/unfold YMC events, in which "unfold" means laptop mode and "fold=
-"
-> > > means other modes.
-> > >=20
-> > > Adopt the said sequence to make it work on all relevant devices. For =
-the
-> > > sake of caution, only emit YMC command 0x08 only for the known fold
-> > > postures. For all other postures (including unknown ones), emit 0x09 =
-to
-> > > make sure the touchpad and keyboard are still functional.
-> > >=20
-> > > Reported-by: Mahir Faisal <mahirfaisalantiq33@gmail.com>
-> > > Closes: https://msgid.link/CAGAHqH6o0TUa1HXMrNV6e+HNYwU3xxHkOM665756n=
-8Cp3AzhVQ@mail.gmail.com
-> > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > > Signed-off-by: Rong Zhang <i@rong.moe>
-> > > ---
-> > > Changes in v2:
-> > > - Fix typos (thanks Mark Pearson)
-> > > ---
-> > >=20
-> >=20
-> > ...
-> >=20
-> > >  	scoped_guard(mutex, &priv->vpc_mutex)
-> > > -		ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
-> > > +		ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, cmd);
-> >=20
-> > Unfortunately, the 14ARB7 does not emit a SW_TABLET_MODE after
-> > triggering the ec with 8/9 or the fixed value of 8 or 9. It only works
-> > with 1.
->=20
-> Did you mean triggering the EC with 8/9 acts like a kill-switch on your
-> device that blocks any *further* LENOVO_YMC_EVENTs? Can triggering the EC
-> with 1 again makes it recover?
->=20
+On Wed, Nov 25, 2026 at 12:16:08PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 25-Nov-26 10:09, Sergey Lebedev wrote:
+> > From: Hao Yao <hao.yao@intel.com>
+> > 
+> > The third argument (args[2]) to the _DSM method was hardcoded to 1,
+> > which selects 19.2MHz. A sensor whose SSDB asks for 24MHz therefore
+> > runs from 19.2MHz, and everything it derives from its clock runs at
+> > four fifths of the expected rate.
+> > 
+> > Pass the frequency from the SSDB instead, with 19.2MHz as the default.
+> > 1 selects 19.2MHz everywhere, but the value for 24MHz depends on the
+> > platform. Where the frequency field is one bit wide (Tiger Lake, Jasper
+> > Lake, Alder Lake, Raptor Lake) it is 0, and 3 would also set the clock's
+> > enable bit again when the clock is turned off. From Meteor Lake on the
+> > field is two bits wide and it is 3; 0 and 2 leave the clock unchanged
+> > there, as measured with an oscilloscope.
+> > 
+> > Fixes: e4543de8b6ff ("platform/x86: int3472: Evaluate device's _DSM method to control imaging clock")
+> > Signed-off-by: Hao Yao <hao.yao@intel.com>
+> > [Sergey: pick the 24MHz value per platform]
+> > Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+> 
+> Thanks, patch looks good to me:
+> 
+> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-Yes, the value 1 will recover it.
+Thanks. I'll add Cc: stable when applying this, too.
 
-> >=20
-> > However, it turns off the keyboard and touchpad when triggered by 8/9
-> > or 1, as well as without any trigger.
->=20
-> So it seems that any YMC commands can synchronize the state of the
-> keyboard and touchpad, but only 1 can actually "consume" the event.
->=20
-> >=20
-> > Perhaps the triggering should be handled on a per-model basis?
->=20
-> I don't want to add too many complexities to the DMI quirk table and the
-> module parameter.
->=20
-> Considering that triggering the EC with 1 does nothing on newer models,
-> perhaps we can trigger the EC with 8,1/9,1 as long as the trailing 1
-> recovers the event delivery.
->=20
+-- 
+Regards,
 
-Writing 8 + 1 / 9 + 1 works.
-
-
-Thanks,
-Gergo
+Sakari Ailus
