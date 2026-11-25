@@ -1,81 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795628963;
-	b=Wknq321N10+efd70pJin5lWKLUB94MQrWemufImumS1ohIZ+cR7oMmz6DkP0RDad9pPU
-	 9fVXYy+RpoMJuMKjxiP1Q8qs+LMZLc/hr0gCq7Ujdx+u5x0mv0NwERlT+DVEL5AW7YOPn
-	 MdrXmAv1sXmepdhHH/0LdhASgxp5hi5OI5govjJ09Z+YVTHMfhTwUWMYd0zpEuNf3HrU7
-	 K/O9oX3ZRrxugG4lkF4Sj9BKT6BFED0LU/gVSJARsCPtE503+btxuq0sIpvk4cTm2h1UP
-	 aBUd2yyK5pQoZOim1XNq4/TMQ1Cyo4LggyzeO7qdnY/46LlByOrG9vQzI6NV6hqTphQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795628963;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Subject:
-	 From:To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version;
-	bh=VSrdhCV78Kqq7+HZq7TSgeUaWdvzaWenMwAyVDxuYJw=;
-	b=doxQkBWcKK4KxxnMIJSQosiBARD1bPGlsY6fh/56lZARkvQw8jBtM/8Cig5Ql5PDiTkA
-	 Eg1XmojBVaQy/skvD2XmC0YMYAmJdiNWjAxedUBcqwHfBDdojfDnBIsrv+mdSpUyTt5Pi
-	 brTv3Xl5UEuFR7jQBlb+1j4YgqTjL8/CSVwN3iymssxQC/Ve1ExnC9e5rXdt1EPmoz5VH
-	 g3/DyLgBYApAeghaf6ww2/cLlt7L88AXO4xKPMKmHohuUOOCYNH4GEke3m3W8JTl7X0OF
-	 wun9o5gePlpg1QjIgn/PoGz+bFzvivIr9PfWJ50q6rBcdbHVnHlSkmqo+cfAuLcTKtA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gmXpwMT8;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795629810;
+	b=zC7lYAla33NkGNJ1mOBfFln++lujLvJ7nb/ZzlcpkuTyhlDfEbaWvhPfqlmHnUTrxE9X
+	 e3H4aDgd50dXMnL6zIyjkxqzr/j4abc/BefdQ7S3VWdLxyhpdQkEaQWi+OwP/sl23n8St
+	 FRoVpc8hwt8O/Mp4FNTaoSOqKsma7iNoljUKiF3SY2IWxIj2wKDyeK/AquSZkjmqzC7OO
+	 5PYRv8mVEzM4AWJ45cU0LlLKdur89/02LP+Uo2J46SruzrVP8fUadPHw9gW02thYZpg+r
+	 QBaKYB4ItlG0zcaatuvbjuQ0hA/3LNuouNCEayrvrt4VkS6tV/VgyDeXw6rkrPv26pQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795629810;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
+	b=ZyE3aCBksK+paM1+ZsUTZ6qrmalRfAF6J58gRKVdH5VN3HnY3QfSHRo7XRJu1fdJk5ej
+	 HbPL+RKahwXcjBdpZzeWwmKSd+MZ639JTNYl70YgR4YRU3y1YeyRPgWyUzeDDlfyMXxcm
+	 0NbDl7gOAWOlL6WrN/LW6jk/VRN81ZoeHk44ynSuoOLZ0PrO6WmlYTEzvIUzuYA1HTwW8
+	 /cgbDT6l83PqE8l3+Q8zmTnxtSvUSZQTXwxdMed2GxHJSvLoGoao+3bNngFJ7oi2zv1Xq
+	 JTXg6tD5Gy3xenP0U/CtIz8gRLDxN/xhctGhSeNAZqWyz4gGtrgv3GdKQTaapfV1cjQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Utu5jKWE;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.47
+Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EE6606A33A;
-	Wed, 25 Nov 2026 17:49:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86EE6606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AC9606A331
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 18:03:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24AC9606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gmXpwMT8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795628963; x=1827164963;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=K9Pyi1PyzMu36Fq+bvuCkDzpoXpuwUc9Lc0EQ63cwbw=;
-  b=gmXpwMT8bRxhVuotVeXxCvje86+KLhwQ7FFRogXLeXOYqPgKhEnyJnoe
-   4aw2ypdFqpo3FB4NEi54ZNaL/52aqgqIIfLctEUFImISeBeGJDGqLL/Tb
-   4fMa/nskbY6kAyJzKI5qVEvBdTCBB5TkGIunGzyL1YBj1q0GCnCJMsKTN
-   Wd99G4Q1F6ogtqgsNUKxFvVnbFc4G1KkoXr3j/MdXmPeKNwb4BzThNDv+
-   mRfhIRYQyHCXOl2Fu4sv3Zx/R2e8d7RZULg/7jLf3pMJfxMe19vKJu/eY
-   zci9Smu0l5j0SR8maRgALnRHPCX6RidX9P5xrFoMFXmIgdxWX3LSket05
-   A==;
-X-CSE-ConnectionGUID: xsLR8qKdSgKl2TQAEopMaw==
-X-CSE-MsgGUID: +0QAVA2ISMOuEv8v/HVUow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4409236"
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4409236"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 09:49:22 -0800
-X-CSE-ConnectionGUID: ENU4monsQTWyfOq7WMbOiw==
-X-CSE-MsgGUID: TM64G7RVQ96QHve/gDrDyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="11911000"
-Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.124.220.229]) ([10.124.220.229])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 09:49:21 -0800
-Message-ID: <39da5f7295537024b97eeca6b567720c117ee002.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: Fix CPU selection on
- partitioned systems
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Qinyun Tan <qinyuntan@linux.alibaba.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede
- <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	xlpang@linux.alibaba.com
-Date: Wed, 25 Nov 2026 09:49:19 -0800
-In-Reply-To: <20261125092244.3641945-1-qinyuntan@linux.alibaba.com>
-References: <20261125092244.3641945-1-qinyuntan@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Utu5jKWE
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-67da564d9f2so8222293d50.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 10:03:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795629809; cv=none;
+        d=google.com; s=arc-20260327;
+        b=kxCRXoxl2xywKnhrhdxl4WlIO6BCv59rxFWB1daBcLtTuh/leuBv2xerISN/2Cq+rG
+         EdlP8MgtJtf1QsYG7PgTyG9umFL6gXxliLfcAKKt5dNu3FrkPd5M1E2uYuw7w4Z2twOP
+         DIdCxAmMjFKPYgYxRaKtzpgNQFQ4+yQnzeiK8H5wOar0+u/hcSV3Wk4vOcbjhfjgHGUi
+         uvf4bOWTWSHqBcdATXoYAUHqnOyztThIukTufTn8kwr0W+y3SezXfh2YUNl2/DxbZS+K
+         AZ7MH4QhA+mS2urvFw3I1GjMHDo5HL2BDMdplbDCqLvJAMy0/B4y775QH4+UNbAP8ED5
+         OPRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
+        fh=5tpVPdfoNgfZ96xbsOUd8WOs4l+cFsOlQUlp/RCD9HM=;
+        b=YWRxVuFTRg1LH+f2QFVTurtKvYabAK3oWHxus4kYGgj2VxvhyERHCkZBHdpwlADDl0
+         pD5z0WZ3bt4sB2mQ/JJ7FhyTYoOzLfExRxK6RYOjMV9Ra94OztBAfMObRDCmbERKlXeF
+         UxXfMFarsw6iDfjUH7ZWPnOm+bTtcmvqVrtC+4aqAmh+GBWITZ+8SwAziui9P5iuHRgl
+         WUT0s9zeZvqFaI+Oy2+WKhbmSm9bcRYwgGbLs16wHctM4smaBQ4cOg2MdMCdxsO09q2w
+         I2GzF/eTw8zPfty/5XflU+hIsnm+pU8p2v3x1s3/m1qbfhr8SCX0U5FxjE2jwhS8hjBv
+         iNLg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795629809; x=1796234609; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
+        b=Utu5jKWEGVIdW35vjoBuglbD4NrMX23BcDFTZcJWrrMJ3d2BRMRGAThzxlSxiCojHd
+         q5uOLfCrMA3eZnVg/MCWfE+dUcrMUbMV4+UcpUH/JM9erURiXwa1ilXIJ1XhiC+Cd3s4
+         txrDqiOiE4HSWH1wNyFf/pUWa3NxRHWxZiY/W4QWU6XzT3/ttNTKGRXAKBAWrXSYZd5j
+         OGa1e8Fe47nAvuj8JR+afsvzSk/Kc6o0dWyQeaA2JND7UiumCEg/ZpnDcLydLeWosxrw
+         vjNqhzym6IABNJBEOFLcMEG+jtdJQE1VRhi5j3KvkQpPfn7LyMwqnqhR9mODKxATSjwv
+         oLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795629809; x=1796234609;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ednzTerZKQHbSr9weSnkbZGaI0lxxyuNE/iWCwgD8eQ=;
+        b=IZPBEt0tkQ3c1cPA/N/+SOvhpj7AaABdX8vQ/vUmNQRAdidQqAm8DaVDDz776KHkpR
+         mQTuGbOpSnKt1XZq3ahBG8UTByupWZ2ZrlhJMFnPg/TrK9Rvy8rGFoXahlm6KeuAFx7j
+         kIur2/MCLSBNVt6uZN4gdWRbkxtO0FFWRXZ49c/pZZSYQ5Jk+PTojF2WJqm6Yv1Ecr9d
+         gFSmXfjMEQbEZM/Sc2mpGOHrNaGs5YPXJ75JFB2WT6go/OtsEISoC1Q3BBq106kNI6QU
+         5aSMstusjNjdjbfmJqbfz3YUyfo9OI/w/fvi4sc/JaRG4cT8nf28/ee7LEH6bfGzadsD
+         seNQ==
+X-Forwarded-Encrypted: i=1; AL+hErGp246D7NWfEcdtVWUEBrXby1aGCrOHI2HoLIP6f33IbilbJedr8jR7165GQ5yxVN09AvfHAU8VqTr9s4i+8j32vDlO@vger.kernel.org
+X-Gm-Message-State: APuU4Z/FOiiRLOqkHsHr1/Ubw5dnbyYQOIQF86KO9Zf+0wABvPz0oUu9
+	rx/YrzNRpjHJdUkOD9+5hvbNqyT8ViB9KOI/DuntFencbjMremj7OvjzFrKofzsF2CQdV967TyT
+	5GLX+07yqk2DELLdlI/0mjt/r69//iLY=
+X-Gm-Gg: AZFdTZdti5io1HKypxyL0K8JNXe6NusNH+m0y1hUvV0BVF9SIYM88UbCCr5RSp/uGCO
+	yMetoqhCKBi+nRRD63072GnlFTrpbF6hRyp5Y5O3GwJDH1YlsOSZYEveH/39Rbrp1MpWnNWQasL
+	cPTJNXr2DsRIlXMaEig6b21fLRwXEPundESesKShgMaHOFiVRdXnt4Rklefgop47UxDg806FXbb
+	HGrXKKARPB4MhMspNYD41nZu3n7xxva0kyMU2Fp8n10WlRDzPxjAlkatRPOubigrzVNyFLdk2jC
+	YgXa4XD1WnqIvazVTTW7u6VGrmoJI3GOH5H9weAN1aYZ4PoFlcq0hlkkVMDQawJ5Onpep1JU/2y
+	hngVKnfaL4bsY+pSceOTQp6tX8fFcApym4dYe
+X-Received: by 2002:a05:690e:4849:b0:67d:bd5a:cf4a with SMTP id
+ 956f58d0204a3-67df42d0aa2mr4895252d50.5.1795629809087; Wed, 25 Nov 2026
+ 10:03:29 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -85,186 +103,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+References: <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
+ <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev> <ce46d69f-2a3e-45fe-abe2-f643f683d09f@gmx.de>
+ <CAMnz_-Dztuj3CRsxcVnfe2=OCB3tTJzK6Lu7-AKfkbuqn5N-UQ@mail.gmail.com> <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
+In-Reply-To: <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
+From: =?UTF-8?Q?Riccardo_Zangh=C3=AD?= <riccardo.z.dev@gmail.com>
+Date: Wed, 25 Nov 2026 19:03:18 +0100
+X-Gm-Features: Aa3M54o3ejowZkwXNaB2whcv1q9ei4v9f7X_tsdIHarYRrDqpjLNLgFm4DNkp9Y
+Message-ID: <CAMnz_-C02J6CznPD68GgWCPCWEDSGsq6hoC+AJhsZjw39H+hhQ@mail.gmail.com>
+Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
+ differs between MUX modes
+To: Daniel Dadap <ddadap@nvidia.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Denis Benato <denis.benato@linux.dev>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hansg@kernel.org" <hansg@kernel.org>, 
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, "luke@ljones.dev" <luke@ljones.dev>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2026-11-25 at 17:22 +0800, Qinyun Tan wrote:
-> When a package has multiple TPMI partitions, PLR can report the same
-> CPUs in more than one partition. For example, on a single-package
-> system with 72 logical CPUs and two TPMI partitions, both partitions
-> list CPUs 0-35 in their PLR status files. CPUs 36-71 are missing.
->=20
-> Each partition numbers its PLR resources from zero. The driver
-> compares
-> that index with the CPU's power domain ID from MSR_PM_LOGICAL_ID,
-> which
-> is unique within the package. As a result, both partitions select the
-> same CPUs. A mailbox read or clear on the second partition then uses
-> a
-> module ID taken from a CPU in the first partition.
->=20
-> Use the partition's cdie_mask to map each PLR resource to its package
-> power domain. For compatibility with older platforms, keep using the
-> resource index for partition 0 when no mask is available. Skip per-
-> CPU
-> mailbox accesses if the resource has no valid CPU mapping.
->=20
-> Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for
-> the plr mailbox")
-> Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
+On Wed, 25 Nov 2026 at 07:13, Daniel Dadap <ddadap@nvidia.com> wrote:
+> So, as an experiment, if you could read the LSb at physical address
+> 0xFEDD83B8 in both iGPU and dGPU modes, and report on the value, that
+> would help.
 
-Hi Tan,
+Hi Daniel,
 
-Thank you for submitting this change, similar change was in our queue
-waiting to test.
+Thanks for the detailed analysis. I believe I received your full message by
+mail.
 
-You have moved definition of MAX_POWER_DOMAINS to header file, but this
-there is no description of that in the commit description.
-If you happen to post update, add that.
+Result of: od -An -t x1 -j $((0xFEDD83B8)) -N 1 /dev/mem
 
+integrated mode:              4a  (bit 0 = 0)
+dGPU mode (gpu_mux_mode = 0): 07  (bit 0 = 1)
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+So G40C does differ between the two modes. I can try the DSDT
+override next and report back, or test any other patch.
 
-
-
-> ---
->=20
-> Notes:
-> =C2=A0=C2=A0=C2=A0 Tested on a single-package system with 72 logical CPUs=
- and two
-> TPMI
-> =C2=A0=C2=A0=C2=A0 partitions. The PLR status files now list the CPUs bel=
-onging to
-> each
-> =C2=A0=C2=A0=C2=A0 partition.
->=20
-> =C2=A0drivers/platform/x86/intel/plr_tpmi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 31 ++++++++++++++++-
-> --
-> =C2=A0.../platform/x86/intel/tpmi_power_domains.c=C2=A0=C2=A0 |=C2=A0 2 -=
--
-> =C2=A0.../platform/x86/intel/tpmi_power_domains.h=C2=A0=C2=A0 |=C2=A0 2 +=
-+
-> =C2=A03 files changed, 29 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel/plr_tpmi.c
-> b/drivers/platform/x86/intel/plr_tpmi.c
-> index 785c279b4540..33066f4763ef 100644
-> --- a/drivers/platform/x86/intel/plr_tpmi.c
-> +++ b/drivers/platform/x86/intel/plr_tpmi.c
-> @@ -51,7 +51,7 @@ struct tpmi_plr_die {
-> =C2=A0	void __iomem *base;
-> =C2=A0	struct mutex lock; /* Protect access to PLR mailbox */
-> =C2=A0	int package_id;
-> -	int die_id;
-> +	int power_domain_id;
-> =C2=A0	struct tpmi_plr *plr;
-> =C2=A0};
-> =C2=A0
-> @@ -201,10 +201,13 @@ static int plr_status_show(struct seq_file *s,
-> void *unused)
-> =C2=A0	seq_puts(s, "cpus");
-> =C2=A0	plr_print_bits(s, val, 32);
-> =C2=A0
-> +	if (plr_die->power_domain_id < 0)
-> +		return 0;
-> +
-> =C2=A0	guard(mutex)(&plr_die->lock);
-> =C2=A0
-> =C2=A0	for (int cpu =3D 0; cpu < nr_cpu_ids; cpu++) {
-> -		if (plr_die->die_id !=3D
-> tpmi_get_power_domain_id(cpu))
-> +		if (plr_die->power_domain_id !=3D
-> tpmi_get_power_domain_id(cpu))
-> =C2=A0			continue;
-> =C2=A0
-> =C2=A0		if (plr_die->package_id !=3D
-> topology_physical_package_id(cpu))
-> @@ -241,10 +244,13 @@ static ssize_t plr_status_write(struct file
-> *filp, const char __user *ubuf,
-> =C2=A0
-> =C2=A0	plr_write(0, plr_die, PLR_DIE_LEVEL);
-> =C2=A0
-> +	if (plr_die->power_domain_id < 0)
-> +		return count;
-> +
-> =C2=A0	guard(mutex)(&plr_die->lock);
-> =C2=A0
-> =C2=A0	for (int cpu =3D 0; cpu < nr_cpu_ids; cpu++) {
-> -		if (plr_die->die_id !=3D
-> tpmi_get_power_domain_id(cpu))
-> +		if (plr_die->power_domain_id !=3D
-> tpmi_get_power_domain_id(cpu))
-> =C2=A0			continue;
-> =C2=A0
-> =C2=A0		if (plr_die->package_id !=3D
-> topology_physical_package_id(cpu))
-> @@ -281,6 +287,23 @@ static void intel_plr_unregister_notifier(struct
-> notifier_block *nb)
-> =C2=A0	tpmi_unregister_notifier(nb);
-> =C2=A0}
-> =C2=A0
-> +static int plr_power_domain_id(const struct oobmsm_plat_info
-> *plat_info, int index)
-> +{
-> +	u16 mask =3D plat_info->cdie_mask;
-> +	int id =3D index;
-> +
-> +	/* Resource indices are relative to the partition's first
-> compute die. */
-> +	if (mask)
-> +		id +=3D __ffs(mask);
-> +	else if (plat_info->partition)
-> +		return -ENODEV;
-> +
-> +	if (id >=3D MAX_POWER_DOMAINS || (mask && !(mask & BIT(id))))
-> +		return -ENODEV;
-> +
-> +	return id;
-> +}
-> +
-> =C2=A0static int intel_plr_probe(struct auxiliary_device *auxdev, const
-> struct auxiliary_device_id *id)
-> =C2=A0{
-> =C2=A0	struct oobmsm_plat_info *plat_info;
-> @@ -340,7 +363,7 @@ static int intel_plr_probe(struct
-> auxiliary_device *auxdev, const struct auxilia
-> =C2=A0
-> =C2=A0		plr->die_info[i].base =3D base;
-> =C2=A0		plr->die_info[i].package_id =3D plat_info->package_id;
-> -		plr->die_info[i].die_id =3D i;
-> +		plr->die_info[i].power_domain_id =3D
-> plr_power_domain_id(plat_info, i);
-> =C2=A0		plr->die_info[i].plr =3D plr;
-> =C2=A0		mutex_init(&plr->die_info[i].lock);
-> =C2=A0
-> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
-> b/drivers/platform/x86/intel/tpmi_power_domains.c
-> index ebe052c3bbe4..f6a46b4571ec 100644
-> --- a/drivers/platform/x86/intel/tpmi_power_domains.c
-> +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-> @@ -70,8 +70,6 @@ static DEFINE_PER_CPU(struct tpmi_cpu_info,
-> tpmi_cpu_info);
-> =C2=A0/* The dynamically assigned cpu hotplug state to free later */
-> =C2=A0static enum cpuhp_state tpmi_hp_state __read_mostly;
-> =C2=A0
-> -#define MAX_POWER_DOMAINS	8
-> -
-> =C2=A0static cpumask_t *tpmi_power_domain_mask;
-> =C2=A0
-> =C2=A0static u16 *domain_die_map;
-> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.h
-> b/drivers/platform/x86/intel/tpmi_power_domains.h
-> index 2fd0dd7afbd2..43a80b526133 100644
-> --- a/drivers/platform/x86/intel/tpmi_power_domains.h
-> +++ b/drivers/platform/x86/intel/tpmi_power_domains.h
-> @@ -10,6 +10,8 @@
-> =C2=A0
-> =C2=A0#include <linux/cpumask.h>
-> =C2=A0
-> +#define MAX_POWER_DOMAINS	8
-> +
-> =C2=A0int tpmi_get_linux_cpu_number(int package_id, int die_id, int
-> punit_core_id);
-> =C2=A0int tpmi_get_punit_core_number(int cpu_no);
-> =C2=A0int tpmi_get_power_domain_id(int cpu_no);
->=20
-> base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+Thanks,
+Riccardo
