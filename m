@@ -1,104 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795676891;
-	b=SWBmOJ3nusp0vwJhIlnd5pWytW3ZZ9aR15l2kQYD6tfkhI4VY8cmyQVKXlb8TRd6meJd
-	 POV9EG9NSgcj/s3MJfwaiZB/4iw9VwCS3xQUWULOmAbbWmSS7+noA0KVi2fwRz0+BgAmx
-	 Y/0UNfj3HUdcfrzlbGiMtaj/ze97QbMjut9wOc4ofQMLm2PDVuOsrwde7A/EOsjgyJPAq
-	 ocqUSVPU2gqG5DYk7BHmSSeboK70YIF4CRAZK40VMBdKrQjo6yOF/7kNd0PB8nBGMtZz+
-	 ukyk4SCVfr9ukk7aG3Pnd8JggUZ5cltXSe06eke/jmYYB6Pyh0O6QzBz/kVeJtMuxiA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795676891;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.175
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795677893;
+	b=ypgtm4eUWNgdch1ROTUfOgjhUAYa20+kWPXAKrIKOHLdm94HYjfGwZhOH4z+JaomMO94
+	 0i5+2sf3u8MaRYKj3KGwD0r3EUgwgEdYadWxGVQdMRnWMBficH4C2xywCX3/lndmJPL0Q
+	 qg0g5DSwhdrOKAhe+z4A5Z7FVeWt7PIQMWy1/OFyXSuYDNGRMjdnt21pyZTt1y3xGxgGC
+	 MbZBNSp+k8W5a2+L3P3i/dpuz6xRIUogsyDpJ/qnWC5ovtyQjLG8s4SXgNNIA1/Zszwt8
+	 Y+JhIq8Ef1oCtUImM1iSM0lqDeu4QnUoT2+51IEbhBkNa9RIwn9muusId6ievkRkxxg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795677893;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Received:MIME-Version:Received:From:In-Reply-To:References:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
-	bh=1uZzcwZkjMdrFehJHdbj7pCjSP5dhGRIEopGhBhh3Q4=;
-	b=PFaSJIICYvp3IpOpD627XkxEEMliBkcMtFB5PnWPIAUdyto8miRSJLC+fcQxTB4JYgky
-	 RF9paQBU9jvwvCSEwbJ+5PVmJX9vPl3SR1b217bFPbYg1rF6WZ/kel7aTytE+eIh1ZBPZ
-	 zp0OApklFkbO2SBPsW29hiU1t4WFvCmNQwgOe/FZr0xQGDBYq5llB2lFaC1eUKVgdob2o
-	 /Ae+Af84hmAxqAdAy2fLQzMKicrDhYDDphW1i/d86bxWALSGwH4CPqoqVxc+cWA0AQ3OJ
-	 yCXwIUWKkl0VRkMVaqs6ZbzpgA0VYRVVO4jUSYancW9EPCaK4+jdCMp1kXy/fpuEfYw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=mk/72Ud1w99NhITuoR5LpdVTpngaXRQ5Qgh0L/idvEo=;
+	b=pf3Jat1pH8FJAv/QuTUP9qsW+6gfpE0uBjw53FZCgLEbBuAVhxce+9EspA1pJC9LpTPs
+	 tkUEZftSzshX4WL7y7Li+Ngy43e8RrbKDfujkIMqkGoqDX6ehpqEWPGyWjvrHKRYmatLf
+	 SVmeLpukEUIFWg3FCubVXyoEaoUXzckQnIkDoMtE5YG7koj3HJ/wz66caY7qvKWyM+VVZ
+	 MmuyHq2HjF92y0Q6ybG15rUtZAWPqU0PIjr+lwuz0AhjkioKs6dBa86x8OXAPPmPhk54k
+	 gYpy3OTWqzqLgzLq0qhezF9ZZT4QUcbYNJ929c3qhkb47uaNTDL9TfBT3Q7QkokH21w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zrQ69w7r;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.161.45
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QrOzT7nq;
+	arc=none smtp.remote-ip=209.85.214.175
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE6E606A323
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 07:08:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CDE6E606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDFC606A31C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 07:24:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2BDFC606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zrQ69w7r
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-703be215729so2951717eaf.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:08:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795676890; cv=none;
-        d=google.com; s=arc-20260327;
-        b=o8e7sYLG6rIS4iq4m1KPAf56DtVhtasgeBpi0vh+91bMuu3dzZ0JQthxR2LfjWX2QY
-         3HB/5Fkr+EAtf2D3RUEgkTMLWmS93zu1rXJf1h7Nl7huuq/w3vqZmC/t7N1dJEtp5Akb
-         SODWRUP5uXToFuAyHgTEXQi5/Sa2zzPASCYjn47mc9m7KqxmiLHM9mPUFsftSb7yJ7Cm
-         s7uQU9Gooy8DJVMQyRYDoGIJC7kGSwYOpmtET6pDYqKalij9WplgIUlvZf8SQup9VM7f
-         QznFRUS1v0QrIjrkBFKlIFLNfdTimZNfkvAchAXGuxMNctm1Z5FSZZ1rzTQx3imNTwwY
-         QcHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:references:in-reply-to:from
-         :mime-version:dkim-signature;
-        bh=1uZzcwZkjMdrFehJHdbj7pCjSP5dhGRIEopGhBhh3Q4=;
-        fh=cceJaiH08J8EWE9FDqz0OyJL1GoeiWBTBontEFS6Mi0=;
-        b=WEX+brQarFfRyQ5HXtKt3+VAq7+UKnag4BEjQqGELKF+qZO41rzJ6DODETefQTkSfY
-         ivXIJlByX/XiwuR5/3RnzXCzbtnII3pG3V9EFf4wz6qnTosm7OQvGD4d+xqokC0CmPm2
-         Ws7gPy7EJPyOuyffvOeF9kjtDfK3vYqS5Ucoagc4MJGZFEAdALcuuRjcRHXEf0gEkLKG
-         lJU+gSAKjwjpPQgPLQegLp+MIgnatT3FnRi88UH1acvsouQ3xv9asel0S7KPh7QFv4Dq
-         21RSSsx1Jsugu5t8hCaxInnLLM0hyBVnb89btDqTP9il1nJEMts7aBL0yoR2jBNy6mLC
-         DEHg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QrOzT7nq
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2f04ad2c46dso42137335ad.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:24:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795676890; x=1796281690; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1uZzcwZkjMdrFehJHdbj7pCjSP5dhGRIEopGhBhh3Q4=;
-        b=zrQ69w7rPqzFpzwZh5MZxKFu10YqpWrixIw/XJEZoWUIJiTrXhD3GDLcMG3w9pI2jc
-         1epDSR6wGqGuY0RL3Gl2vCHFjasJBUVDeLnHrlkfEd0pkLmurZZtWpnIardJVxhK801D
-         XAfqyZpy1zIkE9EDyOV9OREcYkGSmVuz1hK+GuTiQMrQZj2l9h5ul6E7fU29ibwD1IlC
-         OKKD/AvDs+IWje/Kt7Z1sIUtbiFlQLrSaWBCAYcDFrM6OwHRftGmc3mPj/VLlut+KfTj
-         iuAI/H+x5WXQw7SoeLa+h8OQ+GJR99uyOyxPjuSXwIPIhwGvqAL+jRWUNfwCObXiEJ30
-         vf2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795676890; x=1796281690;
-        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1795677892; x=1796282692; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=1uZzcwZkjMdrFehJHdbj7pCjSP5dhGRIEopGhBhh3Q4=;
-        b=IuxEKrpc+sJ3bcodE3s39dcE6cIX1EGChlSyHCo1V4U+Q4yG5oX0MjaQRVYwSYHdOe
-         Cyc65WlZhtJ3iTNy3YNVqOJP42nmlF6tfmHP2JIBfub6DV+orQAwU8JG2orn6ix+mNk+
-         3ZkfPN+bsUNjC5q5JI+OPGn6iuVqg9oUNPk1Gk5qNi3lvmslkNT7GVUBbuo5BZ1a+ULl
-         FFzRemQFGX7h1upAeA9rVFLZSL6Z/He7Fl++XGH4pamzlj8iHu4GPXzxcJUjZIHWYpTB
-         AFSunpDD2eehwh7qeoKQs1kngsOAvGr+sI7240AC5JT7mFSYb3+hzD7hY8dvzKsKZ7SV
-         lIBA==
-X-Forwarded-Encrypted: i=1; AL+hErFWfiR3aZthSAEoiSHKDvegD8q5nfWrRa3lM7qKrzy8sRqL/WBeYb4xjZZuAm/4ybqhxuP+pFem84y21RKdnrnBmz3W@vger.kernel.org
-X-Gm-Message-State: APuU4Z89T8lCZtYYv5QAD8QYOBkPy2AHket3VDyCgiUTA8EvpgpJr9xo
-	3kDmOrknHSNsNtjJHYX3g/yMki0N2wn5rzNGbI7a7CPT3dQVsCYZHYwfcvkLRO8HgQeK++mN76X
-	RaQPBiH01aI7zSojs3jryScE2fO5Iup4=
-X-Gm-Gg: AZFdTZf8MbFMXjfXWXnN8CbjGfKnmDvAADUJuHneKvU6Lw57QZ1s0Sf2VwrKUVJtFiZ
-	IsBsfU6yuJBZVeUmSpySt2vKaLtxRPHV9Gixu92HSFwSiEhhq0hTp7BKstIoZcVtAVkeKxDr9O8
-	TiGVvb/9EGJi7i/uYP084unsSq41zu52frOWzNtZqQxvy/VZ2Y8rHb0Y5I2LLQMSEGZD7ILL4sV
-	mVAm4I043+U33bQDVtqhH0gtfJmYEsiS3vC7+3D8jb7Uod0UZLNzJMyz4R25utcOt+B6YTWlKq8
-	G4aPPMqwctlLNetMzV7Ay5TsK2XgZwAW6CWrjelRh6HgryiSnhnmmM/eXeSWj+FDiXu34BTSbxz
-	pyvrqAnVvO2XufV4bfku3Wp8Hyqbk/KpJB4rhgm19LmHY6EoE2z0QHon0wXUC4jus3jtoyryMJu
-	YJ7jxHz9CdaR8=
-X-Received: by 2002:a05:6820:5709:10b0:71a:f119:9c1c with SMTP id
- 006d021491bc7-71b3920f378mr11544663eaf.11.1795676889819; Wed, 25 Nov 2026
- 23:08:09 -0800 (PST)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 26 Nov 2026 02:08:09 -0500
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 26 Nov 2026 01:07:41 -0600
+        bh=mk/72Ud1w99NhITuoR5LpdVTpngaXRQ5Qgh0L/idvEo=;
+        b=QrOzT7nqsMKQdm1h0hM5kVEdttUFmTjDCZFoczT1B3aYxsWIQThcVUHk3pfelT1jwh
+         EN49IfvEiOImLzrZ0pCpyI960PEPTP7XSal6sBHYZcP/ssTw6Xcd2X8NX0lgjAvLTPCe
+         /T0An6yGxJiI5HGn/bJ4LdFT4YYnm5bfJHZh8cMXI/4nq7KhoWQEE9Iet+rypk9qCmyF
+         kml58u4rUspDyJiP9+qGJ4wvFdI7wTohjMtyyqoNVOz8qkZehSXlfnOKSUsOdPo/efep
+         mk6ZMlQoPJPthnLOwnSterVZJts1IbbG0IfqWnwgCcwC1wkXUMQSMNyz4Ks6AvuVhbrD
+         zT5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795677892; x=1796282692;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mk/72Ud1w99NhITuoR5LpdVTpngaXRQ5Qgh0L/idvEo=;
+        b=YzasRpz46m797KeTS1gWNSw2yzVz5d6AZbgq6CFUUab1la2ua7AKWvBaokibA0Yjtr
+         wl6K/bdl8zzTWMCnIJmmiR3FCPHxsT5R4lKOID27zxUq7OVhyUTnT0/lVUBV5J5mIeMH
+         v/saZXIhuZ9WEhS+NCPXn49WVFZoHjzxE3PDbhqCgnIHKFIFNeRJqePfQcLLCOUIG50M
+         rRSd0SpFeUAD7UiLalk45Ooyv4IRPHw/RC3JOpo89yY4G0Eny8YJTpphVJrBkCksheJ3
+         6V0HtjJlkkSxazUKLzvFHXaOdPHCr8cAoKarMC7m5jM6EjTrRin7uyStMEaGPcjedDym
+         g9Bg==
+X-Forwarded-Encrypted: i=1; AL+hErH5XWJ6JgCGv23YSvt6V6lTPS/Cjqcy0Gw5lNy6lnBcKwEI6f2uwH89EPa+iKaTCfqSrah9IFf8cI5x79SU1wpDx3xQ@vger.kernel.org
+X-Gm-Message-State: APuU4Z+OXeFyBgS7pnmQqECxMJdqyEjPLw5//kDlB8n9DhdQO2e4tFFP
+	pwq/SnLwIXJo3XcpU2KwR6sewLR8Y6fpWuza2t9rsctPmIzMwM9jwqXr6BDVfl5gAShauMlO
+X-Gm-Gg: AZFdTZfyxJdNXVdBlIag3pfA7Jyzl+VgJ6qAnpxYkl6z6C90S/nsfS4uNA1O6yPqSrN
+	VVL+74KSCVlJHhCvtCUr0toPpZzgYtSVN2G9/hG48M1BrGDJfhUGBTh6pnea9R//LKD580xmTZQ
+	VTFX59jwPtmu1Srp2VlTIqWrBrYNtB0wjefMJb6gI5fJWJQP1Ro48TnVhfK3q2GjZ6j8i+DbW8s
+	kdcSj8+DQdjE9lV3OJqOpiAPutRQhFsW0sproj83T5ACcSHagK9yYTtnb0qaTuUHCUkZvbneP5p
+	wW8NlepdTr8eiWNstNL6WRPuWpaJcAhDNxNHca7Ax6BGnGA6K67Ah438TezPrpNIOXgDQOeO05l
+	v8EljzRjVPANH/IAVCsR+lOF1ArgbC5OrJbDaDQYP6FwhNP1KSa0Kx7WCcum7GWQ2FXVy7sSRkR
+	EKnX8YvX/x80AslwINdn4FoGL83KYb4xriJFSHxQrvQHbR29LtA0kXOBx62t01IuckWKxLnY89m
+	EKHtSlYH8KdMI9MWqYmbYAODAPEhW+AFG4qXgYUc+jSNNpOLccmg/CoOabdfjGcL7CYlqcLSb/O
+	Dstx+KpoHyFVCcrqq20q2SBcR3HwT1Na17WxgBsbrm7A0l4YFTme/G/JxbWCk/3xJ8VWtHgCbfu
+	9SfavHBGNxgtwnyYWwyI0gcGTnwMCfiZfhJ7ij7soT5eXXOdL/jSKuPW15UNRsZrtDDzTuICZjS
+	bWcB+/Asta5pHpNlEIkfNGSFM=
+X-Received: by 2002:a17:90b:2e49:b0:3ac:80dc:f419 with SMTP id 98e67ed59e1d1-3b41c90811fmr19051550a91.25.1795677892416;
+        Wed, 25 Nov 2026 23:24:52 -0800 (PST)
+Received: from kapoor ([149.40.62.11])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b4afeaaa84sm15526820a91.10.2026.11.25.23.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 23:24:52 -0800 (PST)
+From: Arnav Kapoor <kapoorarnav43@gmail.com>
+To: Rong Zhang <i@rong.moe>
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add V14 G2 ITL to ideapad_dytc_v4_allow_table[]
+Date: Thu, 26 Nov 2026 12:54:40 +0530
+Message-ID: <20261126072440.749440-1-kapoorarnav43@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <598e22ddcfa810915cead43afb9886d0564e9319.camel@rong.moe>
+References: <20261116171817.21802-1-kapoorarnav43@gmail.com> <598e22ddcfa810915cead43afb9886d0564e9319.camel@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -108,56 +105,30 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Received: from 77377267392	named unknown	by gmailapi.google.com	with HTTPREST;
- Thu, 26 Nov 2026 01:07:32 -0600
-From: Lee Youngjoon <getfeus@gmail.com>
-In-Reply-To: <CA+m4KrC5=QzYthdWOyeJy68OrgTCrKdYFRovD3vRC+V26NkqGw@mail.gmail.com>
-References: <CA+m4KrC5=QzYthdWOyeJy68OrgTCrKdYFRovD3vRC+V26NkqGw@mail.gmail.com>
-Date: Thu, 26 Nov 2026 02:08:09 -0500
-X-Gm-Features: Aa3M54oGC8JyzC7ZHjS2hKqgJ3x0iDaaz23uGuqDSEQk8n_JxJTKR7rbcP0z74o
-Message-ID: <CA+m4KrC2yADABquJgRREJCfX1dXihqV6udihHm=WUsuuGDnYaQ@mail.gmail.com>
-Subject: [PATCH v1 2/2] platform: arm64: huawei-gaokun-ec: Validate the PAN
- ACK bit index
-To: Pengyu Luo <mitltlatltl@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The UCSI driver passes GAOKUN_UCSI_NO_PORT_UPDATE (-1) when the EC
-reports no port update. gaokun_ec_ucsi_pan_ack() shifts by port_id
-before checking the sentinel, so this normal path evaluates a negative
-shift even though it subsequently sends a zero mask.
+Hi Rong,
 
-Initialize the one-byte mask to zero. For an actual port, check that
-the index fits in the mask before setting its bit. This preserves the
-empty ACK and rejects unrepresentable indices before contacting the EC.
+On Tue, 2026-11-17 at 01:31 +0800, Rong Zhang wrote:
+> > Fn+Q does not switch profiles on
+> > this model.
+>
+> Even on Windows?
+>
+> If Windows can switch profiles, you may improve the relevant Linux
+> drivers.
 
-Fixes: 7636f090d02e ("platform: arm64: add Huawei Matebook E Go EC driver")
-Link: https://lore.kernel.org/r/20260607214621.9586A1F00893@smtp.kernel.org
-Signed-off-by: Lee Youngjoon <getfeus@gmail.com>
----
- drivers/platform/arm64/huawei-gaokun-ec.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Sorry for the slow answer, and a correction: Fn+Q does switch profiles
+on Linux. I only checked for a key event in my first test and didn't
+watch the profile itself. With allow_v4_dytc=Y, each Fn+Q press moves
+/sys/firmware/acpi/platform_profile to the next profile
+(low-power -> balanced -> performance -> low-power).
 
-diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c
-b/drivers/platform/arm64/huawei-gaokun-ec.c
-index abf05e7ec..95e867596 100644
---- a/drivers/platform/arm64/huawei-gaokun-ec.c
-+++ b/drivers/platform/arm64/huawei-gaokun-ec.c
-@@ -458,10 +458,13 @@ EXPORT_SYMBOL_GPL(gaokun_ec_ucsi_get_reg);
- int gaokun_ec_ucsi_pan_ack(struct gaokun_ec *ec, int port_id)
- {
- 	u8 ec_req[] = MKREQ(0x03, UCSI_REG_WRITE, 1);
--	u8 data = 1 << port_id;
-+	u8 data = 0;
+Fn+Q produces no WMI event, no keyboard scancode and no VPC event, so
+the firmware/EC seems to switch the profile itself, and ideapad-laptop
+just follows it through DYTC. Nothing more is needed in the drivers
+for it.
 
--	if (port_id == GAOKUN_UCSI_NO_PORT_UPDATE)
--		data = 0;
-+	if (port_id != GAOKUN_UCSI_NO_PORT_UPDATE) {
-+		if (port_id < 0 || port_id >= BITS_PER_BYTE)
-+			return -EINVAL;
-+		data = BIT(port_id);
-+	}
-
- 	refill_req_byte(ec_req, &data);
+Thanks for the review,
+Arnav
