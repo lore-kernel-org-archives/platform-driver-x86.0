@@ -1,69 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795695761;
-	b=blrkTLKwb26w1eYMEs7nWmBQiyOn6wKZdX+wDDwb51xcDEnCaWU+MOwO4LHr402y+TFC
-	 Oiz3B49SjY+YVr5frNAZWaDL4utwfnLcfFUX9meRecfc7JI6djg9ct7IvB08jXqw96VMt
-	 DpJ4Oz32yPTL2isqW8pj5mCxRwWD6bv/Xb82+zvgDurWAHI/O0J4y4m27VG07HdKHbTl9
-	 OQJv9SNEnE4e/tjHJLeOB5nDIdxquKBq0FSl4QO/jYgYsOHBVUQLDJaPWu3hl3VUpgTP2
-	 F8wt+91ggPM/24f7uDuthOwufWVHNT8oFRekePDCfnxvOdLVJRElcT/qpGN2Df71cwA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795695761;
-	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-ZohoMailClient;
-	bh=qi4FF2QJ6KQO/hUNATzHnnLZPzy4jKrK/At4sLSpRdE=;
-	b=0ecWrkSSf7OiM9zHnftWGHwTYGzzV14GtoXlWnV7pxj/zwqEAoCZurmMdN0dSYMKPw+q
-	 oVe2CMEBhy50F3ps9QG5ihuKmf3q5Di5vwIutfVqu5Ylgd90q7D3K7CHGaz7WlgNE/Z+e
-	 JjxqUAtdsy8dXuw9AfbGd4YpLthrkVJrL+/pSbBnur89qlsEWTN6XLR67axM+LuPkfRTs
-	 K27LLGQpuEpU2mlw4qFcQThFW9mseFzHVWcCS+z+oX644ITQRFnTnWB0QJIevTA4uPVYE
-	 0naIG37BnuAJUMkQhI8pfbIYbEJvqbiiI5L7nNmjVs5m69lRqs+XCG2i6HtU9t8fbqw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=rong.moe;
-	spf=pass smtp.mailfrom=rong.moe;
-	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=mUJfDtpb;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
-Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795697553;
+	b=y00DhzEtRkokLwsCeofbscfhSwCrEalqnGGUm5zoVOUtQiVSFKj7fo6wefD7V+oTJuR5
+	 aGyE2SDnOzG9+/8fwqlIq2jWwuPtpx+50PDNBmT4FrFWrbCKTrfRPigMZtU8XBLu2RZ97
+	 vhUkeyA73yusf6vdsxvGlfWHcMCDuwUqxBPcYwYf0SJiPMaWXTn/EqeGyOKh4YOIfj9kH
+	 MgvKiEIw9p0azo30vXmUE7xR6rOqrPrc41PsihoKm87ZoafMN5QDYqfNsFgPDc2g3ezmA
+	 WWmTNA4JgYbWJdbrbawLPmoUGRa7quE3lkg3CgRwk6jLoA7CX/TzZRgzgttJYxiz+Hg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795697553;
+	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
+	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
+	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
+	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
+	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
+	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
+	 Message-ID:Content-Type:Content-Transfer-Encoding:X-Bugzilla-URL:
+	 Auto-Submitted:MIME-Version;
+	bh=zR/xZ4BCH7coC71mNndLUxWa+5U/UbNolbgNI+btiyE=;
+	b=kmlybOfjKrFGqmPVmf3zS416Ay3cz5T7OdTLJAUZy+sBdlpdRpe+78i3V/WjoCY68GP0
+	 O4PqR81u9mL2ji74wbdb3OtcdFDsbY/IpYwkDwENYszz1IweLURWhT3WVxw/N0Tv+THjY
+	 ehMTcab1dbAtHFa2EFSkT5LrdrBu2OBGLfiiqx8m0xvPfeik/vuRcmaZRwOld04qIcnZM
+	 uI2kM5pnKlsWaJyY4DI8QDlBFD8+nIr61uK3wb3lzHvrrQmD6mUVtwSU14Jq6XrAMnzC3
+	 025L2gg9DDoxBJC/3/EEtx2I4EcXgx/8J06iQZZmuZwr2f3cCq6BKvNubfclOYiM0/Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oFsJ0dbX;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDBE606A32D;
-	Thu, 26 Nov 2026 12:22:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5CDBE606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C073C606A31C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 12:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=mUJfDtpb
-ARC-Seal: i=1; a=rsa-sha256; t=1795695739; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TWp3DqpVErMmb5PJwklj20/6L9CwOKQ6YWcvWWLLPPmdbPwAgVJoHiGrZFjzHeo4cGzkljwH4eeFycG7Ep2WaAInbFs0ELKi17k7pkWfxif/JvqMHbl3frlChVCIqn7MUqf0T1B45SGojEaBf3h0BWXcNa/OPoxvn0N2GE36GHY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1795695739; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qi4FF2QJ6KQO/hUNATzHnnLZPzy4jKrK/At4sLSpRdE=; 
-	b=ELGhn3XwZUh5k8njjsUXNG2e2/c1THVMA0+hzLEEzKl1oz/O+Hld8wbRSbU3bma29vamqJ/Cvc+sYrdHPRdzdVPHY5iC0X2/iFrP51zEQgLvipFQMgYDDVN+pz2Ny0r9iN3f3vjmukakXJV4gznTsnHBPJjZj7BUlBIgwb2WVHM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: a=rsa-sha256; b=mUJfDtpbR4CqigQuBTaAtVXfpzutSuuE9N0PdtuqGVyn1XQEC5aI8yeDJSE4IBgWPElzItc5gCMA3XLKd+bjiTF+wjUib3mrX5u4PbcEOrj5PiQLY0dmYOhS+ucfq1LBcFCvUESe2/oAh4emlCWE+u9f51ISvurxegehDA8gJ5sRoLoF+m8eqUBlDiZZXjiGlMG7zlb7y6iTZ5ZV+9Qxv+/Ny7VMRgzcDC9645xq3SMvIMGN6plwf7qNGRX26uaGOR2uRl0bpDkHYLJBRrdpkLpI+xZ5PZLUO4i609pFI7cyi/KpfXytvm+iKmSRAe8N88dJEyxqarKc3XCnFI0IEg==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=qi4FF2QJ6KQO/hUNATzHnnLZPzy4jKrK/At4sLSpRdE=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
-Received: by smtp.zohomail.com with SMTPS id 179569573769159.776852180311266;
-	Thu, 26 Nov 2026 04:22:17 -0800 (PST)
-Message-ID: <845a099746be67e72abbed7b4a63d169a1c1ac86.camel@rong.moe>
-Subject: Re: [PATCH v3 1/2] platform/x86: thinkpad_acpi: Update charge_stop
- only after it was applied
-From: Rong Zhang <i@rong.moe>
-To: Tom Hu <huxiaoying@kylinos.cn>, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Henrique de Moraes Holschuh	
- <hmh@hmh.eng.br>, "Derek J . Clark" <derekjohn.clark@gmail.com>, Hans de
- Goede	 <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, xiaoying_hu@126.com
-In-Reply-To: <20261126011058.39175-2-huxiaoying@kylinos.cn>
-References: <6066c701-55c8-494f-9348-f9835b258b44@app.fastmail.com>
-	 <20261126011058.39175-1-huxiaoying@kylinos.cn>
-	 <20261126011058.39175-2-huxiaoying@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oFsJ0dbX
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 30EA11F000CF
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 12:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795697553;
+	bh=zR/xZ4BCH7coC71mNndLUxWa+5U/UbNolbgNI+btiyE=;
+	h=From:To:Subject:Date;
+	b=oFsJ0dbXNx18K2co+KscBOt4zKg2S5Dx4U5NO8lXASv+9q7uzhGrU9ALBKJMMYgv5
+	 Vra32I5eki9Agg4czvaCYDzSqVCmZ3O2hBGSE9izHUJGQV7FbgIV9BeGnomdZZczyv
+	 h15WFwBJtg0viAVHg7sdJtPIykbyMzUK81ipjTeQA2wCVSuYLQbzjN/HLOIjVZRJJt
+	 mhm6wK8meV22JABmJVC46s2IK0pWrrtrsC6OqnvHFUZfRg0zUkRFcXOtnciocT5t+9
+	 JCYIn2lNWKMv06wi7SJg8+glxwrnkb2dS2RNkE0WZALhA2NONjxMZv1YGJ34Zdn1N7
+	 rKxPukakMZXSg==
+Received: by aws-us-west-2-korg-bugzilla-alma10-1.codeaurora.org (Postfix, from userid 48)
+	id 2D54D240040D; Thu, 26 Nov 2026 12:52:33 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222329] New: thinkpad_acpi: ThinkPad L590 returns previous
+ threshold value when switching between BCTG and BCSG reads
+Date: Thu, 26 Nov 2026 12:52:32 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: w.yizheng.self@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys bug_status bug_severity priority
+ component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-222329-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Nov 2026 20:16:03 +0800
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -73,59 +83,119 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.62.1-4 
-X-ZohoMailClient: External
 
-Hi Tom,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222329
 
-On Thu, 2026-11-26 at 09:10 +0800, Tom Hu wrote:
-> From: huxiaoying <huxiaoying@kylinos.cn>
->=20
-> The charge_stop_threshold store writes the new value into the cached
-> battery_info before the EC has accepted it.  If the ACPI call fails,
-> the cache and the hardware disagree, and subsequent charge_start
-> writes are validated against the stale-not-applied value.
->=20
-> Move the cache update after a successful EC write and report -ENODEV
-> on failure, matching the charge_start path.
->=20
+            Bug ID: 222329
+           Summary: thinkpad_acpi: ThinkPad L590 returns previous
+                    threshold value when switching between BCTG and BCSG
+                    reads
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 6.18.65
+          Hardware: Intel
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: w.yizheng.self@gmail.com
+        Regression: No
 
-I asked you to add a Fixes: tag here, but you kept ignoring it twice
-without any explanation!
+Created attachment 311586
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D311586&action=3Dedit
+DSDT dump (ThinkPad L590, BIOS R0ZET60P 1.38)
 
-Thanks,
-Rong
+Hi,
 
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 4f81855ad721..8fc5569131f6 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -9847,16 +9847,15 @@ static ssize_t tpacpi_battery_store(int what,
->  =09=09=09return -EINVAL;
->  =09=09if (value < battery_info.batteries[battery].charge_start)
->  =09=09=09return -EINVAL;
-> -=09=09battery_info.batteries[battery].charge_stop =3D value;
->  =09=09/*
->  =09=09 * When 100 is passed to stop, we need to flip
->  =09=09 * it to 0 as that the EC understands that as
->  =09=09 * "Default", which will charge to 100%
->  =09=09 */
-> -=09=09if (value =3D=3D 100)
-> -=09=09=09value =3D 0;
-> -=09=09if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
-> -=09=09=09return -EINVAL;
-> +=09=09if (tpacpi_battery_set(THRESHOLD_STOP, battery,
-> +=09=09=09=09       value =3D=3D 100 ? 0 : value))
-> +=09=09=09return -ENODEV;
-> +=09=09battery_info.batteries[battery].charge_stop =3D value;
->  =09=09return count;
->  =09default:
->  =09=09pr_crit("Wrong parameter: %d", what);
+On a Lenovo ThinkPad L590, reading battery charge thresholds via thinkpad_a=
+cpi
+sysfs attributes returns the *previous* query's result on the first read
+whenever switching between start threshold (BCTG) and stop/end threshold
+(BCSG).
+A second consecutive read of the same attribute returns the actual value.
+
+=3D=3D System Information =3D=3D
+- Model: Lenovo ThinkPad L590 (20Q8A0MLCD)
+- DMI:
+  sys_vendor:          LENOVO
+  product_name:        20Q8A0MLCD
+  product_version:     ThinkPad L590
+  product_family:      ThinkPad L590
+  bios_version:        R0ZET60P (1.38 )
+  bios_date:           11/05/2025
+  ec_firmware_release: 1.18 (EC R0ZHT39W)
+- Kernels tested:
+  - 6.18.65-1-lts (Arch Linux official LTS kernel)
+  - 7.3.6-zen1-1-zen
+
+=3D=3D Kernel Boot Log (6.18.65-1-lts) =3D=3D
+Linux version 6.18.65-1-lts (linux-lts@archlinux) #1 SMP PREEMPT_DYNAMIC Mo=
+n,
+23 Nov 2026 16:05:10 +0000
+thinkpad_acpi: ThinkPad ACPI Extras v0.26
+thinkpad_acpi: ThinkPad BIOS R0ZET60P (1.38 ), EC R0ZHT39W
+thinkpad_acpi: Lenovo ThinkPad L590, model 20Q8A0MLCD
+thinkpad_acpi: battery 1 registered (start 45, stop 60, behaviours: 0xb)
+
+=3D=3D Steps to Reproduce =3D=3D
+With actual EC thresholds set to start=3D45, stop=3D60:
+
+1. On 6.18.65-1-lts, reading start 3 times then end 3 times:
+   $ for f in charge_control_start_threshold charge_control_end_threshold; =
+do
+       echo -n "$f: "
+       for i in 1 2 3; do echo -n "$(cat /sys/class/power_supply/BAT0/$f) ";
+done
+       echo
+     done
+   charge_control_start_threshold: 45 45 45
+   charge_control_end_threshold: 45 60 60
+
+2. Similarly, reading start after end returns 60 on the first read and 45 on
+   subsequent reads (60 45 45 45 45). Reading end then start once each in
+   alternation consistently returns swapped values (end=3D45, start=3D60).
+
+3. This is not a timing race: inserting `sleep 2` between switching from st=
+art
+   to end (or vice versa) still returns the previous query's value on the f=
+irst
+   read (45 then 60, and 60 then 45).
+
+=3D=3D Analysis =3D=3D
+In the DSDT, both methods delegate to the same SMI wrapper:
+- BCTG(Arg0) -> \PSIF(0x05, Arg0) -> SMI_(0x14, 0x05, 0x05, Arg0, 0x00)
+- BCSG(Arg0) -> \PSIF(0x07, Arg0) -> SMI_(0x14, 0x05, 0x07, Arg0, 0x00)
+
+The firmware appears to lag by one query when switching between BCTG and BC=
+SG.
+- `tpacpi_battery_add()` reports the right values at boot because it evalua=
+tes
+  BCTG twice (capability check + read) and BCSG twice.
+- `upowerd` also reports the right values because libgudev reads each sysfs
+  file twice (`g_udev_device_has_sysfs_attr()` followed by
+  `g_udev_device_get_sysfs_attr_as_int_uncached()`).
+- Userspace tools that read each sysfs attribute once in sequence (such as =
+KDE
+  PowerDevil's `chargethresholdhelper`, which reads end then start once eac=
+h)
+  consistently get swapped thresholds (end=3D45, start=3D60), causing KDE S=
+ettings
+  to clamp the stop threshold to 50% and risk writing wrong values back to =
+EC.
+
+=3D=3D Potential Fix =3D=3D
+A ThinkPad L590 quirk in `thinkpad_acpi` performing a dummy read (evaluating
+BCTG/BCSG twice and returning the second result) in
+`charge_control_{start,end}_threshold_show` (and legacy start/stop attribut=
+es)
+would work around this firmware bug transparently for all userspace tools.
+
+I am happy to test patches on this hardware if needed.
+
+Thanks!
+
+--=20
+You are receiving this mail because:
+You are watching the assignee of the bug.=
