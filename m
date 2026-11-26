@@ -1,101 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795687738;
-	b=uvx3T+Cr7IDHietOYsx/loOvqWR9mdsvA06/qsD4NibcT+kidWcr/Pc7/qXpmHhQNeqC
-	 Bazs0dJhVz44IS57UPZTCRGsSHGXYHOa5yxavYEfERr2n7B+WhiRiifebmFVAhsl7t/dC
-	 WuUwA02cmhEZ76CeunGgM7uVp8ed+1mSI0Sq7tS7/E8irzYP9loXec4wES2LvkdMiwXmP
-	 F9FzfBVDPcLQQS3TSX2qEhHrin0BEuHjZUSxnZWP6gnFxMreDZRamFbyTDGcExqe2tjkJ
-	 z5S2gUEhJeVFbnrKLrBhPIXDmnwvn2mWxA0SibO/pW1rOKn2/SPOy/Kdz2HlofQovZw==
+	t=1795695673;
+	b=SyNhdU3NyeZCZ+h9pkHjnM2RNeHOcFElohO0iJlTnY+ueiO2c3+r44GrvvG1UaZMssck
+	 QwGGYu/S71UoXuWOVDJ4f86XWA8U27iQgBPuT6xOc6OHKVlcU/KzMnxysi9LpLDzjA7Bz
+	 AxamGI71Ka0+veVoxQJSxQg8VWsXWeSb0cs7QKpCI+rM1jp68ZZsW4iC7wOxHJMo+3rgy
+	 eMb/MtX1hdCFkuQwRq37BcRLdQGmzfsbeOIJR5UuH0y2siwDdvc6TjgnqgFqgyde6+bkt
+	 nULZhHLdGrAmWgSZyRMu8cLtIrqX0OFTzZxyaC51pWTEr4Zdcr7kjTAY94ejWW+8tLg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795687738;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=B/vfwATZ+aTQb+3ShWrmO/WvkZL+j5UiTgHiGPHPM0A=;
-	b=vnUuEltKGFur3mI6gHM7H+/Zh77TX4fRwV67GUy6MX87xG5/7FFj2nBZSeV1hcT3t2XS
-	 pin6AYswXZ09DRE3IRkPnaPRBNOzH5HEiFS8zkY1LY9xGm9nYWRCqg/OinE45Ra/H5+o4
-	 7kVq+03iTjIoOsmR9bFxDpYlMuR8WPA57ZWSTBE4zZ7VmzKX0qL4bpZzzmI1rzIMJAXrF
-	 fJWS7MH/ivqaSs7wrXuf+CDHqJngbh5JCvrXtm+rPlpRMhZomnPLURUrKvwYEifz2UJVA
-	 abxx7fDAyVO9CJSLRmJWNvKV+cVIdmtaE7vWzjcSmU4lcn4chmAl2gVFWcqz5bzzBAw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795695673;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
+	 MIME-Version:User-Agent:X-ZohoMailClient;
+	bh=CHEjAoC69VXdBks94HEYmeYGFOFSYDBxDKQhVtoGcY0=;
+	b=xS92NdDKizUuOrjfU7IPn3mRDEk/JnQyxPD1OeUkF7r4kEP0KQ8FAyw2d/E7LGwA7NiG
+	 rwFMkp0FMDQLj0iXegstPhi0sdhzDHuaXdEiG+v/dQddeBWChPHWH3c2gWCDBPhj/rQHe
+	 TO39A9hzH7q3u+kQBL8lUqyG6RLKfp8SX7bq4Jf3PwaI5TIB0ndbMB6/c8NX6eWqMEOKE
+	 HpOJUYuGqSYs95BOHAqaY55epigGQFCWfyOF0DE7/uc8t0qyanhLKqIA7+Ap8xgqzHgEa
+	 ydczjReO28zf6i8Pii46qltPi9jBEK3xph2hKQTWqpmp6C2bTXhQYVSeNt2okkGUmdg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BLnLq7sw;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.53
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=rong.moe;
+	spf=pass smtp.mailfrom=rong.moe;
+	dkim=pass header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=XDiWSuUF;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=165.173.182.112
+Received: from sender5-pp-f112.zoho.com (sender5-pp-f112.zoho.com [165.173.182.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84355606A31E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 10:08:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84355606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C3606A32C;
+	Thu, 26 Nov 2026 12:21:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2F7C3606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BLnLq7sw
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6bb06dc1fd5so3947426a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 02:08:58 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795687737; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Ao0YD8juOacUxRzFHf6EOugi3yyuk3sgVeDrSxkZXB/g32pvuUxteirQOJGk55yi3y
-         Y5V5reGjW+FfcCKSWvEm5XFj1EVNqd4Kdecb8WZ0Mr4qlnTLtC3R5bVkrY5BfK/E5fUC
-         TanuERZWdkG5L9szy9EnmJkGIDA6FaKDnTgw9UNTp8zRGmHpM7yQPjfQt2fyFfibN4QI
-         BncFpTeQeZvXJ8rFKHDBkRua/7640u2FrgtNfhddtuJL4sysWFahxZptqfbfRqZXUn0F
-         Vr1fMzYQm9TLo/kiRk3HyorrjuFexeE6tKEtFZ1QrYKs1dUChScEX8bZUw8A6y7sSUYz
-         +c7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=B/vfwATZ+aTQb+3ShWrmO/WvkZL+j5UiTgHiGPHPM0A=;
-        fh=LsTol1L1g9aJRMXrnHpBo9jg/KRrlxYaB1M4/SitdP4=;
-        b=iUO45BiO1Y+Zbmkxw5HAIISesRGSJjOpsdxVHvHX7l26aBHdmQu8S+2e9LV0YMFZvT
-         xlRHFqXhS+WbzqBKt8QD5HNEae91B5VqwmcsuJ+pEAbSb7YNyzpgXYPTd4XrX3Lral8e
-         SuJaA/elu2ZU/BdfK2XQpJvSon9gHQFUpNA++TNglzHVzoMR3T05u6olB6TiUsM5fxLZ
-         CQwD2mK1aVjW8qRA/UPDuYTx3JgsCvCwgrP77Har34pneGterbSpnKAXgxr+siSuBXqB
-         eck0Ik2CEVQc8q+lCA23D9GM+8mwif9tvVuuJh6nkxafuKfVbY46GIcipCfzQbLeTeaI
-         WK+Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795687737; x=1796292537; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=B/vfwATZ+aTQb+3ShWrmO/WvkZL+j5UiTgHiGPHPM0A=;
-        b=BLnLq7swDKkGqwuOkT88kDi/k5Wkx5oS93R+YopL4cpAdWoUggr1K/iXwHu9AMn7jW
-         YdCVPUsJFlfBA/kA/tjTHmEFgNHxTvJsTOvLzcq2//cNf0QTiA/3BC9fiqw9OnGi+rXk
-         ZwxF2DnIp0XOHmhNr1oRVzv8FMN2uwvjA7NNhW4osabSFGPHv46o/L57MH7b8bm2za+A
-         m2XggcYchWL5IHY3hFg+HAUeKqQDThIEHXs2Z8C9i2O6sSJM0IZ38NEn6RLh9z8JEHZD
-         VnL3TYvQFKyv3jpmH3mxanQdF/liqE7IP0ck90K68jb7cFne5MPTJyexbCgb/IUcT+A2
-         X7bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795687737; x=1796292537;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=B/vfwATZ+aTQb+3ShWrmO/WvkZL+j5UiTgHiGPHPM0A=;
-        b=U5uoH3cVoB2hz7vLTinICr5S1ddU65W0ZYz7o7OJWKkT5QhQhux6StPsldmaVsCnRQ
-         6pQsOHW1InxjI87FgYB38+A3DGbwIK/p4bp0abvfrpnCLDSyRbK600upqUrBcw1dQO5g
-         AZ8dy/Uc9V9rIuEMcsVOriES37Pfz6sxdZNmkvcdBCsl0Jtw6k/v1kKFEpCVLQgXCPx+
-         d2gUA1aTNWtgonPySqWjaK5v0UO/sWzMac2BFzrx2yNS+qjdZwSSg70x4kDUKF6PLOqD
-         TUpbvs8mui8jd19yREd/LmCFBn4O6gDfq2DPckPufJ/oHEZ6dfJm7XZRUy1HW7hDNdio
-         ikIg==
-X-Forwarded-Encrypted: i=1; AL+hErFp6f6d72NVciIxoN+asTe8lik4CFAMPwSTCrAeHBGwohM2fSyvNLEztFzYHtNFfS5O7QQXUK5unlcG5d4lZ3VZ9awi@vger.kernel.org
-X-Gm-Message-State: APuU4Z8qmzGw+R3MxMVQBx57quhBMoEHtl7jTjOTwYUzYczYb0QgmZri
-	JAEYKuUqZHGMkZNjtZAKYBpaaogjBnJmVHDfJPziWd6P4ghi4kBnEDyJdTiBBgmVmInqB0jQooU
-	RuoERNVzeakaKzBL2VWO/JRxdMEsrjBQ=
-X-Gm-Gg: AZFdTZfBGzeiqsBUu3Czf3H37EWVBF+BNT3bnFNUQDMeIXBIk/LFlKs8CPgIbK8HONo
-	qMlEJLJPNt+R3FzqGYWwDap6DM1FXLZ4+7tDlWa5NpjoBheocBVV5HTZHznijuPBNWytMF2KSQV
-	KoaGDcVP0uVx9iEVExVZx1dBD5Htq7C6QnhDSUSNeIWF4ZC8BF69AJxKlw8PV4MpU3Un7m32CUY
-	o9y1mdk3VdSRuOeMU+OBmHvQCXUVpeluiMVBYh8Djhg3Fe0b++WoG8TSadABtSQ7NLm5tMn4qSw
-	pAMlqyBDpgpsVDmWeDllZCyMbRYFIKWS6+6zo6QmlThcvAIa7PD14ruCJwB1BUem15JM31W2T3+
-	iwUNNOIhO596E3PXFYNhQoJoaK/gChObEEKSr2ST9kFQO4tQOEn93iT6wT7s5YdNbBrIxMsq0Yg
-	==
-X-Received: by 2002:a17:907:2d91:b0:c51:982e:28bf with SMTP id
- a640c23a62f3a-c51982e29d1mr584103766b.40.1795687736599; Thu, 26 Nov 2026
- 02:08:56 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=rong.moe header.i=@rong.moe header.a=rsa-sha256 header.s=zmail2048 header.b=XDiWSuUF
+ARC-Seal: i=1; a=rsa-sha256; t=1795695659; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UvkEe01t571u2ruhHxbofncl4bOTjqG6jE7W1yQdueJfxehkbs8Y3YazR0Bc6DSuLLLpakU90eypnJ5rHccM7CAR9sBuK25mpv4x5clyhZiVNNcZgIq3QX9kQkliEJULKHABFn4p7eJ9npK1WpXzLHe/WtMl1mt5a7eJ6S6iJfc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1795695659; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CHEjAoC69VXdBks94HEYmeYGFOFSYDBxDKQhVtoGcY0=; 
+	b=l8FQ8rhQ8dOtcynZ/oeAfoKl4ayq+eq199DrabVG6cF6A+FQmoXF8WdRHC32xBZzHM2oZOFXhpugDplmnIWrGrenj2fFi3Dv4IYqN7vQYmpteDkbW4hO9s3RdBd8TkchBxEJrdFsM8HNSCfbbjOpVS/9B4vZHfnvXBmzbzh/0UY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: a=rsa-sha256; b=XDiWSuUF06ArwXo5uo4DIBrzLGZN3QzglRGyJIKdbfvD1O2cHGiQv1k7nXagb1U7MCySDuFm/rqzj8L/9/NkfIZRyNLYOp/OmJ4Nptg4OzsJAinDjs0V02yqoL4xKQ14kuvQTq9K3OM1nB5LidBBJXvbDDtgTy5bHFm4kySPVSJMN1KZpPBJQu7IFHiqlI7s3uyoie46BkodAFly9/J2dqLOQOUHRHGOJ+yhgwsHt1svbD+Z87O35FlAmA8AIGtj+xEwBh/keCXkW5iPETj88RFhELZsarxyzYnfekAbfOv0HbB+Ljs0+2aFyRWl90DjzU8kcD9lQW5i76faWy8HRw==; c=relaxed/relaxed; s=zmail2048; d=rong.moe; v=1; bh=CHEjAoC69VXdBks94HEYmeYGFOFSYDBxDKQhVtoGcY0=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by smtp.zohomail.com with SMTPS id 1795695657334712.6395625652469;
+	Thu, 26 Nov 2026 04:20:57 -0800 (PST)
+Message-ID: <3e932924940536878264c1ab46d24bd6db362183.camel@rong.moe>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: don't warn about
+ keyboard backlight type 0
+From: Rong Zhang <i@rong.moe>
+To: Arnav Kapoor <kapoorarnav43@gmail.com>, Hans de Goede
+ <hansg@kernel.org>,  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>
+Cc: Ike Panhc <ikepanhc@gmail.com>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>,  "Derek J . Clark"
+ <derekjohn.clark@gmail.com>, Stuart Hayhurst <stuart.a.hayhurst@gmail.com>,
+ 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261126073107.765676-1-kapoorarnav43@gmail.com>
+References: <20261126073107.765676-1-kapoorarnav43@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 26 Nov 2026 20:15:50 +0800
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,113 +72,64 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261116155147.769630-1-erwanaliasr1@gmail.com>
-In-Reply-To: <20261116155147.769630-1-erwanaliasr1@gmail.com>
-From: Erwan Velu <erwanaliasr1@gmail.com>
-Date: Thu, 26 Nov 2026 11:08:43 +0100
-X-Gm-Features: Aa3M54pPJggkTaxEZ8exgufSp3xG7DaTC8fi_wGV9VbwisqyDNi0qDOvXzZidkM
-Message-ID: <CAL2JzuzBNTCAQBf-O=bJACLbVBXRM68VJ+KE7_W975X6tpTktg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] platform/x86/amd/hsmp: Unify per-socket sysfs metrics
-To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>
-Cc: Carlos Bilbao <carlos.bilbao@kernel.org>, Muralidhara M K <muralidhara.mk@amd.com>, 
-	Suma Hegde <suma.hegde@amd.com>, Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Erwan Velu <e.velu@criteo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.62.1-4 
+X-ZohoMailClient: External
 
-Hi !
-I'd love to have feedback on this v2 which tries to address the issues
-reported on v1.
-Erwan,
+Hi Arnav,
 
-Le lun. 16 nov. 2026 =C3=A0 16:52, Erwan Velu <erwanaliasr1@gmail.com> a =
-=C3=A9crit :
->
-> From: Erwan Velu <e.velu@criteo.com>
->
-> The goal of this series is to ease server monitoring, by exposing the
-> HSMP metrics the same way whatever the driver, in a format that is
-> straightforward to integrate in metrics exporters.
->
-> The per-socket HSMP telemetry attributes (c0_residency_input,
-> ddr_max_bw, pwr_current_active_freq_limit, ...) are only implemented by
-> the ACPI driver, although they are plain HSMP messages the platform
-> driver can send as well. Systems probed by the platform driver therefore
-> only get metrics_bin.
->
-> Their location also depends on the driver: AMDI0097:0X with the ACPI
-> driver, amd_hsmp/socketN with the platform one. "modprobe amd_hsmp"
-> picks the right driver, but userspace cannot know in advance which tree
-> it has to read.
->
-> This series moves the attributes to common code and adds an amd_hsmp
-> class with one socketN device per socket, registered by both drivers.
-> /sys/class/amd_hsmp/socketN/ is then the same path whichever driver
-> probed. The existing ACPI and platform sysfs paths keep working.
->
-> Patch 1 is a pure code move. Patch 2 adds the class and wires it in the
-> ACPI driver, patch 3 does the same for the platform driver. Patch 4
-> exposes the pwr_current_active_freq_limit_source bitmask as a single
-> hexadecimal value, whose interpretation can be centralized in the
-> monitoring stack (e.g. Grafana value mappings). Patch 5 documents
-> /sys/class/amd_hsmp in Documentation/ABI/testing.
->
-> This v2 reworks patches 2 and 3 following Carlos' review of v1, and is
-> meant as a basis for discussion: I would rather know early whether this
-> is heading in the right direction, in particular for the class approach
-> and the AMDI0097:0X ABI question raised in the v1 thread, before
-> polishing it further.
->
-> Changes in v2:
-> - Replace the separate /sys/devices/amd_hsmp tree, its root device and
->   its hand-rolled refcount by an amd_hsmp class, as suggested by Carlos.
->   The kref.h remark from Ilpo no longer applies, as there is no shared
->   object to refcount anymore.
-> - Platform driver: the socket devices replace the bare socketN
->   attribute groups. As class devices land in an amd_hsmp glue directory
->   below their parent, a socketN symlink keeps the existing
->   /sys/devices/platform/amd_hsmp/socketN/metrics_bin path working.
-> - New patch 5: Documentation/ABI/testing/sysfs-class-amd_hsmp.
->   Its content depends on the AMDI0097:0X ABI discussion with Carlos in
->   the v1 thread, and can be dropped or reworked accordingly.
-> - Collected Acked-by from Carlos on patches 1 and 4.
-> - Rebased on v7.4-rc3.
->
-> Tested on a Zen4 (Family 19h, HSMP protocol 5) server with the platform
-> driver, and on a dual socket Zen5 (Family 1Ah) server with the ACPI
-> driver: attributes read through /sys/class/amd_hsmp, legacy paths
-> still working, and 20 unload/reload cycles of the driver while reading
-> the attributes in a loop.
->
-> v1: https://lore.kernel.org/platform-driver-x86/20261007125908.321186-1-e=
-rwanaliasr1@gmail.com/
->
-> Erwan Velu (5):
->   platform/x86/amd/hsmp: Move per-socket sysfs attributes to common code
->   platform/x86/amd/hsmp: Add amd_hsmp class with per-socket devices
->   platform/x86/amd/hsmp: Expose socket attributes from the platform
->     driver
->   platform/x86/amd/hsmp: Add pwr_current_active_freq_limit_source_raw
->   Documentation/ABI: Add sysfs-class-amd_hsmp
->
->  .../ABI/testing/sysfs-class-amd_hsmp          | 120 +++++
->  Documentation/arch/x86/amd_hsmp.rst           |  24 +-
->  MAINTAINERS                                   |   1 +
->  drivers/platform/x86/amd/hsmp/Makefile        |   2 +-
->  drivers/platform/x86/amd/hsmp/acpi.c          | 345 +-------------
->  drivers/platform/x86/amd/hsmp/hsmp.c          |  19 +
->  drivers/platform/x86/amd/hsmp/hsmp.h          |   8 +
->  drivers/platform/x86/amd/hsmp/plat.c          | 155 +++----
->  drivers/platform/x86/amd/hsmp/sysfs.c         | 435 ++++++++++++++++++
->  9 files changed, 681 insertions(+), 428 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-amd_hsmp
->  create mode 100644 drivers/platform/x86/amd/hsmp/sysfs.c
->
->
-> base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
-> --
-> 2.53.0
->
+On Thu, 2026-11-26 at 13:01 +0530, Arnav Kapoor wrote:
+> On the Lenovo V14 G2 ITL (82KA), which has no keyboard backlight, every
+> boot logs:
+>=20
+>   ideapad_acpi VPC2004:00: Unknown keyboard type: 0
+>=20
+> followed by "Keyboard backlight control not available". The KBLC type
+> query (Arg0 =3D=3D 1) in this machine's DSDT reads KBGC from the EC but
+> always returns Zero, and KBLC also returns Zero whenever the EC is not
+> available or LFCM cannot be acquired. So 0 is not an unknown backlight
+> type but the value for "no KBLC keyboard backlight", which the driver
+> already handles by leaving features.kbd_bl unset.
+>=20
+> Only warn for non-zero values, and add the missing newline to the
+> message.
+
+See https://msgid.link/20261107140700.16036-1-punnaysharma805@gmail.com
+
+Thanks,
+Rong
+
+>=20
+> Fixes: ecaa1867b524 ("platform/x86: ideapad-laptop: Add support for keybo=
+ard backlights using KBLC ACPI symbol")
+> Signed-off-by: Arnav Kapoor <kapoorarnav43@gmail.com>
+> ---
+> Tested on a V14 G2 ITL (BIOS GGCN55WW) with the 7.0.14-based
+> kernel: reloading the stock ideapad-laptop logs the warning, the same
+> module with this patch applied doesn't, and the rest of the probe output
+> and the sysfs state (platform profiles, fn_lock, camera_power,
+> usb_charging, charge_types) are unchanged. Build-tested (W=3D1) on pdx86
+> for-next.
+>=20
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platf=
+orm/x86/lenovo/ideapad-laptop.c
+> index d2344dcd6945..d5679ff2e8ab 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -2627,9 +2627,9 @@ static int ideapad_check_features(struct ideapad_pr=
+ivate *priv)
+>  =09=09=09} else if (val =3D=3D KBD_BL_TRISTATE_AUTO_TYPE) {
+>  =09=09=09=09priv->features.kbd_bl =3D true;
+>  =09=09=09=09priv->kbd_bl.type =3D KBD_BL_TRISTATE_AUTO;
+> -=09=09=09} else {
+> +=09=09=09} else if (val) {
+>  =09=09=09=09dev_warn(&priv->platform_device->dev,
+> -=09=09=09=09=09 "Unknown keyboard type: %lu",
+> +=09=09=09=09=09 "Unknown keyboard type: %lu\n",
+>  =09=09=09=09=09 val);
+>  =09=09=09}
+>  =09=09}
+>=20
+> base-commit: 61c0dac952b9308884936d05cce97565a5c89af4
