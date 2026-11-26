@@ -1,73 +1,73 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.15.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795706268;
-	b=uMpq0wHU0TTEWCU4rPgWezgC5bh1vtqSF2bofaKfSBQlyXUnF0U+6AX71TmA5r9+1mmI
-	 3QQ80ZC/UPD9KBlRmlOyc/B6/FFejQF4HUJbj0RkF1fyViQlvnSQ5Ijv4qVbn3/87359i
-	 8kMW86oVVNdmV9Sc1lg1Fbf2nOnMF0nLl3sjZBrnZIZiBVQgfcOhxUY9mfiXPvRVOWb0D
-	 EFGKVCnsOAP5FoRB5KVPQ5eb9ZRVtOdyKecVN/CIIV0I0p0h0QcEzYSXTNCvZLIXa6jxu
-	 OSX89CLKe1x/rr/nX+p8zS3OILHX3QtoL2pQqlmIeQ/oI9QZTz8lKlmj+5gGKa3Z/jw==
+	t=1795706279;
+	b=fvMT0lVmDuddz2A2IROPmzQGPpstxkmtxIv62LesSiAOt8WKEa6dVgX6CSjetBzPPSUl
+	 uLCvHg1ycG19W/FkGuRtTn9A3wOOnv2VTFcTn9Z46ubWv6aGpPttc/iGpcDdGRsG3ruH7
+	 U9352ALMq/sLO6tUFD1eWAKfOHqr4teqWmVPhA7igur0x5z3CQ9CbyW4a06tgZvYogazE
+	 fAEf+QY4X4KOC7u20k86LVClB1X+elUqnx7Qy2SWF/a6yWgtz15XkPDwnallaTtlZzhgY
+	 4ASvvQse7OZcNNKeC/cmW6ySrmfistkWPZpvadDNLP2eewC62XmPVrP2I3xpFdBKdcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795706268;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795706279;
 	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
 	 X-UI-Sender-Class:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
-	 X-Spam-Flag:UI-OutboundReport;
-	bh=2I++9dVYUQ9bi4XmmTeSrWLcwZpCnHfoDkUWRXe4cjA=;
-	b=xFvZuwPZQqRs/YMjPW+uo7X5AA+8YH6Ngt0k4wob1+EeVzgRDZt7a//QDr0P3hk4rWMd
-	 cd+o2/GFE3MECaIKmj4nj9kVdVKfH7Xqgtj6M0HtarEsk72vt3Jm42PqIKab3N/0BNXf8
-	 qRXTt+I7zAGDTMdA7wsZHnJn9mhM3AvnpO2YryzqwifbE3CO+nQIbWz4ThAVZSU/oNQ+g
-	 1GEwtWBYPfwryq10IJZX98sMdEcECOIM036n0CiecCQk7uWmxe0Aa7R9up7sG6rPV5tME
-	 nsS62l8EKGkoytQg2Y96z2GBXjlS17SSLv+g2noT4nUzYpG81jhERmv7yi53yE3sdPQ==
+	 X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:UI-OutboundReport;
+	bh=cnypbvYZqrUfwSlWJO6RhHOOr07vvi7VQJvQzGakdOs=;
+	b=qfAbgRZm2BKEp7XZ28BTb7BF950d1i1voQAzgSyQsbejmDYPqZ1fusRa66Mf6RgZUdHC
+	 O5nst/Zij+RWRiOfaQwOJzP/fvcMagtE0Oi0VQltDNwfpQnsh1IWQaEYxKyXJRLgsT45e
+	 IDQGnfH/SPV8ocuYUSbAHoYnlEJ8GuOVu8LlK8Iw7bSk1Cb4HlWxCDInvFoSaHOpvALi5
+	 LWVsulJP/LQjHzB4GeWwx7Ldm3AGNw/TE7O45Hu2KJnULEOJfEyMO/edcRLS9liXaDjdi
+	 MgGKbTVqOf6XpMDG5rEuykULzQafn5HfEWQskUwSAzI45Bmnga3tU+iz9ggKMlsRU1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmx.de;
 	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=mNuletI8;
+	dkim=pass header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=A9x5IkkQ;
 	arc=none smtp.remote-ip=212.227.15.15
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C126606A333
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 15:17:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C126606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445E0606A339
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 15:17:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 445E0606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=mNuletI8
-DKIM2-Signature:  i=1; m=1; t=1795706265;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=A9x5IkkQ
+DKIM2-Signature:  i=1; m=1; t=1795706276;
  mf=PFdfQXJtaW5AZ214LmRlPg==;
  rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
  d=gmx.de;
- s=s31663417:rsa-sha256:tBfXkhhLFGON+5Z5u9sl11JfvgO2
-   gS/dmpLXPQF1zLLtyozoYxeTN8iKXrBGx809T0TXAWfs+zOx5UchWuwdQ7jUIFnGDc1HYh55Iwx
-   JDtH1nak6KBGLUuY187of6TAbArxZiovAvGNMw2tfjEq7H4ZyDxyuuqKgdgbeYBy2XOBwDg9ysK
-   QJVUsoMA2xSIgSWsh2v2nkaKgehg8gaMmKMkst54rOxKZnKwbj28Ml9K1QfFQl82fwcC0gWFlmn
-   1kUcpvz2yPfV+wy4KHGmOrgaoxos8MEJWg4Gf3kAbzbkC3BqQPMFVgBxNkVVmawjKwS0MSwBF7Q
-   9EdUGnEVHk2voQ==;
+ s=s31663417:rsa-sha256:li6BMLQ7xGRxPkhc90XYLlwDOquU
+   I3JfYYCHRpgDWP7VvYpFyKHxsRQNKd/+t0J7zI0Hqce34nMPBAn6WTcRVCEioGM4TJS84TbyFM8
+   NDKTsfZnyZs0vQ5PS57lUITJAG2xrBUHsn2lM6+YPECITooNWYU/6J71Tt+d7c309y7SmfY5wtw
+   EFyxJ3zq+ID9tVq/nTvqNiDksT5s6XIxNmZSupSU6AI/W/7/7Wa7thxCvxNeiNFqCG5HUyBseff
+   3SX3GfI20ZLqARuZpB2B4uQThcrNWheHbG5wIETGEzUUvWA/UAz3swCnPwz6YpHxGrRN/Y0P31G
+   aP/XqfCV/5vWpA==;
 Message-Instance:  m=1;
  h=sha256:
-   1Si852voLgRfzypR9j0gI03ZGwjX/Xd1ELa09aZbTTw=:
-   oG0TaPlwwzRC19LE+UpyDtLP4kRqQ7RVKRWaUjnvUvw=,
+   OLKtv41Ej46KW6dxFvBLGtsKRj+pvE8NhCDdHOGgT90=:
+   ngXNcFUAYpm0a7XCKxhwnXY5cjfbrrc0irydlXicMHw=,
   sha512:
-   rrMtgV/IIYeB49e0MFM5Ye1IPqutXnfHSljGVjdUIDai0zEK9Nhtq/oPDhtygCVof33zlQmZDm5MJHB+PXhPJw==:
-   3E1un9K/FYvHv0eAfUzl7ACwMmmPumWI7z3PiVPyFXFrM4MZyCuDP3WtwVqrpV2tFn3US21aH7tXQu6BHaOF9w==;
+   MPpsQf6rV2VsxqdFgrVE+8SAEXnk+V3dv57562jxXx2ig3i0FiVLk+0Sd3DhrGYKCXW5L8/vLSaHD6FzOpQZzQ==:
+   08Ri058x879XzVGBXlXkBTfa5aeMLQvzykX1efvM8lZ+N3VqMUEHyQ1WQVp+5EoOMy0RCwYkh3DiDRlp700cyw==;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1795706262; x=1796311062; i=w_armin@gmx.de;
-	bh=2I++9dVYUQ9bi4XmmTeSrWLcwZpCnHfoDkUWRXe4cjA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	s=s31663417; t=1795706263; x=1796311063; i=w_armin@gmx.de;
+	bh=cnypbvYZqrUfwSlWJO6RhHOOr07vvi7VQJvQzGakdOs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=mNuletI81dKSIrGGE3oe6jN9S1ulFUp6g//L2mWfGvj7jyYEFYDDg+bwhz6h0zLS
-	 DrVAhpv81xUD7UB5JngtMPTSuDK2VWppDpI2xImAxNS7Niwen6Hx0nJcs4X8Hc76/
-	 M8Td33hJ/vsBekwjFw9Wb+pj26p02oE2cQngIPnkL+SwDEhrg2k0WOx0rAiXBo9FC
-	 QSxii/vOT8s3JrAthb5zDJ3aAOuZSnzHvAP7iY3ahYCAvRlxE9TGv9H87iIZI5R8T
-	 XMuASMf9uejwMWorqKbdaFNjkeoxZYvORa/o/Z2BhMO8Hs3ORQSw9HfzKOkxc2aSF
-	 v0pYA6l3varRfmt2MA==
+	b=A9x5IkkQDj8wtBQ+HfKZpBBlQz8OXeVVQZChhsMJV00inc29BhSUDG6jU5wNH41p
+	 lRIho0v7sLaSODPPWyf4csjd49s/idyFmwAtVp29ppUlM0pdUM7Zjnu9IZeZMnxad
+	 JGZuKI1+Car+5Zr4Z/AsCNEO+cOHuUe2YB2PxbxOGTNbcVWyfTqWMQtMNN/SInviU
+	 kyz9k6aZJkyvEnlGdHmSOu24e7UZzNo98o4OgUxNLtjBwCJMjzUtY3RhziXuvaqp8
+	 jvR2xGGySRmjAWCEDBlO5yiacllgiAAsz8lPZLabE0Dijb9HQx5Gq7X6FUuDkmNq1
+	 QltZg2lsYBAeEcVH4A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCKFk-1xfzAC0ISI-007NOU; Thu, 26
- Nov 2026 16:17:42 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4zAs-1yXOUt0ABI-00yW1J; Thu, 26
+ Nov 2026 16:17:43 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: matan@svgalib.org
 Cc: hansg@kernel.org,
@@ -75,10 +75,12 @@ Cc: hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	daxter1992@gmail.com
-Subject: [PATCH v3 1/2] platform/x86: lg-laptop: Fix possible LED deadlock
-Date: Thu, 26 Nov 2026 16:15:56 +0100
-Message-ID: <20261126151735.442375-1-W_Armin@gmx.de>
+Subject: [PATCH v3 2/2] platform/x86: lg-laptop: Improve keyboard backlight detection
+Date: Thu, 26 Nov 2026 16:15:57 +0100
+Message-ID: <20261126151735.442375-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261126151735.442375-1-W_Armin@gmx.de>
+References: <20261126151735.442375-1-W_Armin@gmx.de>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -89,185 +91,215 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qFo7qISLnnT4WFcEcEWTERvRizk+rpurODfFpruydqzPZOcFk2L
- IfPC/cWJmWXanqJm8lpbepT0v2cNVTK4GXdcYEVsdAkVurIz6j4h6Uy+0PfGv+kYwFi3h4K
- ede/RlHIEH6T8JXqyp6DDiUQ7qSITaXG54L/pZnVPP77hvwFtdhqIiIolmjNN48SlYnxgmh
- bosRLoEnArUy82lqB+A5Q==
+X-Provags-ID: V03:K1:gJjsbEoqL9D2MjcEBSQ8sgwA3a7C0ePgQfXzSbuXHDXE6gWrRZb
+ FgTwdjrR2OnQEI3Xeewja2AYiqG/MmKVKxMiziZht66YVTIPmoumFExRizVXjAcTxZz9LJd
+ Q46Fzmb59SJfXvG3wBCTCk29aPUX76B87ux6BMsy6Gn6lUbtntpf9ntkuFRkQZskGUPd01m
+ AqMR+Psb1MZCJMNRFxixg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uXNcnQnHAE0=;sXkyCb/c4jvCgFxyS8dSf8SFhGf
- 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
+UI-OutboundReport: notjunk:1;M01:P0:RlMdF/uieQM=;ZaK/5iRIPweg+RFDYKVaVA634nH
+ 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
 
-Calling ACPI control methods inside the .brightness_set callback
-of a LED class device can cause deadlocks because this callback
-must not sleep. Use .brightness_set_blocking instead.
+Not all devices support the keyboard backlight feature, instead they
+will return an error when trying to read/write the backlight level.
 
-Fixes: dbf0c5a6b1f8 ("platform/x86: Add LG Gram laptop special features dr=
-iver")
+Avoid registering the associated LED class device on such devices
+by first verifying that reading of the backlight level works. For
+this the get_kbd_backlight_level() function has to be modified to
+stop hiding any errors coming from the WMAB call.
+
+Reported-by: Carlos Javier Alvarez <daxter1992@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D222275
+Tested-by: Carlos Javier Alvarez <daxter1992@gmail.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
-Change since v2:
-- none
+Changes since v2:
+- make kbd_brightness signed
 
 Changes since v1:
-- none
+- fix error handling in lg_laptop_handle_input_event()
 =2D--
- drivers/platform/x86/lg-laptop.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/platform/x86/lg-laptop.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-la=
 ptop.c
-index 36ad1e269443..a784071de8b3 100644
+index a784071de8b3..d6d452a1dbe5 100644
 =2D-- a/drivers/platform/x86/lg-laptop.c
 +++ b/drivers/platform/x86/lg-laptop.c
-@@ -32,7 +32,7 @@
- #define LED_DEVICE(_name, max, flag) struct led_classdev _name =3D { \
- 	.name           =3D __stringify(_name),   \
- 	.max_brightness =3D max,                  \
--	.brightness_set =3D _name##_set,          \
-+	.brightness_set_blocking =3D _name##_set, \
- 	.brightness_get =3D _name##_get,          \
- 	.flags =3D flag,                          \
- }
-@@ -599,10 +599,9 @@ static const struct attribute_group dev_attribute_gro=
-up =3D {
- 	.attrs =3D dev_attributes,
- };
+@@ -641,10 +641,10 @@ static enum led_brightness get_kbd_backlight_level(s=
+truct device *dev)
 =20
--static void tpad_led_set(struct led_classdev *cdev,
--			 enum led_brightness brightness)
-+static int tpad_led_set(struct led_classdev *cdev, enum led_brightness br=
-ightness)
+ 	ret =3D lg_wmab_get(dev, WM_KEY_LIGHT, &value);
+ 	if (ret < 0)
+-		return LED_OFF;
++		return ret;
+=20
+ 	if (FIELD_GET(KBD_LED_MAGIC_MASK, value) !=3D KBD_LED_MAGIC)
+-		return LED_OFF;
++		return -EIO;
+=20
+ 	if (FIELD_GET(KBD_LED_MODE_MASK, value) =3D=3D KBD_LED_MODE_OFF)
+ 		return LED_OFF;
+@@ -703,7 +703,7 @@ static int lg_laptop_get_event_data(acpi_handle handle=
+, u32 value, u32 *data)
+=20
+ static void lg_laptop_handle_input_event(struct input_dev *input_dev, u32=
+ value, u32 data)
  {
--	lg_wmab_set(cdev->dev->parent, WM_TLED, brightness > LED_OFF);
-+	return lg_wmab_set(cdev->dev->parent, WM_TLED, brightness > LED_OFF);
+-	unsigned int kbd_brightness;
++	int kbd_brightness;
+=20
+ 	switch (value) {
+ 	case LG_NOTIFY_HOTKEY:
+@@ -719,6 +719,9 @@ static void lg_laptop_handle_input_event(struct input_=
+dev *input_dev, u32 value,
+ 				break;
+=20
+ 			kbd_brightness =3D get_kbd_backlight_level(kbd_backlight.dev->parent);
++			if (kbd_brightness < 0)
++				kbd_brightness =3D LED_OFF;
++
+ 			led_classdev_notify_brightness_hw_changed(&kbd_backlight, kbd_brightne=
+ss);
+ 			break;
+ 		default:
+@@ -823,6 +826,21 @@ static int lg_laptop_input_init(struct device *dev, a=
+cpi_handle handle)
+ 	return 0;
  }
 =20
- static enum led_brightness tpad_led_get(struct led_classdev *cdev)
-@@ -612,8 +611,7 @@ static enum led_brightness tpad_led_get(struct led_cla=
-ssdev *cdev)
-=20
- static LED_DEVICE(tpad_led, 1, 0);
-=20
--static void kbd_backlight_set(struct led_classdev *cdev,
--			      enum led_brightness brightness)
-+static int kbd_backlight_set(struct led_classdev *cdev, enum led_brightne=
-ss brightness)
++static int lg_laptop_kbd_backlight_init(struct device *dev)
++{
++	int ret;
++
++	/*
++	 * Devices that do not support the keyboard backlight feature
++	 * usually return a error when trying to read the backlight level.
++	 */
++	ret =3D get_kbd_backlight_level(dev);
++	if (ret < 0)
++		return ret;
++
++	return devm_led_classdev_register(dev, &kbd_backlight);
++}
++
+ static acpi_status lg_laptop_address_space_write(struct device *dev, acpi=
+_physical_address address,
+ 						 size_t size, u64 value)
  {
- 	/* Must always be written */
- 	u32 value =3D KBD_LED_STATUS;
-@@ -633,7 +631,7 @@ static void kbd_backlight_set(struct led_classdev *cde=
-v,
- 	value |=3D FIELD_PREP(KBD_LED_BRIGHTNESS_MASK, bright);
- 	value |=3D FIELD_PREP(KBD_LED_MODE_MASK, mode);
+@@ -1035,7 +1053,7 @@ static int acpi_probe(struct platform_device *pdev)
+ 		battery_limit_use_wmbb =3D 1;
 =20
--	lg_wmab_set(cdev->dev->parent, WM_KEY_LIGHT, value);
-+	return lg_wmab_set(cdev->dev->parent, WM_KEY_LIGHT, value);
- }
-=20
- static enum led_brightness get_kbd_backlight_level(struct device *dev)
+ 	/* LEDs are optional */
+-	ret =3D devm_led_classdev_register(&pdev->dev, &kbd_backlight);
++	ret =3D lg_laptop_kbd_backlight_init(&pdev->dev);
+ 	if (ret < 0)
+ 		kbd_backlight_available =3D false;
+ 	else
 =2D-=20
 2.56.1
 
