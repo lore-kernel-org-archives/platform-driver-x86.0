@@ -1,71 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.200
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795660544;
-	b=YxdparSDMF8tVp0OWDhmiub6kTUwjth0iJiYg/d5smT6vznQ6hHAZA1N8Kca9SlZ5o+7
-	 5IlG+hPFjsDIl1LEX3YGOrYWzK6KyWsFRMqxN3c3MTwIvowqy4AkLs8RJSIRmiQfRj+0b
-	 wUo5WhCtRkm+lQ4R7UWzXo3t9WVILVaiP1zzCzpJzkV825nEDAfzHdjx2fDFrdh14YbPE
-	 FQ2nvArWJg/kiszkue8QAqw8QM1f13q19TFOI6+GdTBZTvsgJzNWS9BDf+flSrnzBLJD1
-	 E071z3ajHr6MkQwgP0mz4/laR1lgI/AMLvcY2Y9PYjGycx3uRgL5R415EtaAtAQLWuw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795660544;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.179
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795676779;
+	b=MxX7z7ZKr9as6e4+n0dqk/Z/HUC7D7+xzerhza3uG9D8s62M59DmGV5j0OUjLKwPB3ip
+	 RayL09QFrYGeuKLxRDBPEbjZtppLa9u+GTVY6k2PWWoJfAC5mYQmKIayoA0wA9m8IJhqf
+	 sTp65myYypJmOkmQ7qpkpYsXdq/je8NLXgai8X+3/rE9q7k2I9EhqUgUV4vrUPSOKS5G3
+	 KLDHswzqMk+4Q22dmoqTkQCudZQMxZZ9sHWgcIFHH1WEidtO+X/DINnMeE3w/lD/gtyfm
+	 CE68TeesmHSZET8mlAlRETQIjDva468H/Pqcugj63QYIT+8CwZ/RrZnF5HrgOA1kOKw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795676779;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Received:Date:Mime-Version:X-Mailer:Message-ID:
-	 Subject:From:To:Cc:Content-Type;
-	bh=SYAKzX21Kh2sJO41pdYAEdjUVj8LHqXhl4mb9nrrAeQ=;
-	b=Fzx63NnpH0Xd94UaZupPhBmpH7s6WOtPT8hjOaukn2gx2xRVLmINd4DcKtu8Hz+oLycz
-	 BYjsDrDTqaC4DmngedL/2TGy0R+i1hBO4iBWrFlUbTZNm/TgWrafnWR7YjZxUGKoIzhYV
-	 UTg6M/dTxjGsUpTamSt7IuhBKlO+BpfkoEQQMejpMduaTyYkUBGCdf/M4Sul0jmoKElP4
-	 b02I/xH+spbJi4QBpTJ6DzWRdJ5R5nuUAragqdGX3hQEnf9Sx1vIgupwe0IOKHDCwjoan
-	 glp21B8scj6Kj7Vel5LYYsjIJ1x9mWq1e+IhFcYDpiv8WcGDC0WA8p3jYS9Nj6/bKdw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--zhenwenliang.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ftZZ7KW4;
-	arc=none smtp.remote-ip=209.85.167.200
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=JGkzya9dAjnn+jPv3SgcvQ46bNDRabbKXhUISQinlYA=;
+	b=mEG6p874HXfIbY+wMkXgCV4RLNC8u4QnW90dNICmTAYGbrBUKTmFVzQFJ1RhXn2BbFEV
+	 6wCDGfbNzo/dU75UdMed1f6k4f3xziJHFdvj1UNLDef9etqcvLUL8XUWhSwVSPzWYMVmg
+	 ss3roXlEK660IoOmKmQDswSSm01/S5QBZ6/BSgA4D68r6vDFDKiU1W4GnSS016OJItovW
+	 TO5lrdQBs3F2WbJSVmQU7agQGzZyh9VEO8KNNpmiUyZw0AYkZZ0XGtxQP3TwM36r3ilK2
+	 LfW7/N4zn1YA2ReUx0s1AYvP/ygR+3zGwLdfyIGPkG3k0be4YzzT3zN24xQJJf+rVcg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UH5HQHFq;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.179
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F30606A329
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 02:35:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88F30606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zhenwenliang.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59080606A326
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 07:06:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59080606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ftZZ7KW4
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4cbf700ddccso4784079b6e.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 18:35:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UH5HQHFq
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-4c5d8c7f326so2664615b6e.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Nov 2026 23:06:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795676778; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZRwG/P0z8CztbHkWU42YGYeVgwIgtPb5dKkrrYcHK6Ab2lQelf5/cYoKVu0fz/u9yb
+         jJRq9xC5rCIpIbBH8yS1srsvmZUi8cqPMd4qvVGr9tXgsSDC43WMcj2IfOdUpBXgvitZ
+         tBA8swx55KPR18Ym9ebmsHrVzLyuR3Ys9EC3lXXJxQF5TLX5hVNCtku23MBVsie5AKWj
+         kTBxrqMpo9mZsftYtYYLTSTWLmXd04KMk7ZfVMq8Fm2FW4SyXyIoplwL4ZDkaHdOMuSD
+         OmbMsgqzJZvDAv3sgY3Vcg2MWWkM8zrezL0MKu8y7Umd2JF2C9qWdGzsBw35L8+2ZPjW
+         SWuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=JGkzya9dAjnn+jPv3SgcvQ46bNDRabbKXhUISQinlYA=;
+        fh=Qa8JRcM48A41L+Oc4N3M9ZUuPVCx55hMOpyr2e5xNi4=;
+        b=TpgLTFeWP7MbbXsSvA6ugf6P9gka1xk5fkbcRQ6uAdyl5VDkVpnsxJAP91FWnItXci
+         ZFi1Y49Q6tROziB4U8KQlNxe42hbBMMQUWRF6IjkNMrrvJzFZrxK/nUk3OgIPYaS+yWJ
+         uEwrKrX4fSzI5lujw9tXzv3gi0WLWLUsSyviE/hCANOq5lvc3/gJ4u339vhSnkKUPs1H
+         TZG1eoEEosK74w0fo+12Wvf8lVChgMvAQzt/A6TZI6BRN2GDkaJGdKrEtkIwO2uZRlcq
+         tjd856QLVTBnUMdM23ViKWUeCbYujP+Zya9OlBqSgNoTmx7D9emac7oQBaqQ5XtDSU+3
+         Nxjg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795660543; x=1796265343; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+        d=gmail.com; s=20260707; t=1795676778; x=1796281578; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SYAKzX21Kh2sJO41pdYAEdjUVj8LHqXhl4mb9nrrAeQ=;
-        b=ftZZ7KW4GIVIpexsRtBH4kxa7zAWOML2BgAQsHtb/bfL3ud3ziDte0tfj+QiksOv2/
-         d+OrfcnMpnNIxiZl5TTXIHzZnnDJgSyIWaFC1sxagz9idtlp9ER8nAffj0rqDR09/lY1
-         BXsLw8VurQWCSOH2nbcXagvrdLwYaRaKMD/hTVoSZXvX8mtKOy3fJCYP4HSesc+wJiy4
-         TmjTh6NY7bJcjdUQe8eeqo8r5CjLmYUF8goE+8x4Ae4wr5m1TDZ92pCovCVBWpOjHs1g
-         fYNAIE8D1zVhIVk8Un3gSuG7wtFromWuueDlCnqwAPWyrthlo2fQiaNE6Kr43JAmdyQI
-         8h4w==
+        bh=JGkzya9dAjnn+jPv3SgcvQ46bNDRabbKXhUISQinlYA=;
+        b=UH5HQHFqTxWVAe4pNETG3TgSSnfdvawd8ZQqFQpTnXL8pklkBd3jqxrX4e1K60dzCN
+         mCk/ExxbGY7CHX9BaicRT/mUMnD59Wl7VG2ao0I/MrUgavg8Dk4k1G6IFokyh5mZ0oDm
+         AjSe3P7IfgcbvQxru2NKz9hbmP8nCLfrcNQSyS28j/dZUrchIitIru9PMmoFrvN9okV1
+         7uMLKIV+zxO1B36TBVevbRi0bE9Huy4j3dCL5Ht6IN2bT5Jmslw8xPBv7Wn1/997vVCr
+         F+iCkk8pUWDQq9JJqWyWFuq4UR1ZEf8IbZhe6Y6FfyXuRqPr5atBZEKVDCLveet/ZI/6
+         K7IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795660543; x=1796265343;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=SYAKzX21Kh2sJO41pdYAEdjUVj8LHqXhl4mb9nrrAeQ=;
-        b=IwKZUu27FvV3TuISBm2kCXtveo8vQEW003jq2FQZB5w4M8vOdUhPVha3Pjbl44NPlr
-         yv1UExadZsU5AHQPpj15Owf3XOkNtTyy+loYlohSHX+f5Y1UGRO2j3eT6s6Q6cBLSnKp
-         LxLZArXY0bXgN/KC6SPkdEebsnE57oHdxaINPP5hM/k5ltQjSTmLC9XZj4eOA+eNuxGU
-         9f/cQF/JFUyjq5O76a86nzEOjw0tmRBQXxQeGis6/SoHQKlosrM0hFcDyBt62DffroM5
-         O6NGb6B1jnXFUKFSVekdTDC3zs+ZQ4IpoA5dcx+7C4n5SRUQNwcKOqcuPRzHCnr1UnGx
-         OE/A==
-X-Gm-Message-State: APuU4Z8ykO+1D13C1ED652H4WLc6jupgi+ab+q9dr2nofhWZfxtVhLz6
-	Oc07E/3mV26u2yp9WjG67bbwvlGigfgRdzZ5b9rtTW+HFr2MGVWbzqpu61+4Eg7byWgZSZJNXM2
-	pxs6wxtHaICNMZV5YfWNcog7G2+/SHQ==
-X-Received: from ilbeu7-n1.prod.google.com ([2002:a05:6e02:2f07:10b0:524:59d2:f0f6])
- (user=zhenwenliang job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:67c7:b0:4f5:98d:d1ae with SMTP id 5614622812f47-57a0bb8d52cmr20362723b6e.55.1795660543130;
- Wed, 25 Nov 2026 18:35:43 -0800 (PST)
-Date: Thu, 26 Nov 2026 02:35:42 +0000
+        d=1e100.net; s=20260707; t=1795676778; x=1796281578;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=JGkzya9dAjnn+jPv3SgcvQ46bNDRabbKXhUISQinlYA=;
+        b=n95s5BpuCZrcNa/dAJJxB12fZpUVSIodKHcFzwS6fEv/iyctA7aIuZbVSwzfKx4O1o
+         7B+ycncNbzSYfvPOq01PAvR8WNCkWxy4EnDIt//OeJKUpXezEoHAMiGdhw8BsrMtwpFu
+         oBoV2hl4uaoRmlfYExZVkRnWjjevdiUCgMeVUZWHX1pRiR3z1DCCz7cQWJi9oTCMARnt
+         XboQQJzgPZ0dL2PJdjfunO8/JLT8Xi4U9NbONLETVfQS4AFrZKn9iq2wceng8Vh1mbyJ
+         MJP/buiNqNB9R4mrhvAge29hOAlS3S6sbH/hUQcVht2z5Un9YY8EdfY+LhT4YDgyaS0Q
+         GZ1g==
+X-Forwarded-Encrypted: i=1; AL+hErGfWz2hHslqY6FScyTNKDVbvx9oD0WiXGD1pc8rGkj97AS8kKXtOhdj5sywe318M6ZYDPUIBGMimMckVxdRllBoKmLc@vger.kernel.org
+X-Gm-Message-State: APuU4Z9WnidJSj66jML4N1sAPKOGfvjM9u/pcgG5FeyFLekkwz5Bls3Z
+	hkC1XCU+rM0K6t9q6KquhdWtIYQ59Zyj2hSi2FywUQdi/1kKEyFTCZRyHPjBgnEWqOXqhgZ6N8g
+	haZR+jKxMqioZfRgcSC4DW6lt7+i9OME=
+X-Gm-Gg: AZFdTZebfN1PGZp4FvUMMs8XN7z7PIkw8e5wf3/nNktMRKixXCRbPZpw+TeFVvvLGZz
+	x5t90RUS1aYtA2Vt6rxy2Etr/VB4aEy+ND11PMmiPEucp40NziC9loq1bSk1o8sQOO/doIydtJq
+	MuVi95QDYRlDz60FWXBpvllDqR12qsEvv5xs/YVewGgjqvaaBjAbW+C6iXjqwdPUNcOPFP9NFPk
+	S/6cSXfxlHhG4lPavvZiZx4Mcf49SzKFvECQiWXToMeDzeJWuLCqXwKfQ02tdJDXoZipQBcg9te
+	88JFFqtXAcSkA+VNqkmgTa14Od9qvZWSAzCGWvD8/eDBLMYLaDqMadL80xjEwzcqouk6QZATLj6
+	cvX6Zk1xJ+HzFpg1hI8MMnX243o4LhzCsXZEuzF6qH1OpOdz83VtiStXKsw3nqS0etE+iADxxmL
+	3pZHaPAocXjBc=
+X-Received: by 2002:a05:6808:6413:b0:574:9463:5511 with SMTP id
+ 5614622812f47-57a0b64e63emr19810454b6e.48.1795676778214; Wed, 25 Nov 2026
+ 23:06:18 -0800 (PST)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Thu, 26 Nov 2026 02:06:16 -0500
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -74,67 +103,65 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
-Message-ID: <20261126023542.4161884-1-zhenwenliang@google.com>
-Subject: platform/x86: hp-bioscfg: concurrent writes to the SPM sk/kek
- attributes can free each other's key buffer
-From: Zhenwen Liang <zhenwenliang@google.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
-	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
+MIME-Version: 1.0
+From: Lee Youngjoon <getfeus@gmail.com>
+Date: Thu, 26 Nov 2026 02:06:16 -0500
+X-Gm-Features: Aa3M54omcjTpSdcnmVtJqEgoipl0t9iwMSKeuCL-vk9fRXRWXqfRUnArp4WiGRM
+Message-ID: <CA+m4KrC5=QzYthdWOyeJy68OrgTCrKdYFRovD3vRC+V26NkqGw@mail.gmail.com>
+Subject: [PATCH v1 0/2] platform: arm64: huawei-gaokun-ec: Fix short transfers
+ and PAN ACK masks
+To: Pengyu Luo <mitltlatltl@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-sk_store() and kek_store() in
-drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c keep their
-temporary copy of the user's key in a global pointer and use it without
-any lock (mainline ebb7a8dc1e74):
+These two independent fixes address the host side of the Huawei MateBook
+E Go EC protocol. A short I2C transfer can be reported as success, and
+the normal no-port-update case evaluates a negative shift before sending
+its acknowledgement. Both issues are present in the pdx86 fixes tree.
 
-    /* :237 */
-    bioscfg_drv.spm_data.signing_key = kmemdup(buf, length,
-                                               GFP_KERNEL);
-    ...
-    ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK, ...,
-            (void *)bioscfg_drv.spm_data.signing_key, length, 0);
-    ...
-    kfree(bioscfg_drv.spm_data.signing_key);    /* :252 */
-    bioscfg_drv.spm_data.signing_key = NULL;
+For patch 1, a host-side test fed the actual request helper adapter
+returns of 0, 1, -EREMOTEIO and 2. The first two now return -EIO.
+A complete transfer still returns the EC status byte, including a
+nonzero status. For patch 2, UBSan reproduced the negative shift on
+the base commit. With the fix, -1 sends a zero mask; ports 0 through 7
+set their respective bits, and out-of-range indices return -EINVAL
+without a transfer. Both patches were built individually and together
+as an arm64 Image and EC module.
 
-kek_store() does the same with spm_data.endorsement_key (:272-290).
+For reviewers interested in firmware inputs, the PAN write can also be
+checked with a fixed cable configuration on a Gaokun. In an earlier
+instrumented run, the left charger was online and the right port empty.
+After a normal left ACK, D3 still reported update mask 01 and port
+records 05/00 and 02/00. A test-only driver hook rechecked D3 and pending
+work, then issued one empty PAN ACK while both ports were left untouched.
+The I2C trace captured the following exchange:
 
-sysfs serialises writes only per open file, so two writes to
-/sys/class/firmware-attributes/hp-bioscfg/authentication/SPM/sk (or kek)
-through two open file descriptions run concurrently. Then:
+    host -> EC    03 d2 01 00
+    EC -> host    00 44
+    D3 payload    02 01 05 00 02 00 40  (before, after, +2 s, +5 s)
 
-  W1: signing_key = buf1
-  W2: signing_key = buf2              (buf1 is now leaked)
-  W1: hp_wmi_perform_query(.., signing_key=buf2, len1)
-  W2: hp_wmi_perform_query(..) ... kfree(buf2); signing_key = NULL
-  W1: ... kfree(NULL) or a second kfree(buf2)
+This observation documents the existing empty ACK encoding. The EC
+accepted the command and the update mask stayed set. The series preserves
+that input and makes no change to firmware recovery or hotplug policy.
+The host-side cases above can be exercised without a board by stubbing
+i2c_transfer() and recording the request bytes and return code.
 
-Depending on the interleaving this gives a use-after-free read of the
-key buffer in hp_wmi_perform_query() (it copies the buffer into the WMI
-input), a double free, the wrong key (or a buffer of the wrong length)
-sent to the BIOS, or a leak. Since the pointer is only a temporary for
-one call, using a local variable in both functions (or a mutex around
-the sequence) would remove the race.
-
-Affected: since the driver was added (b2715aa2e135, 2023-07); unchanged
-in mainline ebb7a8dc1e74 and next-20261125. This is different from
-a7508c7959ff ("fix heap OOB read in sk_store() and kek_store()"), which
-fixed a single-threaded length issue. Trigger: root only (the attributes
-are 0200) on HP machines with Secure Platform Management. Impact: memory
-corruption or wrong key material sent to the firmware.
-
-Found by a formal analysis tool we are developing that uses AI
-assistance; I have reviewed the analysis and this report. The tool runs
-verbatim copies of the kernel functions with stubs for the rest of the
-kernel; it found the interleaving above, and the interleaving was
-replayed natively on that harness under the tool's schedule. Functions
-involved: sk_store() and kek_store() (the WMI call stubbed). It has not
-been reproduced on HP hardware.
+OpenAI Codex assisted with source inspection, the fixes, regression
+tests and drafting this series.
 
 Thanks,
-Zhenwen Liang
+Lee Youngjoon
+
+Lee Youngjoon (2):
+  platform: arm64: huawei-gaokun-ec: Reject short I2C transfers
+  platform: arm64: huawei-gaokun-ec: Validate the PAN ACK bit index
+
+ drivers/platform/arm64/huawei-gaokun-ec.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+
+base-commit: d4000e7b99e06e92f21a3c92098a0476d316e9d6
