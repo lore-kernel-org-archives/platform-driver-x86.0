@@ -1,79 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795777401;
-	b=Upaick7Fd5hAnIKGW6WoAXkIJZBmFtAn+52ZBrBt+4IyZF2O/2w9rTFEuL7WYWIgtVHC
-	 4U5JWs9Q6xowczCIk6ijtMo1+NJix6A8XEwZd3jyrWGTdetTAYgSM6goupwzUNVSqNzx6
-	 32OfVcEVP1X7NgFvrAIF3C/+fr6rPriEycjg3FMGddKcgc2iTx+nxHGBvJXENpZ1rkToB
-	 1EFAuw8INj/z1AOv+rbc2N1Zpn5c8W1zg5NnqT9rRJAF7KXnAg1iiRfgZDxU7uqHKJwWL
-	 OQOnjnlpWAVg5s8iyS10xpp1Wo2kerNF/HNbEVhaB69vltS8w4HDwW1Ye7CQ/NXjIDA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795777401;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=VhUiHoUvwaHzRo0iqWoFEinCyRU/jMmnOPM2znbr/PY=;
-	b=cEsndNscXADBOJx8AhkuExSjxF6JaFKgjlKy3kPG49LsYtmcaI/R5Omu2njy+qo0yTeo
-	 04+DoI3iTv9856D++Zjg0tBY5JxzHBQzqXDq/L2ljsEG5V6CiRms/x3SsHTb58L26Lp++
-	 PM6cRLVfmOVGk4ukbOWvY4W5SguLqydjVrhW7hE/fmO3SDJfwgLR329dk+FjUghxKoKeM
-	 odRQzTWrnSqJR5x1TJgv8T68bMbQ8rgDwPZFuxv1Ti+kkmhFgtljnPB4EfOI3ulWVUKdt
-	 MnsGtjhKZ2Q4t9cqkez9mO7TYuJ3VakKR2SjvK3vCgPzWBarZ3cJd29T+46CQJBuIiQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O5jIsLw7;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795780799;
+	b=VkX5xJ8rMKCr0daSdKURBHg6WY/3aPX/VlK/rW4rWM7j2woEnjJX7uqkiKGW0chLOrTc
+	 YufittWqSIm1SdcyPokfK3+m6GvB71phd9TJSRmVbw1oMmsoX99WP62ufltPosFDgmVnA
+	 tAhs2BoObZebakUv3znhUJtZWKqhxF8ghiy4gH72CV11L/O83ohMEAoJ0bpOVDxM9+qaH
+	 6NEEaoTw1y9gphV22btLSaeyaKaAL/N4BkeRUrQ181VvXmTeyPwPGI6CwpqHXOSPpk3q+
+	 Xp35XEbQ4QWfPBJSklJf5FftbqvvGf1UyR46QI2EfoegNvWA8fZ6OUgnGLQ1Ahg9sbQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795780799;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Subject:
+	 From:To:Cc:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version;
+	bh=wlDl5cJRF79lUP9FTjADUwSUf57erYSrU3NdfsejBiI=;
+	b=5SLvzZrUplN6zQXkQ53RTV7aBTewN5RmxxGlMdijILQ5pkQ+fEip0iUvhV2K7wQ/jJuF
+	 qippdDWxqX2GQCho8ZkXlBeD3Y3mlL4Czyn8jGlEArqmS0FXum96Z/7BRGeDab+hu08aJ
+	 E310BeJXb5wBWIy2yq66nCosWrgU4zHrtqhbLT0uTGF+SYbbI2V5Q4YgwODLZOgxffauW
+	 Sl4UgcH7OoskcPWVbgaQn12SKZv+2vEkqDebObLADsh3NfSYsUjPHjtdGiUL6QNOp55nA
+	 uXb127b4og9VcPpEPYUiyplZt/HWXYdMjRBq9/UdCFAK/oDdYNhEjeLYRAmgR1G25dw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=blzi4JBL;
+	arc=none smtp.remote-ip=198.175.65.21
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9A2606A31C;
-	Fri, 27 Nov 2026 11:03:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FE4606A31F;
+	Fri, 27 Nov 2026 11:59:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07FE4606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=O5jIsLw7
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795777401;
-	b=v7Eenu6MejPtr3nkgBRL3MxJ7Rlv73ix3PCra8gItzeqEvqtYCVR/7JWAXWFAjkc6v8b
-	 Aix0TXGZkJOLIUyJAKbRutH5oAM9mS8MFqmLHJBoubRNBfkH06PWKCLSSDrM6xyvP69E7
-	 wC5KKXUUA4qMoA7imCBsckm1TXPCpZbPEls7FUfMsmsFzHh9wgGivk3pDqIOdXjthfOma
-	 I1/aQc5KrLTBfNmdS3f6uQh1gsdL8V/mdhRxtqV3c9EyJHwKL9rkF6X0zwXLr3FCqaXZq
-	 nuwtEriGo1qdfrDUq2FZKNW+4tl9GwXP8Tvob62sv4/5mvK2XQs97ei32WAPeO4HM1g==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795777401;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=VhUiHoUvwaHzRo0iqWoFEinCyRU/jMmnOPM2znbr/PY=;
-	b=Xz9HBHvQRq9XhtXTw7NvTQA+dcRBOCXYblIwCvxehVn8gcm59/z+gh7sPrkGIIZ45ihp
-	 fekoNyEkfZwbfTh+U66LR5liI9bJvQmNET0qRjOcQjqsm0Ix2Xs85baE+NRPHIxv/kr0L
-	 nTOM4Xeqa3nOrXn5L/PCG6XtIf49vaKJLut+ndV/KDwm7hAvMwHkb0/MABVnd623NrgL/
-	 Iaa3rPFWQikf/r0eGj6YqJR3SZ8OTtvzpo5d1JbErjZ/DR9CB+TEZN29bjiD1lYaOuNFS
-	 u+f501gxwaIDibL2yMdeAWvzZP8oX/SaHU1d2wpBQTeGDpRJBEMygt7Tp+wEoGDiiFw==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 37F541F000C1;
-	Fri, 27 Nov 2026 11:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795777401;
-	bh=VhUiHoUvwaHzRo0iqWoFEinCyRU/jMmnOPM2znbr/PY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=O5jIsLw7DeakQjGkRa8dwb0rnOss4lBOlG2mcipXEJwdZ6pedjyoqRexFkBYhmLLy
-	 8tc8AuvoriqaEoh0SNtiyiLHpbKUdFm1iogtQYo+mlfKD2dFackGtnfvdIlPRjzMxO
-	 x9SzgqXfS+EUlZum9pw2QdSzPOSubceEK1vPk18dEksESwwb5Ip9xbpQg6ZC4SpG2f
-	 bgGe6645bRsLfdV5AaaEgixxa6AYm0ZHPwWXH19f8knydO8RG2MKRwatkkHCGgHg/t
-	 gx9NSk3igwS6dpdDEEwDVFDQTBBZ4C3UCfg34z3Fu1q8n+scnge81HbPqSBg7Oflrf
-	 7ZVSIJCtC6lng==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id BAE804B762;
-	Fri, 27 Nov 2026 11:03:04 +0000 (UTC)
-From: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>
-Date: Fri, 27 Nov 2026 19:02:51 +0800
-Subject: [PATCH v2 3/4] rust: wmi: add Driver trait, Adapter and implement
- RegistrationOps
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=blzi4JBL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795780799; x=1827316799;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=1LpZNcFZ5HoKUeo9dWQkeA7wSeG+Z9St0e3lxDCAnpY=;
+  b=blzi4JBLaOpWSfgNJAC+iebk1ygDdQ6siUmqo8YO3iDlgqwsmgfr++pm
+   qxp5sl2X7K0HawS5epYk3JPMwxcpeEh2fpJ7S98ehHWqnVp23H+bxcvkX
+   XiSBDp54nwnSi3F4xBKX+v3oD6rKe+bqBk96elKCO0sAKLKNy8+vLI4jE
+   GjW+/qyz8riRCMonhyjtp9CRVbYMcK39fHlGsAuz00tr7ANVhy8ylLpgi
+   MQwef6+5sd9XcA1FOWyrmzKM0R81jxmxcyzpJ/4fbttqxSdrzX/6L411N
+   SXzb0stEHAOy86/ilSpXywqxU/B90XsjPQ2vHQ6RkBHBk75UQ+giK59aK
+   g==;
+X-CSE-ConnectionGUID: fYJdaEBvSsiCpp9hY20FBA==
+X-CSE-MsgGUID: WJ/yCJneQgCws+lhSxv/Mw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11979"; a="4782127"
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="4782127"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 03:59:58 -0800
+X-CSE-ConnectionGUID: CtQUIXK5Qg2bvl7wt+fZQA==
+X-CSE-MsgGUID: Sn1UWcE2S+OfTVzJsdvlCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="12806047"
+Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.124.221.51]) ([10.124.221.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 03:59:58 -0800
+Message-ID: <bac20576fb7d82c59fe9d33719b8a339ed4da84b.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: Fix CPU selection on
+ partitioned systems
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Zhang, Rui" <rui.zhang@intel.com>, "hansg@kernel.org"
+ <hansg@kernel.org>,  "ilpo.jarvinen@linux.intel.com"	
+ <ilpo.jarvinen@linux.intel.com>, "qinyuntan@linux.alibaba.com"	
+ <qinyuntan@linux.alibaba.com>
+Cc: "xlpang@linux.alibaba.com" <xlpang@linux.alibaba.com>, 
+ "tero.kristo@linux.intel.com"
+	 <tero.kristo@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Fri, 27 Nov 2026 03:59:56 -0800
+In-Reply-To: <7bd156a0ccc8ce5c24d26b1a4583bd7086f41942.camel@intel.com>
+References: <20261125092244.3641945-1-qinyuntan@linux.alibaba.com>
+	 <7bd156a0ccc8ce5c24d26b1a4583bd7086f41942.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,204 +90,88 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261127-rust-wmi-v2-3-5bfafabd6a6e@gmail.com>
-References: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
-In-Reply-To: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, 
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795777382; l=6617;
- i=nick42d@gmail.com; s=20261127; h=from:subject:message-id;
- bh=Yr/cV4bFQCpsCIJouPt3fyTS/uUCj24+sQv4ztfNN4g=;
- b=oocXIrckJJYiL4FowQMun3GCoMuuBgUIH3fw3ykOKGrWiNVvBPlI2qqAP/6TvwCBAlgsX1Bje
- xZIYNqPbf6NBC7EgjwrtIopzoeQ9FFuSxec08klN+OQSSshU6ZjOidV
-X-Developer-Key: i=nick42d@gmail.com; a=ed25519;
- pk=rewGRrQm8GTjt8ii+wLiI2tUWP5gtTF4pntVEMNXrj8=
-X-Endpoint-Received: by B4 Relay for nick42d@gmail.com/20261127 with
- auth_id=1660
-X-Original-From: Nick Dowsett <nick42d@gmail.com>
-Reply-To: nick42d@gmail.com
-Content-Transfer-Encoding: 7bit
 
-From: Nick Dowsett <nick42d@gmail.com>
+On Fri, 2026-11-27 at 05:00 +0000, Zhang, Rui wrote:
+> On Wed, 2026-11-25 at 17:22 +0800, Qinyun Tan wrote:
+> > When a package has multiple TPMI partitions, PLR can report the
+> > same
+> > CPUs in more than one partition. For example, on a single-package
+> > system with 72 logical CPUs and two TPMI partitions, both
+> > partitions
+> > list CPUs 0-35 in their PLR status files. CPUs 36-71 are missing.
+> >=20
+> > Each partition numbers its PLR resources from zero. The driver
+> > compares
+> > that index with the CPU's power domain ID from MSR_PM_LOGICAL_ID,
+> > which
+> > is unique within the package. As a result, both partitions select
+> > the
+> > same CPUs. A mailbox read or clear on the second partition then
+> > uses
+> > a
+> > module ID taken from a CPU in the first partition.
+> >=20
+> > Use the partition's cdie_mask to map each PLR resource to its
+> > package
+> > power domain. For compatibility with older platforms, keep using
+> > the
+> > resource index for partition 0 when no mask is available. Skip per-
+> > CPU
+> > mailbox accesses if the resource has no valid CPU mapping.
+> >=20
+> > Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for
+> > the plr mailbox")
+> > Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
+>=20
+> I have reproduced this issue and verified that this patch can fix it.
+>=20
+> Tested-by: Zhang Rui <rui.zhang@intel.com>
+>=20
+> but one minor comment below,
+> > =C2=A0
+> > +static int plr_power_domain_id(const struct oobmsm_plat_info
+> > *plat_info, int index)
+> > +{
+> > +	u16 mask =3D plat_info->cdie_mask;
+>=20
+> This cdie_mask is a bitmask, its Nth bit means hardware cpu die N,
+> which IMO equals the punit/power domain id N.
+>=20
+> > +	int id =3D index;
+> > +
+> > +	/* Resource indices are relative to the partition's first
+> > compute die. */
+> > +	if (mask)
+> > +		id +=3D __ffs(mask);
+>=20
+> here we want to get the power domain id for PLR domain 0/1 because we
+> use that for cpu to plr/power_domain mapping.
+> The above code generated correct results for the platform being
+> tested,
+> but with the assumption that the cdie_mask cannot be sparse.
+>=20
+> how about something like
+> 	id =3D fns(mask, index);
 
-- Implements the `wmi::Driver` trait.
-- Adds adapter implementing `driver::DriverLayout` and
-  `driver::RegistrationOps` - `wmi::Adapter<T: Driver>`.
-- Adds `wmi::Registration<T>` type alias for convenience.
+With recent update in spec cdie_mask can't be sparse.
 
-Signed-off-by: Nick Dowsett <nick42d@gmail.com>
----
- rust/kernel/wmi.rs | 127 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 125 insertions(+), 2 deletions(-)
-
-diff --git a/rust/kernel/wmi.rs b/rust/kernel/wmi.rs
-index f7fbde29177b..235c4a2cef6a 100644
---- a/rust/kernel/wmi.rs
-+++ b/rust/kernel/wmi.rs
-@@ -8,15 +8,138 @@
-     bindings,
-     device,
-     device_id::RawDeviceId,
-+    driver,
-+    error,
-     prelude::*,
-     sync::aref::AlwaysRefCounted,
--    types::Opaque, //
-+    types::Opaque,
-+    ThisModule, //
- };
- use core::{
-     marker::PhantomData,
-     ptr::NonNull, //
- };
- 
-+/// Type alias for [`driver::Registration<Adapter<T>>`], the registration of
-+/// a WMI driver wrapping a [`struct wmi_driver`].
-+///
-+/// When this struct is dropped the driver will be unregistered.
-+///
-+/// [`struct wmi_driver`]: srctree/include/linux/wmi.h
-+pub type Registration<T> = driver::Registration<Adapter<T>>;
-+
-+/// WMI driver trait.
-+///
-+/// Drivers must implement this trait in order to register a WMI driver.
-+///
-+/// # Examples
-+///
-+/// ```
-+/// # use kernel::{device::Core, prelude::*, wmi};
-+/// struct MyDriver;
-+///
-+/// kernel::wmi_device_table!(
-+///     MY_DRIVER_WMI_TABLE,
-+///     [wmi::DeviceId::new(c"00000000-0000-0000-0000-000000000000")]
-+/// );
-+///
-+/// impl wmi::Driver for MyDriver {
-+///     type Data<'bound> = Self;
-+///     const ID_TABLE: wmi::IdTable = &MY_DRIVER_WMI_TABLE;
-+///
-+///     fn probe<'bound>(
-+///         _dev: &'bound wmi::Device<Core<'_>>,
-+///     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-+///         Err(ENODEV)
-+///     }
-+/// }
-+/// ```
-+pub trait Driver {
-+    /// The type of the driver's bus device private data.
-+    type Data<'bound>: Send + 'bound;
-+    /// The table of WMI device IDs supported by the driver.
-+    const ID_TABLE: IdTable;
-+    /// The `probe` callback is called when the WMI driver is bound to a matching WMI device.
-+    /// Allocating driver-specific data structures and initializing interfaces to other kernel
-+    /// subsystems should normally be done in this function.
-+    fn probe<'bound>(
-+        dev: &'bound Device<device::Core<'_>>,
-+    ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound;
-+}
-+
-+/// Adapter to allow [`Driver`] to be used with [`driver::Registration`].
-+pub struct Adapter<T: Driver>(T);
-+
-+// SAFETY:
-+// - `wmi_driver` is a C struct.
-+// - Since `T` is a driver, `T::Data` is by definition the type of its
-+//   device private data.
-+// - `wmi_driver` embeds a `device_driver` at offset `DEVICE_DRIVER_OFFSET`
-+//   as per `core::mem::offset_of!()`.
-+unsafe impl<T: Driver> driver::DriverLayout for Adapter<T> {
-+    type DriverType = bindings::wmi_driver;
-+    type DriverData<'bound> = T::Data<'bound>;
-+    const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
-+}
-+
-+// SAFETY: It's always valid to unregister a registered `wmi_driver`.
-+unsafe impl<T: Driver> driver::RegistrationOps for Adapter<T> {
-+    unsafe fn register(
-+        reg: &Opaque<Self::DriverType>,
-+        name: &'static CStr,
-+        module: &'static ThisModule,
-+    ) -> Result {
-+        // SAFETY:
-+        // - It's safe to set the fields of `wmi_driver` on initialization.
-+        // - All set fields meet the invariants of `wmi_driver`.
-+        unsafe {
-+            // SAFETY: `name` is valid for the static lifetime.
-+            (*reg.get()).driver.name = name.as_char_ptr();
-+            // SAFETY: This callback will only be called with a pointer to a `wmi_device`
-+            // valid for the lifetime of the callback.
-+            (*reg.get()).probe = Some(Self::probe_callback);
-+            // SAFETY: `T::ID_TABLE` is valid for the static lifetime.
-+            (*reg.get()).id_table = T::ID_TABLE.as_ptr();
-+            // Per the documentation, new WMI drivers should be allowed to be instantiated
-+            // multiple times (see `Documentation/wmi/driver-development-guide.rst`).
-+            (*reg.get()).no_singleton = true;
-+        }
-+
-+        // SAFETY: `reg` is a valid `wmi_driver`.
-+        error::to_result(unsafe { bindings::__wmi_driver_register(reg.get(), module.as_ptr()) })
-+    }
-+    unsafe fn unregister(wdrv: &Opaque<Self::DriverType>) {
-+        // SAFETY: `wdrv` is a valid `wmi_driver` previously registered with `register()`.
-+        unsafe { bindings::wmi_driver_unregister(wdrv.get()) };
-+    }
-+}
-+
-+impl<T: Driver> Adapter<T> {
-+    /// C wrapper for [`Driver::probe`] function to use it as a C function pointer.
-+    ///
-+    /// # Safety
-+    /// - The caller must ensure that `wdev` is a pointer to a `wmi_device` valid for
-+    ///   the lifetime of the callback.
-+    unsafe extern "C" fn probe_callback(
-+        wdev: *mut bindings::wmi_device,
-+        _context: *const c_void,
-+    ) -> c_int {
-+        // SAFETY:
-+        // - As per the safety requirement for the function, `wdev` is a pointer to a
-+        //   `struct wmi_device` valid for the lifetime of the callback.
-+        //   This is the definition of the Core and CoreInternal marker lifetime.
-+        // - `Device` is `#[repr(transparent)]` over `struct wmi_device`.
-+        let wdev = unsafe { &*wdev.cast::<Device<device::CoreInternal<'_>>>() };
-+        let data = T::probe(wdev);
-+        // As per the C driver subsystem documentation, the return type of a driver
-+        // probe callback is 0 on success or a kernel error code on failure.
-+        error::from_result(|| {
-+            wdev.as_ref().set_drvdata(data)?;
-+            Ok(0)
-+        })
-+    }
-+}
-+
- /// IdTable type for WMI drivers.
- pub type IdTable = &'static dyn crate::device_id::IdTable<DeviceId, ()>;
- 
-@@ -140,7 +263,7 @@ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
-     fn as_ref(&self) -> &device::Device<Ctx> {
-         // SAFETY:
-         // - By the type invariant on `Device<Ctx>`, `self.as_raw()` is a valid pointer to
--        //   a `wmi_device which embeds a `device`.
-+        //   a `wmi_device` which embeds a `device`.
-         // - If you have a reference to a `Device<Ctx>`, then the reference count must be
-         //   non-zero.
-         // - If you have a reference to a `Device<Ctx>`, it is either:
-
--- 
-2.56.1
+Thanks,
+Srinivas
 
 
+>=20
+> thanks,
+> rui
+>=20
+>=20
+> > +	else if (plat_info->partition)
+> > +		return -ENODEV;
+> > +
+> > +	if (id >=3D MAX_POWER_DOMAINS || (mask && !(mask &
+> > BIT(id))))
+> > +		return -ENODEV;
+> > +
+> > +	return id;
+> > +}
+> > +
+> > =C2=A0
