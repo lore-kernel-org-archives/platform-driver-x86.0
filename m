@@ -1,67 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.165.43.98
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795765534;
-	b=Vf8dXtKjpjDEEiPlnZFzpmmiszQ29ZYwYY2mE8/rKjldySYHFv27FkZKX6G0Wzxbk583
-	 ISbtkkEdc7IgKdLDY8fTxIE+hooaJjMaUFfJUeovbVQOYWXSMQXU9G6DJk2Yst8s4kkCE
-	 TUkJils6fJvplHYqlfJ5uJzhYZMcyhqi01RUEQxCq5jniDQhVSC0v1UeAljKJim4bh48y
-	 mISOCoemROQ1CqVq1tx9jzZeOjt1At/NyGW4ufkX0I2I2YfLx721iBf24obCcxxyPSfQ+
-	 MKq8n1dX79WZXOVzkH8GrKsPYioyqqhHBIC6FRh2lniQwXBer19VIw8WbiAJkn2nJpg==
+	t=1795768417;
+	b=gsSTODISmso4Ag4kLvB8cN56BsUNhC0aWvwixZ6NvsckQfD+92h0Gj/8yaEPkQQ+wI0K
+	 17Vddxqlx/KS98GE5o3RvtWsY8StUGwnkogWeSsd1IOEe2oU1TYWazQiaFq8iv3jdKIaD
+	 94ioaGTtrcc6zrSsZsd45gdAsw3THMreQBQY0JmoOwseGWSv4Om0SUIPHP2ay9NP9yNNj
+	 xm2IHmuZpUFSOq0h3BLZSoPd1oA9Zvy6M8MRqOKY/PChc9fSE6t3MVaefQB8HoqJ0LYL4
+	 3v54hac5NbqOpTyeoZ2FPLDLWC2blL23r+QZrhYDz+RPrRD13wRWsI3obKnBI4uOCpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795765534;
-	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
-	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
-	bh=z9vJoDrmi4VvPz/fdIYst5MH9N34CWVA51+Tn9NBe24=;
-	b=MuInL8RlBxHBWgSQhiw5uOQEpCkWln0eVntsVAs3x4MSuK+oU+QGdcnCcoquQS1LID0v
-	 danL3avvgiFnbH2VWOBM/KP7LI+gcJNujHNFaHJ3hSC0DXL/T6PWhWoc/kxzt4qWAk1Pp
-	 XwIISk+3nyjYd6FlNoIRpAummT58Vd7l0M+Spj3nzooec5iM5qh2aUwzktSQNJrLHCxhl
-	 UowzdI9MHpkTDfjPOVJvwnY0BW+pB6Pg+9XOXBEYtfBO4pGAAXv9/pvIz/Pb+/Pdx6Aqt
-	 /0OCYliUrw0E7B8wc9pH84ApNY1O+a3zcfdYVAFA9nVo9hvrXo+CwjIxZFBzfXLHVIg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795768417;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=2adoUAJE2urbAHUCjcZJHR3qU6oXeqmDWStaP03rNfU=;
+	b=R488kVxYTxXY4G/kxOy99CH1QQPDEkopzpW74BuTaswiPH2Pw5G2g0g0JhDcRJkg5u8x
+	 R8Hqnqex4nN/EGoOGH34HCd9mv7AeVm6883ZvM2U1n/8yHta9Dpb88ry+cxMVxo/M9qhE
+	 3zIculF2QZ6P+xpsc5bjQPOSBtPfREGQ97hEKlK0xFbhul3Y8AKBSdrLwMdAXGmkdknP3
+	 Jrf097eTEPzgWKVlDr1g7mx5ES3fVPuxGe26OuukfN7IHAW+rCQpoc+mOjB9/QAg/UDVU
+	 s7/3YSYiPeMLXbv1SOFqykV2/nFOF6yUjkGvK7bW5bqFe4bR+BJg4M7nJPFh/4BIXYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=3mdeb.com;
-	spf=pass smtp.mailfrom=3mdeb.com;
-	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=GFth3eKQ;
-	arc=none smtp.remote-ip=188.165.43.98
-Received: from 14.mo561.mail-out.ovh.net (14.mo561.mail-out.ovh.net [188.165.43.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hw0K3LRk;
+	arc=none smtp.remote-ip=198.175.65.14
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6F8606A338
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 07:45:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E6F8606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC1B606A32E;
+	Fri, 27 Nov 2026 08:33:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABC1B606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=GFth3eKQ
-Received: from director9.ghost.mail-out.ovh.net (unknown [10.110.54.182])
-	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4jbQSP5tFsz5yGT
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 07:45:25 +0000 (UTC)
-Received: from ghost-submission-7ccd8bbbb6-dkqtv (unknown [10.111.182.117])
-	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 391E481F60;
-	Fri, 27 Nov 2026 07:45:25 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.108])
-	by ghost-submission-7ccd8bbbb6-dkqtv with ESMTPSA
-	id +aujBBI1CWsizRQAjZbTUQ:T4
-	(envelope-from <filip.golas@3mdeb.com>); Fri, 27 Nov 2026 07:45:25 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-108S00232aad674-6475-467b-86ac-5f9238b4053e,
-                    2D78F170DE5B25267C595F1CD7CE4558A7ADEF44) smtp.auth=filip.golas@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	=?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-Subject: [PATCH v3 3/3] platform/x86: dasharo-acpi: Add EC fan curve support
-Date: Fri, 27 Nov 2026 08:45:18 +0100
-Message-ID: <20261127074518.3244152-4-filip.golas@3mdeb.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261127074518.3244152-1-filip.golas@3mdeb.com>
-References: <20261127074518.3244152-1-filip.golas@3mdeb.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hw0K3LRk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795768417; x=1827304417;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qO1CBDql5BdqV/ZAEf8Juo9+US4w1SccOa1RJtgkBvo=;
+  b=Hw0K3LRktsAXAnM+ZnBN7Vz4D8gAn9BtPX3Rl7LlvKwYdB11YOiDxeJd
+   S3u+F0OjS6iW2f9nVpfaBdsb9uLDT6WIAGt7kGK8UVltv3N9xzQ6T720y
+   WM88QlhCt3JyBEcg1sdBcU3CsGUIr+P8VbeSblBGDNVgRSmD4xLqkDdzV
+   C18HJ1DalGbou+U03xrnQPKDfdz6r54kivoGcxMHdRZzAJBKw2TTfFnIs
+   rEEhPeEma6GdrYkHQ2WVxX5nm5GHzWuxgv+nFy3sXYn9JgXJPPVCLGG2E
+   sNoeVNB/3rC/1uHydCwc1Rs83pRvqS5ReDKBxe/yuhbO+jZbkx0o9Ihze
+   w==;
+X-CSE-ConnectionGUID: DqA+4HhuROq9L6Ug2mVdag==
+X-CSE-MsgGUID: DuLImOJdTvKsGWLVCpeX5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4587772"
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="4587772"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 00:33:36 -0800
+X-CSE-ConnectionGUID: syHLHn8XT/ejptysGfyUHg==
+X-CSE-MsgGUID: BJ2OY1R6TP2HtUrSTCXDvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
+   d="scan'208";a="12132628"
+Received: from igk-lkp-server01.igk.intel.com (HELO e79648c3b81b) ([10.211.93.152])
+  by orviesa008.jf.intel.com with ESMTP; 27 Nov 2026 00:33:18 -0800
+Received: from kbuild by e79648c3b81b with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xWrO8-0000000000r-44cZ;
+	Fri, 27 Nov 2026 08:33:00 +0000
+Date: Fri, 27 Nov 2026 09:32:04 +0100
+From: kernel test robot <lkp@intel.com>
+To: Alan Pluto <alanpluto@163.com>, platform-driver-x86@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com, i@rong.moe, W_Armin@gmx.de,
+	corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
+	hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw
+ GetDataByPackage interface
+Message-ID: <20261127084625.fhboKKCu-lkp@intel.com>
+References: <20261123061120.18740-1-alanpluto@163.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,311 +86,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-x-ovh-tracer-id: 3824963461177339887
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: dmFkZTE3aoIt9ZbT9+ThQKh2A4MdYGWex/GSt+Rp12USAIE6G6DBzatBv/M83d6W/OnIX3mxwK72pSip8x3QuWgUHV5qjHbrkRpWVdUV9qoAgZ8a2eejD/lenMXheNlZBCKi6Fy2fWj9kj5YpyHMYRXt8w1/BqJsUAbeV+nxVlWISB+Z/XYm3TT2RuKqVRippYrLodcFhtWj0oj/1Z0K3J8lTZVP/WKvi+epIyqr6HIWNUEWfGoC+ApCytv2L+OtVFIC3Pe7Ywqaxa7IrM7oDik89E60RJM3HqWG4jJWani2BYbirfA1XKS/HMYp+GzdAy7pTmoqOjJeSiULBJk710UwRLPITDRNodBOXnI46NBTmQlCV91fZpHsuFvuVcLqkIFPDmxPgULx5oxfVPoWLH7A0cOvO3yZ/9NxcT37WS7+hQp/tNGDcm6JJl8sbEgp8OZtr9rRn6fOTuweWcRa/r7UuD6qy0zv+YoF6LG2cyFC3tyGaOU3ZvPPMmoBQzy2ad/QBz2vOsBMjR3S+Cq6iuISbRqnl9DOdagwpijTCXUyWH1TGu4z8ye99e+owx7DSa3I2+NcUfYyETIweXqwQITsq5CxkIoalWSnvKcAHhZhJX80GfV7fh0uTamT1ztKA5/u2jNLDxnEjvadyxDbtnfal3I2t/WvadtU5tcaJMxxwFdnkQ
-DKIM-Signature: a=rsa-sha256; bh=z9vJoDrmi4VvPz/fdIYst5MH9N34CWVA51+Tn9NBe24=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1795765525; v=1;
- b=GFth3eKQjthlN3AvkVe7d9u8/H7cdSjF1TceER9FnP2NFDTD1b614f3WK/epVecNNt3/casi
- c5JzeI3uSAKKoEdc/+qD3XM/jgSjdmPX4vDXVfS89zWP/LUb3nbYwkLZbj4tKeVFihhpbEEGQ01
- 0fflVSdLV3vM9Za+XmPkBHMalmf7cSndlz31lEomYIZJF4LHsQoNi3OmQo5pxcnj2qPDqSzgHTg
- 4Wapi7KALR+HqEtPnbfR0czdzuM75ZUm/aiTF4t33x/WRNJsvBC8qhUXTJlGLGlBPqnPrR2R4L6
- bYGjWY3T//FgJsZU8w7YDRfFjOhFgdOygLW00QlwMlWxA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261123061120.18740-1-alanpluto@163.com>
 
-Expose the four-point fan curve run by the EC as pwmN_auto_pointM_temp
-and pwmN_auto_pointM_pwm, so that userspace can read and change it.
-The EC validates the curve on every write and keeps running the
-previous one if the new curve is invalid.
+Hi Alan,
 
-On shutdown, ask the firmware to store the current curve, so that it is
-restored on the next boot.
+kernel test robot noticed the following build warnings:
 
-Fan curve control is only exposed for fans on which the firmware reports
-support for it.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v7.4-rc4 next-20261126]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Filip Gołaś <filip.golas@3mdeb.com>
----
-Changes in v2:
-- Make the curve point attributes static, so DASHARO_POINT_ATTRS()
-  does not define 16 global symbols.
-- Reject negative fan curve temperatures before converting them to
-  degrees, which can round to positive.
-- Use DIV_ROUND_CLOSEST_ULL() for showing curve PWM instead of
-  DIV_ROUND_CLOSEST(), so it links on 32-bit x86.
-- Setting a curve point stages it, applying it is a separate ACPI call.
-  Add a mutex to prevent staging more changes before the first set is
-  applied.
-- Use dasharo_fan_channel to find correct channel for DASHARO_FEATURE_FAN_POINTS.
-- SFCS now takes no arguments and saves all fans. The Dasharo dev
-  build previously was accepting and ignoring the argument.
+url:    https://github.com/intel-lab-lkp/linux/commits/Alan-Pluto/platform-x86-lenovo-wmi-other-Add-raw-GetDataByPackage-interface/20261123-141120
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20261123061120.18740-1-alanpluto%40163.com
+patch subject: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw GetDataByPackage interface
+compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+docutils: docutils (Docutils 0.23, Python 3.13.5, on linux)
+sphinx: sphinx-build 9.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20261127/20261127084625.fhboKKCu-lkp@intel.com/reproduce)
 
-Changes in v3:
-- Fix inconsistent use of parentheses in DASHARO_POINT_ATTRS macro
-- Create curve point attributes for all 24 PWM channels
-- Use DIV_ROUND_CLOSEST for temperature unit conversion
-- Use hwmon_lock instead of a private mutex
----
- drivers/platform/x86/dasharo-acpi.c | 208 +++++++++++++++++++++++++++-
- 1 file changed, 207 insertions(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/20261127084625.fhboKKCu-lkp@intel.com/
 
-diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
-index 85f88b11fcf9..c0b65f5e4146 100644
---- a/drivers/platform/x86/dasharo-acpi.c
-+++ b/drivers/platform/x86/dasharo-acpi.c
-@@ -6,6 +6,8 @@
- #include <linux/acpi.h>
- #include <linux/array_size.h>
- #include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/kstrtox.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/types.h>
-@@ -407,6 +409,197 @@ static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
- 	.info = dasharo_hwmon_info,
- };
- 
-+static int dasharo_curve_point_call(struct dasharo_data *data, int pwm_channel, const char *method,
-+				    const u64 *args, unsigned int n_args, u64 *ret)
-+{
-+	int channel = dasharo_fan_channel(data, DASHARO_FEATURE_FAN_POINTS, pwm_channel);
-+
-+	if (channel < 0)
-+		return channel;
-+
-+	return dasharo_call(data, method, DASHARO_FEATURE_FAN_POINTS, channel, args, n_args, ret);
-+}
-+
-+static int dasharo_curve_point_store(struct dasharo_data *data, int channel, const char *method,
-+				     unsigned int point, u64 value)
-+{
-+	u64 args[2] = { point, value };
-+	u64 ret;
-+	int err;
-+
-+	// set of temp/duty
-+	err = dasharo_curve_point_call(data, channel, method, args, 2, &ret);
-+	if (err)
-+		return err;
-+	if (ret)
-+		return -EPERM;
-+
-+	// commit
-+	err = dasharo_curve_point_call(data, channel, "CFCV", NULL, 0, &ret);
-+	if (err)
-+		return err;
-+
-+	// The EC rejected the curve
-+	return ret ? -EINVAL : 0;
-+}
-+
-+static ssize_t curve_point_temp_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	guard(hwmon_lock)(dev);
-+
-+	err = dasharo_curve_point_call(data, sattr->nr, "GFPT", &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", val * MILLIDEGREE_PER_DEGREE);
-+}
-+
-+static ssize_t curve_point_temp_store(struct device *dev, struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	val = DIV_ROUND_CLOSEST(val, MILLIDEGREE_PER_DEGREE);
-+	if (val > U8_MAX)
-+		return -EINVAL;
-+
-+	guard(hwmon_lock)(dev);
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPT", sattr->index, val);
-+	return err ?: count;
-+}
-+
-+static ssize_t curve_point_pwm_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	u64 point = sattr->index;
-+	u64 val;
-+	int err;
-+
-+	guard(hwmon_lock)(dev);
-+
-+	err = dasharo_curve_point_call(data, sattr->nr, "GFPD", &point, 1, &val);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%llu\n", DIV_ROUND_CLOSEST_ULL(val * 255, 100));
-+}
-+
-+static ssize_t curve_point_pwm_store(struct device *dev, struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long val;
-+	int err;
-+
-+	err = kstrtol(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val < 0 || val > 255)
-+		return -EINVAL;
-+
-+	guard(hwmon_lock)(dev);
-+
-+	err = dasharo_curve_point_store(data, sattr->nr, "SFPD", sattr->index,
-+					DIV_ROUND_CLOSEST(val * 100, 255));
-+	return err ?: count;
-+}
-+
-+#define DASHARO_POINT_ATTR(ch, pt) \
-+	static SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_temp, curve_point_temp, \
-+				       (ch) - 1, (pt) - 1); \
-+	static SENSOR_DEVICE_ATTR_2_RW(pwm##ch##_auto_point##pt##_pwm, curve_point_pwm, \
-+				       (ch) - 1, (pt) - 1)
-+
-+#define DASHARO_POINT_ATTR_PTRS(ch, pt) \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_temp.dev_attr.attr, \
-+	&sensor_dev_attr_pwm##ch##_auto_point##pt##_pwm.dev_attr.attr
-+
-+#define DASHARO_POINT_ATTRS(ch) \
-+	DASHARO_POINT_ATTR(ch, 1); \
-+	DASHARO_POINT_ATTR(ch, 2); \
-+	DASHARO_POINT_ATTR(ch, 3); \
-+	DASHARO_POINT_ATTR(ch, 4)
-+
-+#define DASHARO_CHANNEL_PTRS(ch) \
-+	DASHARO_POINT_ATTR_PTRS(ch, 1), \
-+	DASHARO_POINT_ATTR_PTRS(ch, 2), \
-+	DASHARO_POINT_ATTR_PTRS(ch, 3), \
-+	DASHARO_POINT_ATTR_PTRS(ch, 4)
-+
-+DASHARO_POINT_ATTRS(1);
-+DASHARO_POINT_ATTRS(2);
-+DASHARO_POINT_ATTRS(3);
-+DASHARO_POINT_ATTRS(4);
-+DASHARO_POINT_ATTRS(5);
-+DASHARO_POINT_ATTRS(6);
-+DASHARO_POINT_ATTRS(7);
-+DASHARO_POINT_ATTRS(8);
-+DASHARO_POINT_ATTRS(9);
-+DASHARO_POINT_ATTRS(10);
-+DASHARO_POINT_ATTRS(11);
-+DASHARO_POINT_ATTRS(12);
-+DASHARO_POINT_ATTRS(13);
-+DASHARO_POINT_ATTRS(14);
-+DASHARO_POINT_ATTRS(15);
-+DASHARO_POINT_ATTRS(16);
-+DASHARO_POINT_ATTRS(17);
-+DASHARO_POINT_ATTRS(18);
-+DASHARO_POINT_ATTRS(19);
-+DASHARO_POINT_ATTRS(20);
-+DASHARO_POINT_ATTRS(21);
-+DASHARO_POINT_ATTRS(22);
-+DASHARO_POINT_ATTRS(23);
-+DASHARO_POINT_ATTRS(24);
-+
-+static struct attribute *dasharo_point_attrs[] = {
-+	DASHARO_CHANNEL_PTRS(1),
-+	DASHARO_CHANNEL_PTRS(2),
-+	NULL
-+};
-+
-+static umode_t dasharo_curve_point_is_visible(struct kobject *kobj, struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	struct device_attribute *dattr = container_of(attr, struct device_attribute, attr);
-+	int channel = to_sensor_dev_attr_2(dattr)->nr;
-+
-+	if (dasharo_fan_channel(data, DASHARO_FEATURE_FAN_POINTS, channel) < 0)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group dasharo_point_group = {
-+	.attrs = dasharo_point_attrs,
-+	.is_visible = dasharo_curve_point_is_visible,
-+};
-+
-+static const struct attribute_group *dasharo_groups[] = {
-+	&dasharo_point_group,
-+	NULL
-+};
-+
- static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
- {
- 	struct dasharo_capability *cap;
-@@ -437,21 +630,33 @@ static int dasharo_probe(struct platform_device *pdev)
- {
- 	struct dasharo_data *data;
- 	struct device *hwmon;
-+	int ret;
- 
- 	data = devm_kzalloc_obj(&pdev->dev, *data);
- 	if (!data)
- 		return -ENOMEM;
- 	data->pdev = pdev;
-+	platform_set_drvdata(pdev, data);
- 
- 	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
- 		dasharo_fill_feature_caps(data, i);
- 
- 	hwmon = devm_hwmon_device_register_with_info(&pdev->dev, "dasharo_acpi", data,
--						     &dasharo_hwmon_chip_info, NULL);
-+						     &dasharo_hwmon_chip_info, dasharo_groups);
- 
- 	return PTR_ERR_OR_ZERO(hwmon);
- }
- 
-+static void dasharo_shutdown(struct platform_device *pdev)
-+{
-+	struct dasharo_data *data = platform_get_drvdata(pdev);
-+	u64 ret;
-+
-+	/* Let the firmware persist the fan curve the EC runs */
-+	if (data->caps_found[DASHARO_FEATURE_FAN_POINTS])
-+		acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev), "SFCS", NULL, &ret);
-+}
-+
- static const struct acpi_device_id dasharo_device_ids[] = {
- 	{"DSHR0001", 0},
- 	{}
-@@ -464,6 +669,7 @@ static struct platform_driver dasharo_driver = {
- 		.acpi_match_table = dasharo_device_ids,
- 	},
- 	.probe = dasharo_probe,
-+	.shutdown = dasharo_shutdown,
- };
- module_platform_driver(dasharo_driver);
- 
+All warnings (new ones prefixed by >>):
+
+   Documentation/userspace-api/landlock:823: ./include/uapi/linux/landlock.h:24: ERROR: Unknown target name: "filesystem flags". [docutils]
+   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:256: ERROR: Unknown target name: "filesystem flags". [docutils]
+   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:279: ERROR: Unknown target name: "network flags". [docutils]
+   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:317: ERROR: Unknown target name: "permission flags". [docutils]
+   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:352: ERROR: Unknown target name: "permission flags". [docutils]
+>> Documentation/wmi/devices/lenovo-wmi-other.rst:37: WARNING: Title underline too short.
+
+
+vim +37 Documentation/wmi/devices/lenovo-wmi-other.rst
+
+    35	
+    36	GetDataByPackage diagnostics
+  > 37	~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    38	
+
 -- 
-2.56.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
