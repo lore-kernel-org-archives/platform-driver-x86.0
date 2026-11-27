@@ -1,67 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.165.48.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=87.98.174.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795770148;
-	b=jjfW5RGb/S84UuoCjjAfEWYuF549JZ01SigCCa7LBfn+qN/ND6wAdwGfZsIJcQYVKxz7
-	 C9PusD9tjQQdleKSkQI7xWc0izQXXHRRGLGp2gS5bEFStCeTvHpQ4dByEzXMD97vpuNK/
-	 Bk3hDu75cLcvpnbD34bN+Djjr/3FG2jsYSGWiUuYcH7bHjxNCZy7C4NtFn+X+fPgh/xHs
-	 4pqYjsy98foIHYFpT18wBu94hrrNviF7ObURKwSHRQDj6EZdipA+8BfKBh208mI18yPPx
-	 nVUpCpHpLBmTD8rlnE+Pbfj8gSKyXGifXPYW9j0TL/Mfsfx9+g7DoxjfJ7mvBtTOLDw==
+	t=1795771478;
+	b=kEh599VHscymN5IiB9VtV5DLWAnIKrCJD3DvQhf/4IuabiLpNqKoYHVhBftQdEH/smnb
+	 2NZo+bj70J62sIEUgzcPGKYp39Gk4Uct3qFRS2olafRxQGOhzKh/WtdZIyX0223QFGA9K
+	 fk2xL3d/yOs1rdz2G1xAiFL3U5aigQ370+sALC5QEgGRo+tIA4yNvgw5G70bCXY7NAeBw
+	 RSiiCfPpq6kXXJgvnuYX+xN12oM/tiItUhjtRFomrif/js4tLFkX2y+DW20+hm5dDDxfb
+	 P4y8kifpWI40tgfTsQW0XwH0Myq6J3wFCN8OHSC+FrYYnE4iCE5RuBoRCakLrMXBM0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795770148;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795771478;
 	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
 	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
-	bh=7CLOBYbNi1X6W8t+viisTSOz4Vl/AACkz0yRw2Y7JRU=;
-	b=R5NdHkryaL1Qagg4Ihl9G4zQ5aoev1o8oUyUAlZ2QzdLIbCALCnvbvuBUmYqxBJXoaXV
-	 bupzZ2r2c8Cb0kgPt2gkNsjUr2DV/NKwTiTCOtXEDIXVuEhA69OiiQtGwnXKh2YXsaqWI
-	 pFr3iD1/yy9Bj94vzMCwHrARE5A0kExr/6n3Z4po53DhEqJVe3+tbVqVYlD5RM2IS94tL
-	 5a3RgCMJzIB262r+VQ1v6Snpkq9YGsZrcHt53TS70huIfWOnis60IKsxQ6kiM0Mqhu16C
-	 LTn/dTFWS36Mmd891cbtKRgrPtOjPTBJssEFUZ8FK2MYW3UuKcYeqinnZvnvRp7/MMQ==
+	bh=O/40p9mPUJ9lzAMAARPW6FZcfYSAz2NfyvuBdIj3BtM=;
+	b=EB52uywsBLhi4na+R3XLqRof9dsobAGkAZbwDLgOaGa2SyWk6Si9XBdYxj1+Htjj5Lc6
+	 NuDgI+2MlEey+YGXKzfbrAHwMtU8BaE9HLis8mpHv8GFe0WLTFi+MbgiwFokFhSldm4WT
+	 S1WLLAZhwV+wAZe6T0YMoOyuDgLNSvqyc+eB0DAhTgPAMVLpSONCC54jENO2SFU4lbGIX
+	 9TlBqbsG+Hl+vSuLN2otCgq+dMMz6LkMiVg5Gpk0jOrVMujnd5mphJiXEKmiyyt7ys7N5
+	 fXMsfKQoZ9rKqz0bcy1iu8XytW2yXtSApozlN7fv7RiTZFRiDC0UGB8d6SIVrRYj3VQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=3mdeb.com;
 	spf=pass smtp.mailfrom=3mdeb.com;
-	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=mNMbRpsj;
-	arc=none smtp.remote-ip=188.165.48.182
-Received: from 7.mo560.mail-out.ovh.net (7.mo560.mail-out.ovh.net [188.165.48.182])
+	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=esW6lGKo;
+	arc=none smtp.remote-ip=87.98.174.144
+Received: from 16.mo583.mail-out.ovh.net (16.mo583.mail-out.ovh.net [87.98.174.144])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8149D606A321
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:02:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8149D606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD836606A31C
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:24:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD836606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=mNMbRpsj
-Received: from director9.ghost.mail-out.ovh.net (unknown [10.109.254.29])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4jbS982QM4zBThn
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:02:20 +0000 (UTC)
-Received: from ghost-submission-7ccd8bbbb6-qgh79 (unknown [10.109.249.183])
-	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id B17C181D82;
-	Fri, 27 Nov 2026 09:02:19 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.114])
-	by ghost-submission-7ccd8bbbb6-qgh79 with ESMTPSA
-	id wBV3JBtHCWvG7hQA11hrdg
-	(envelope-from <filip.golas@3mdeb.com>); Fri, 27 Nov 2026 09:02:19 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-114S0086ebe963c-11e6-4064-90d7-40b8bccae90e,
-                    2D78F170DE5B25267C595F1CD7CE4558A7ADEF44) smtp.auth=filip.golas@3mdeb.com
+	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=esW6lGKo
+Received: from director3.ghost.mail-out.ovh.net (unknown [10.110.58.156])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4jbSfq648hz5w1v
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:24:35 +0000 (UTC)
+Received: from ghost-submission-7ccd8bbbb6-fkvks (unknown [10.108.42.118])
+	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 8B524C0148;
+	Fri, 27 Nov 2026 09:24:34 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.110])
+	by ghost-submission-7ccd8bbbb6-fkvks with ESMTPSA
+	id BUE8FlJMCWvH9xQAMqfShQ
+	(envelope-from <michal.kopec@3mdeb.com>); Fri, 27 Nov 2026 09:24:34 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-110S00442b59f09-659f-4e85-8f3e-1b21a2cb2032,
+                    D697370656FF9958A21AC54DA46BA3848F1D2CE7) smtp.auth=michal.kopec@3mdeb.com
 X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-To: michal.kopec@3mdeb.com
-Cc: filip.golas@3mdeb.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
+From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
+To: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	platform-driver-x86@vger.kernel.org,
 	linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] platform/x86: dasharo-acpi: Add EC fan curve support
-Date: Fri, 27 Nov 2026 10:02:17 +0100
-Message-ID: <20261127090219.3366764-1-filip.golas@3mdeb.com>
+	=?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
+Subject: Re: [PATCH v4 0/3] platform/x86: dasharo-acpi: Add fan control
+Date: Fri, 27 Nov 2026 10:23:54 +0100
+Message-ID: <20261127092354.2974097-1-michal.kopec@3mdeb.com>
 X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261126165506.2793034-1-michal.kopec@3mdeb.com>
-References: <20261126165506.2793034-1-michal.kopec@3mdeb.com>
+In-Reply-To: <20261127084910.3355833-1-filip.golas@3mdeb.com>
+References: <20261127084910.3355833-1-filip.golas@3mdeb.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -73,25 +73,24 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-x-ovh-tracer-id: 5123970479740088070
+x-ovh-tracer-id: 5499739571757031070
 X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: dmFkZTFr33H5/GZ57e8zOAjy4AbQhwCa71Igc6rICZvEgYy22LsZUcJYgngSL2TZA7w4Ee4abVHmx2CVSiPYNMyD1rmsOTDiAFMtT5hRzkjbQGdazAvQlyBCtPZdJge747x9Epl1I25W76Q0ncVJti4mrg6zoaE7wtpXDPb0Q2i1I2x+T7d14P6v9zzrDBTDIAqMM6IU9GAj5fA9M61FlNTKIaxauqoRaPenq0pb5efhKPlASLxbounT/dORk0yy0kVCOFKPxsQidMqVJHCsQlZPyrdlIkjQbPF0zzYp0Gju+mNOWSH4j0Di5Bsa9G03a1ZJAQq3SVvbh+aYgzZpXZtGaiITQyOi7nbSO7WXcudQNa4npaYP4kGBo2pVWYT/AXCfwhJEc/+TTA9KjJnd1FZA2h0XbnqH8ICYYyBF9v0tBf53pBxVoHQSapMOg1bFWxyU2NluPJdy7/sfAIq5dk/F36KPB8uFfbTl/aoh3hczTEyCodASj/qvM0o81byyxjncvABXIF5G5QhXhxz98Nx+3lo/6rQaTB0NUuOU7A72+wS9gdNK0jDJxVDJAYOPpttuDeSRs/j6BY4aKGJLsHj2NBzHRiCUDG4PRym92+k8Xk8/NAG+gmQR/jZsA4jAYFy3G6eug6WqI1wglY6s2QQIjYLYOttyB8ErINaGDNYEVD2kjg
-DKIM-Signature: a=rsa-sha256; bh=7CLOBYbNi1X6W8t+viisTSOz4Vl/AACkz0yRw2Y7JRU=;
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: dmFkZTERTqOI1oZsiv08VZZ6wCeuxaP5sraS596JdYbW3aVQtcM3PtH1n6tj0S+zKg2BSAqfZatgikFkAIKpsf6nZuyqPQhCTH73PD5KuYVAzbKN+8L8FjG14aWlZCaJNnyjZyP+7h3jXgEpL4dw2madG1XFT5o3xCYZKdcjr/nGTRt2DxLbgbQA7xx54zPn4tqxGsiGAhYPvPxy2FyLZGr4T8Y0SMg4ABcAFnYegGKJ59egup1qQX/yRqE+tZk541zUQ/L2c6FGGoGSNmjtif6Ep5FgJctMIclh4qhWfet2W+BDrk33M5sNdfIXYl+mL3vzY9mOVeBDot9ZxAwS01lqEJE9ipBpAap6tC5YF4V2FdClcdQCiqok4CiDIqW7B6om3SFjEjjPlkuwtD5whiZVY8ktB+zshOg1GbfsOB6QyNylmM4rSGpfEWlCuq1QQscZ/sAG6ZHgCn/tNgFiOLJDdsM6HpGdxQwdcvBGQnEYBeaqeIRkAgyFS1rf1fdi20UV+BEDJGfVliX/jW8g9949sIOtTNTrirl7UOnSZaazieQ1X6pYPHLO4jRPOAxIPm8mFPSVnXnfZJdpVzvywlzFLacTkfKnvXM5yWQHZL8kje5tqsxPzk3krX4wADtFbJ79AL7qlX+Cxw0dQ5EcXf2L6rT+1j0bbOWII9wTVj8oMBQV2g
+DKIM-Signature: a=rsa-sha256; bh=O/40p9mPUJ9lzAMAARPW6FZcfYSAz2NfyvuBdIj3BtM=;
  c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1795770140; v=1;
- b=mNMbRpsj9J3U8fieD55axxz3YD74v7f+H91p08Nj5uMeigZRI5pK1JDkckS3MSaj54ZMlx4j
- HqazIVs9D7KKHU35RnxNGDQuKHPDvD69I0uvj+4iouXXTnH/cT4jNin6dc4vFgx8asD7Ss8EZXl
- aPhz299onHj6Rvwm0s1D9ZqlsnO4jMRQ14kSOpG1su/7/GTNPllXz8C7PKvpzslH02kU+BRbij+
- Z4exVkETWzIB9xUvlDwCN9itRScTNjHefTbIt0xzdlWeQcF34R4R7R7mpWehK6aMB7iJNne/HdT
- 7eB5VlxfxaFoHNKbRagpVB+eeVYE9njsDn5UXTCY2c8Vg==
+ t=1795771475; v=1;
+ b=esW6lGKoFzk7ZX1j98FQevJ9M0+jgPnC16FBKdE6gplJzE57KcA8Yk2FMIcLy3kYe3WiJQwB
+ XDaSy+v8XwXasbhSA+LhnIMv+WMOZfbdxej67uAQuDiCHsn+PclsW78FD3TfcQvGUj/kT66ayY+
+ 6ZL9xDl4i/jtWTdeqlqp/1AgoT5XPs/7gcj55vouaab7pGEKDJ9iX4giUEILOFvrGiV8UZUrwa/
+ yQXd80zqGjOph+iCLyoyorAwxlCE/3orHQUDH4JjFo7B0d8hpusFGQ02pA3hSk3Nqzo5u28ZRbJ
+ 5qNd3QbfGakxuJNhrcvi65PcZyYVfi672oqaJbEdSAxWQ==
 
-Hi Michał,
+On Fri, Nov 27, 2026 at 09:49:07AM +0100, Filip Gołaś wrote:
+> Add the capability to directly control fan PWM and configure the fan
+> curves. The initial version of the driver only supported monitoring
+> the fans.
 
-thanks for the review. I've addressed your comments in v3
-followed by a v4 fixing some problems it introduced.
+For the series:
 
-Link to v4: https://lore.kernel.org/all/20261127084910.3355833-1-filip.golas@3mdeb.com/
-
-Thanks,
-Filip
+Reviewed-by: Michał Kopeć <michal.kopec@3mdeb.com>
