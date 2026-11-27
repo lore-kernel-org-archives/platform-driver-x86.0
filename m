@@ -1,82 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.33.46.10
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795768417;
-	b=gsSTODISmso4Ag4kLvB8cN56BsUNhC0aWvwixZ6NvsckQfD+92h0Gj/8yaEPkQQ+wI0K
-	 17Vddxqlx/KS98GE5o3RvtWsY8StUGwnkogWeSsd1IOEe2oU1TYWazQiaFq8iv3jdKIaD
-	 94ioaGTtrcc6zrSsZsd45gdAsw3THMreQBQY0JmoOwseGWSv4Om0SUIPHP2ay9NP9yNNj
-	 xm2IHmuZpUFSOq0h3BLZSoPd1oA9Zvy6M8MRqOKY/PChc9fSE6t3MVaefQB8HoqJ0LYL4
-	 3v54hac5NbqOpTyeoZ2FPLDLWC2blL23r+QZrhYDz+RPrRD13wRWsI3obKnBI4uOCpA==
+	t=1795769357;
+	b=nURV2EC3hIAr57ibHxNkabRlKbBomrdWi/4xn9JKRHkpv1Hh8PuhVjwlY22iQRRQUJNS
+	 ALEiI2S2Nmv8A3B6JMLnxBOY6lnYT8FFAYY05yylTwyJvE3aaYuskPKxYnGy8mQMbjIXR
+	 EXNybsiGPw3KP3WacZOHTIRCS0sZbP/2AvQGU6LMcS8tQkVhp5yJgELTcuRXK79XP48Jd
+	 Bps+GcgP+v4+RujmTwczwthdJSG/UQjkvj8IfZgpI3BNueBRMBAuQNsveER+LqxLJysxw
+	 OI0yOZW6Viy6x6miUTvngPs8qHU1Z5ExRBtgIBMfjOaPW5RDoUwJk6S6SJQHw1xU3aQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795768417;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=2adoUAJE2urbAHUCjcZJHR3qU6oXeqmDWStaP03rNfU=;
-	b=R488kVxYTxXY4G/kxOy99CH1QQPDEkopzpW74BuTaswiPH2Pw5G2g0g0JhDcRJkg5u8x
-	 R8Hqnqex4nN/EGoOGH34HCd9mv7AeVm6883ZvM2U1n/8yHta9Dpb88ry+cxMVxo/M9qhE
-	 3zIculF2QZ6P+xpsc5bjQPOSBtPfREGQ97hEKlK0xFbhul3Y8AKBSdrLwMdAXGmkdknP3
-	 Jrf097eTEPzgWKVlDr1g7mx5ES3fVPuxGe26OuukfN7IHAW+rCQpoc+mOjB9/QAg/UDVU
-	 s7/3YSYiPeMLXbv1SOFqykV2/nFOF6yUjkGvK7bW5bqFe4bR+BJg4M7nJPFh/4BIXYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795769357;
+	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
+	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
+	bh=Qpg3+IyjjXZz8rn5Pmt07Gcef7W6fRnRi3A9mUqgmMM=;
+	b=pzXpiOZJYgHAj49dQlvhGESQnFO/AouO03lq/CyfekibWVOet+kPSgPMeMoekQJtGTjO
+	 kxv+ERk3dbHPfqGl4PnLwXyoABSYcPn5AuY5n6S/ES9VoGEAIxhyDE+HvhmtmYW0AXXf6
+	 c2l4KVB8N4+PAzX5dO0QFqCaGA0lhmjCPD//zX95FpCBKo0/anf1uYbBshmr/NRKkzott
+	 DvLuPmdy3aoEpwKJ+9Q0v5OHgy+T5TPCSE7UG3Jsfe/ZEKswWLIc2OIREaPfhR3qqMpV9
+	 ouHBZf/r7vohX848oZqsHAKxANaO6Xrwmv5aYSauTIcCZUXipsnuXBjq3M/kL8VapGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hw0K3LRk;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=3mdeb.com;
+	spf=pass smtp.mailfrom=3mdeb.com;
+	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=NXqOf0Z2;
+	arc=none smtp.remote-ip=178.33.46.10
+Received: from 4.mo561.mail-out.ovh.net (4.mo561.mail-out.ovh.net [178.33.46.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC1B606A32E;
-	Fri, 27 Nov 2026 08:33:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABC1B606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39852606A681
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 08:49:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39852606A681
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Hw0K3LRk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795768417; x=1827304417;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qO1CBDql5BdqV/ZAEf8Juo9+US4w1SccOa1RJtgkBvo=;
-  b=Hw0K3LRktsAXAnM+ZnBN7Vz4D8gAn9BtPX3Rl7LlvKwYdB11YOiDxeJd
-   S3u+F0OjS6iW2f9nVpfaBdsb9uLDT6WIAGt7kGK8UVltv3N9xzQ6T720y
-   WM88QlhCt3JyBEcg1sdBcU3CsGUIr+P8VbeSblBGDNVgRSmD4xLqkDdzV
-   C18HJ1DalGbou+U03xrnQPKDfdz6r54kivoGcxMHdRZzAJBKw2TTfFnIs
-   rEEhPeEma6GdrYkHQ2WVxX5nm5GHzWuxgv+nFy3sXYn9JgXJPPVCLGG2E
-   sNoeVNB/3rC/1uHydCwc1Rs83pRvqS5ReDKBxe/yuhbO+jZbkx0o9Ihze
-   w==;
-X-CSE-ConnectionGUID: DqA+4HhuROq9L6Ug2mVdag==
-X-CSE-MsgGUID: DuLImOJdTvKsGWLVCpeX5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4587772"
-X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
-   d="scan'208";a="4587772"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 00:33:36 -0800
-X-CSE-ConnectionGUID: syHLHn8XT/ejptysGfyUHg==
-X-CSE-MsgGUID: BJ2OY1R6TP2HtUrSTCXDvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,236,1787036400"; 
-   d="scan'208";a="12132628"
-Received: from igk-lkp-server01.igk.intel.com (HELO e79648c3b81b) ([10.211.93.152])
-  by orviesa008.jf.intel.com with ESMTP; 27 Nov 2026 00:33:18 -0800
-Received: from kbuild by e79648c3b81b with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xWrO8-0000000000r-44cZ;
-	Fri, 27 Nov 2026 08:33:00 +0000
-Date: Fri, 27 Nov 2026 09:32:04 +0100
-From: kernel test robot <lkp@intel.com>
-To: Alan Pluto <alanpluto@163.com>, platform-driver-x86@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com, i@rong.moe, W_Armin@gmx.de,
-	corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw
- GetDataByPackage interface
-Message-ID: <20261127084625.fhboKKCu-lkp@intel.com>
-References: <20261123061120.18740-1-alanpluto@163.com>
+	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=NXqOf0Z2
+Received: from director11.ghost.mail-out.ovh.net (unknown [10.110.54.111])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4jbRt10pgnz5wyR
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 08:49:13 +0000 (UTC)
+Received: from ghost-submission-7ccd8bbbb6-bntqx (unknown [10.110.113.124])
+	by director11.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 4E30DC2A2E;
+	Fri, 27 Nov 2026 08:49:12 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.110])
+	by ghost-submission-7ccd8bbbb6-bntqx with ESMTPSA
+	id 3zMOCghECWtv1hQAXudyjw
+	(envelope-from <filip.golas@3mdeb.com>); Fri, 27 Nov 2026 08:49:12 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-110S0043b4fcad2-0187-42ff-8b59-53cbb559db0c,
+                    2D78F170DE5B25267C595F1CD7CE4558A7ADEF44) smtp.auth=filip.golas@3mdeb.com
+X-OVh-ClientIp:213.192.77.249
+From: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
+To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	=?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
+Subject: [PATCH v4 0/3] platform/x86: dasharo-acpi: Add fan control
+Date: Fri, 27 Nov 2026 09:49:07 +0100
+Message-ID: <20261127084910.3355833-1-filip.golas@3mdeb.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -86,51 +69,41 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261123061120.18740-1-alanpluto@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+x-ovh-tracer-id: 4902449670733361135
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: dmFkZTERgDH1wtn2aQmW7u1TE/Z35QbX8WazV7XieAr+Pb2q4d/9+I6TFTI+j9AVTXESVjomi7I+kQ9mS9nZE9uqjCE9yphG0p3wcBVKfhqP3OUm8dXZ4BGeKjUig6mnzEAiEbuR2vY3Eu54diMRxqGBikb1VD2nVtw2ZcURh5uJRmiiAzph08vl7W1Pnxq/bUpoQi7F1SRUxbXRBTTRu3TpsIlcNBWFkbO0uGuXQ3+/cp6bZmzW2/tGWf6EbMbJh6G1xGz0BC0HAqLS6iuqUkRClqBU19jqxQRMxZ5RIaWvBbZ03CZavGOgO/WEjjQK2RLvcx6itTPCHl1GhLRCc5bFJfVNGn9IGLztXC4l2dAVoau14Z4ovyMGJKGi39VW6DYn8tHWpnCYZE7NQZdWMknTenbC8SoLqo1kfbWxhzn6enrEdw6GWei19ZPgnHWmygCs+s9vuAR3C+FfTP4znrV8sE78uqgU8hLp08n8/LOAQrxAsunNM/BF2RtHCFvpJu8jCdd3v67IM7fCbd2Gu6bfnk5cMX2MmzQwGOb+QQdWxQegX7iPDSR4hqli6yrJBA8RnPLv0YZVw+GPgWfPlhcxWZSeoO1QjLSG9F6WVnEEGlQFxtAks8J8vw08iTVdSDm7UFKWYLi5GFJBS52/rG7whq4yVbj0HuscwI9Cw5Y1Oe8CXw
+DKIM-Signature: a=rsa-sha256; bh=Qpg3+IyjjXZz8rn5Pmt07Gcef7W6fRnRi3A9mUqgmMM=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1795769353; v=1;
+ b=NXqOf0Z2tPP4KviMZ/urBeTjGPTwQ8GLVD1HDQof+wzIkIdbrL0m0ry8ltQsRxMaoftOCYB2
+ 3qH+84ykqquiDYGvP7DcS92F8TceE0PBdNTPOCJ5EZY4pbv7TXoGN+BRiDtwOcKaJKdyDKOc8P6
+ MZM5tpvgIhCpOoo9nL9zg4VOfM3axay9q/b5nmFjvhFWPDM7DnAlB06A7J4QW8UKEU0kJm2OO+P
+ XbWg4QjMCxHtlSdi3oi3+4U9Erq6lwDChDpJGeEXEMeefi3UqJUN3nx8sxyXC3EXTYUjSJPuxi1
+ ikOOGRWEWeSry1zDtEtECUZidcEE3HL1TKU7NH0xHAMGQ==
 
-Hi Alan,
+Add the capability to directly control fan PWM and configure the fan
+curves. The initial version of the driver only supported monitoring
+the fans.
 
-kernel test robot noticed the following build warnings:
+Tested on a NovaCustom V560TU laptop with a pre-release
+Dasharo firmware implementing the relevant methods.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v7.4-rc4 next-20261126]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Link to v1: https://lore.kernel.org/platform-driver-x86/20261113074347.2301465-1-filip.golas@3mdeb.com/
+Link to v2: https://lore.kernel.org/platform-driver-x86/20261123105821.305527-4-filip.golas@3mdeb.com/
+Link to v3: https://lore.kernel.org/all/20261127074518.3244152-4-filip.golas@3mdeb.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alan-Pluto/platform-x86-lenovo-wmi-other-Add-raw-GetDataByPackage-interface/20261123-141120
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20261123061120.18740-1-alanpluto%40163.com
-patch subject: [PATCH v2] platform/x86: lenovo-wmi-other: Add raw GetDataByPackage interface
-compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-docutils: docutils (Docutils 0.23, Python 3.13.5, on linux)
-sphinx: sphinx-build 9.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20261127/20261127084625.fhboKKCu-lkp@intel.com/reproduce)
+Filip Gołaś (3):
+  platform/x86: dasharo-acpi: Extract dasharo_call() from
+    dasharo_read_channel()
+  platform/x86: dasharo-acpi: Add fan mode and PWM write support
+  platform/x86: dasharo-acpi: Add EC fan curve support
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/20261127084625.fhboKKCu-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Documentation/userspace-api/landlock:823: ./include/uapi/linux/landlock.h:24: ERROR: Unknown target name: "filesystem flags". [docutils]
-   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:256: ERROR: Unknown target name: "filesystem flags". [docutils]
-   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:279: ERROR: Unknown target name: "network flags". [docutils]
-   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:317: ERROR: Unknown target name: "permission flags". [docutils]
-   Documentation/userspace-api/landlock:832: ./include/uapi/linux/landlock.h:352: ERROR: Unknown target name: "permission flags". [docutils]
->> Documentation/wmi/devices/lenovo-wmi-other.rst:37: WARNING: Title underline too short.
-
-
-vim +37 Documentation/wmi/devices/lenovo-wmi-other.rst
-
-    35	
-    36	GetDataByPackage diagnostics
-  > 37	~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    38	
+ drivers/platform/x86/dasharo-acpi.c | 413 +++++++++++++++++++++++++---
+ 1 file changed, 375 insertions(+), 38 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.56.0
+
