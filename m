@@ -1,99 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795742188;
-	b=gEUUkZn1TGbyntM0iqjzTPlmVEKwc13XVvetE54x7kY2vktdWp4RKbi4UJ1h6k7h0+16
-	 TAUxVZtEqOFEvx4pFKDT5NyxwO9W4RV2TAyN0KVHVJD4EmFG8giQ/45ndJsJeUEWkem4p
-	 Vk52wWpn5aTDa9M/UnzBaK3nkFpnS4+tIQ+vHABJS91YFd30sgwiWDFnnhBnDErEl4NDl
-	 Izp2Dd3eT8l/XJfVVe1fwsqPQmvc38a3O7icDTPAjH6h+TPbDLsgwp+XLeKkPMoCTagCo
-	 Q0dysmFwntlUUq/tm+gmU7AcBUJWob8KCV680hzuSbwxZI8g6+hM4xJ3M58ukmshNTQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795742188;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
-	b=aKDVo3uJ3Q2xmGRYj8PlEgrbTBEel3jM8gCXbddBuHt9itvMBLmqjzzEc9IROi9Ye0uj
-	 R1YOlifwmamVy770bG1XWGHmf/PkJs502VDp2LzSQ5iTZ0JnDBC8AT+44A8a7Nz0cul3Z
-	 RhoB6JvMXPLdYvGg5wxxN2JEPdw89ffjO0Z1+0967oeQ9Aut7EQDIBQiBRwpXyFinRNOL
-	 31q79EZL/1jinZaB/af9o/Ah8nVZDKiQ7gxNUjVYAxym4Ac/a+Ih7NJrVOM0PFy/EpQdC
-	 3/aR6bgG7/k9JLqAkJpybznPqjmLi138YcSxK0DLRvr1ogTlxo1fTHODC/GhDyn8iCg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yjACiQmb;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.126.103.232
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795744052;
+	b=btGDyPj3kQZu0lct4W+D7TO7T34m75weGTOu1mzSgKhZnb0nFjAIcASSetWEwalr0lCc
+	 MLJhlKL6dQxcU+hvZQTYiOgQw7iNWDGonJ1j/tkrH54agNHRIfbTJLukv1C0aE5ImM9Tw
+	 fQmRVs0oXJRwdLTDgsHXSwi8zccPlL1bhOW7PDHY/pSY4z7KulzgaW0eai9mXjXQIdNPN
+	 /NaaISecT6p8M5HPiNHKm+tiM4OZ2KqvXOFMJuIETwu5WAg0vDPanjjIOwg68PZ2A0I34
+	 VQZIuQ2wHH23XdK6VbrbcQy9bmXWALOQc0DzCNvhawCwTxbRYkSAR/E55EBNp9+lysw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795744052;
+	h=DMARC-Filter:X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-META:X-CID-BVR:
+	 X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:X-User:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=NN3TaKeQuETHeThk+N5sCx7sW2Aw4Csu+FtwwEltlI4=;
+	b=PczlpTt+m6561ZYlfc0hI5nOHIweC1JzBrVB+g2ZEQUONE49XJ6jX7vnYaiHsbKKHZ8J
+	 /kwdxG/du15wn7YJmPoqK5m6mIMbjkWtoNQTNb3pIcKVbIOQo6X84qvUxLNqX1l5E9Ev9
+	 WsMG36OJwD7nhMSOOq8Ygq6JL5FSjvKLcHpgulhVZ/NTTSdJx9IQU1Lu/j0G6Fyt8IpfR
+	 IUU9ZnLSE24Mi7pynchq/VJbnLC8AAXhg2Ieph4DIooVB5axEmYCEcM4xb9lpnYsEdhT1
+	 4gNtWkJBGvhBYY0zg6eOiVHH260Q5ywDtOgjY5GJd3ENYjwn1HJJbpOohtzPU2FqaYg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=kylinos.cn;
+	spf=pass smtp.mailfrom=kylinos.cn;
+	arc=none smtp.remote-ip=124.126.103.232
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37528606A326
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 01:16:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37528606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yjACiQmb
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-15dd124bbe7so10960722c88.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 17:16:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795742187; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mG4RKUbINny5EKRb631w+Ubm2z/xkevmmleiFNtbPm7JNNgCOfVC/84z39Z3i53/n0
-         f1fu/+CFwKLl6rmFRhLYK847ZZVtPdmQ0k6KebNwnKwGQl34tPjNLK6E6hb/2hLaLhrU
-         Hi/Yyb3ctZ2j4ZwtoMf4RHIC5YmCaOsX6SRZ4mfmrSYcX8T/VdITRmdKxzzls/JiJEfi
-         Kkf/8mNA7OHkpKQ12ZE87oOA800VdCAWc+teIPigdeMbW904yr0pXBHeQJVfoeLZmIBL
-         DhVH0QEvkYz9PPlKg36fpDsA5pIRjrOTChkUi+yN+J9dhgJ6MrsjM0NKegogyx+//uln
-         C6ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
-        fh=G37UT4lrEnsKl956XIA0p+sj9CVO/pZt8YhL+ilxdws=;
-        b=EHTgJcr3auGOdxdPNvzZVBBBKaktyj4E8aMok8DVvk0G/DDdlSWooTN1qd9d7M5cTC
-         nrUMPr1G07xXSD+qh4jfY+Jpb/moqT2rXPE4O/oZERD0ZU6bHS/D3u61tzX4tyzP5Bgy
-         jton6cOToKJJIUsm2BHQ5k2y82n8cEw1ocEC6PGo4oXfZ7K4HdD8iDfX34B6jZ7WBS4Q
-         NNfLkKZWVuKX2UpzsM7UoGMrvfSSi9V44y7izHbdlpnVlkvP/9oplbX0uFO1FBifZF1J
-         J6uXsfIDf4qTXvPcKR0NZKlHbVmpQFMYSzjhD7n9P82DHQoznPlurIlEglnOHqmeRo+m
-         NZtQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795742187; x=1796346987; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
-        b=yjACiQmb/PKrdFqXS/mutr6kBPsP1vGmCYqLSE97eXboBzbviACN/BujKGlE7x1Ndf
-         mQOozTdjoXimTbRYLMcxVD47jQiA8hZkiQOi0P4Eb6fZCfLIVHeyY9KUC9NeI8Mxk1zU
-         bSQihymHqpiucthKPUf75/FDSQ83Ex6n3rizJzs4qNkLXnDjly0FppZsFGLfjU6pMT87
-         nqIa24UonGOBw/vVYYr3lRkdUvgjx8FegLKMaPkb0KpNwHPqCtP9pgPmMrkfA+MTFHnq
-         6mvNBZcWpKrM/ropu7l4jcZ3beMOaA7D1bMhEfU5kCfi8ics0H2RAp1I6fWJJZAi0b6g
-         WqFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795742187; x=1796346987;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
-        b=dcQhHA2G5RNdrppVaLxoJ8GM5trcnPtteYS02vJncHE7UfBKNl+tmqM6BBEw5iDRSt
-         cGI3SngMwkZvoVNbZvnGPxXO8aJlzLupMQXptYW/w7xmOxQ6MdKh5nC/R/jhBzZ4jv+m
-         hWpEC6sHFcVTW94Vn/5a5/4nJQ9/3eH+1KW2ti23D1uELE9pS9fpXVu6IXyXp/sp5yLl
-         o4CBVeI9xN0mI1if6x5oQFDjM6NpzaMd0x0C8R91Ua7qh+zuhNtezaGZTGIme7wzkkvz
-         sv16ZUVsfyWt6AsLovjqty/nJMzqx2a9fGMe93Dad2tzXOwrks9Wk7y8CRINRSxHnpAY
-         Lotg==
-X-Forwarded-Encrypted: i=1; AL+hErHObA1XhGYiFOrogYR5Ojrj3/stteHVtcAGILpqHpsHZu2PoDr853hSy7CL1s6ueCtxNABxb0aAJ1sPJscnQr7cSiEg@vger.kernel.org
-X-Gm-Message-State: APuU4Z+yveb4DyBi0s7zPAmurqVb49yIFc3ZxqBFiu/47cFpIadrZP9L
-	G0kLpjh4YB3y6bLmgVrVbdANUwGxh7b9Kwfvclcfto9utqlKXc7iWy18eQwg9GwpYL1gewQwOMi
-	ba/ygZlBx5LYMXcCn7CublgW+EZJCZ8U=
-X-Gm-Gg: AZFdTZfH7RCx7uJ1SxHyr2VU7V9U22WR2unajyGJ1o4tWeMj5qbu6v7wcwWdhERN0p9
-	FRUa2vB3AlLKbgGPt0we0zZWcFyCpCaUs9tuyaNM8BNKgJfHF+JkUwbDxRjDxTj45ODCPPx7Mh6
-	AfZlWWpKsFZN7PFxQyQ/c4KpeQfouCxcKWYnvfynAwosFK1VAG2gIo+5gbhoUZv9dGDPlVELYAw
-	iFHUUr5orEOYlewdXE0ZXO5n9SzDyyMWRL/IOO/nmKPmMPEjNOGS6tBvTlAeegzmnYMW5V7u9Pe
-	PJablXv5mfVEfMkj7QiBM8WIrVPWRAcnPFyw7/aifXKQpQnLvjrUiXc+/+qWu3lK8ZY45iUN6iY
-	DJpD/XlTfACJTdGAI0l0Ta4bQ+kRMvqTTgvH9
-X-Received: by 2002:a05:7022:1715:b0:144:f089:b189 with SMTP id
- a92af1059eb24-1b55691a623mr20952158c88.36.1795742187259; Thu, 26 Nov 2026
- 17:16:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601E4606A31C;
+	Fri, 27 Nov 2026 01:47:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 601E4606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7e9f3304ea0411f19a56ed5b684f684d-20261127
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:eea51feb-6e95-4a5b-9301-42266ada7f46,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:1,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-4
+X-CID-META: VersionHash:7db8b62,CLOUDID:d43b64166a8d6911b1bb7bbc5cec1257,BulkI
+	D:nil,BulkQuantity:0,SF:81|82|83|102|136|865|898,TC:nil,Content:0|15|50|99
+	,EDM:-3|-100,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 7e9f3304ea0411f19a56ed5b684f684d-20261127
+X-User: huxiaoying@kylinos.cn
+Received: from thinksys.. [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <huxiaoying@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1204022945; Fri, 27 Nov 2026 09:47:25 +0800
+From: Tom Hu <huxiaoying@kylinos.cn>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Rong Zhang <i@rong.moe>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	xiaoying_hu@126.com
+Subject: Re: [PATCH v3 2/2] platform/x86: thinkpad_acpi: Default charge_stop to 100 when unsupported
+Date: Fri, 27 Nov 2026 09:47:19 +0800
+Message-Id: <20261127014719.80930-1-huxiaoying@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <6066c701-55c8-494f-9348-f9835b258b44@app.fastmail.com>
+References: <20261126011058.39175-3-huxiaoying@kylinos.cn> <28df34b19682af96231caaf30185113972d2f735.camel@rong.moe>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -103,54 +75,28 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261110-legion-lighting-rfc-v2-0-845726afb71c@gmail.com>
- <20261110-legion-lighting-rfc-v2-2-845726afb71c@gmail.com>
- <9002537db845b7a0a900612fe3a4a3638f06cd37.camel@rong.moe> <CAPKD0HfHuv4vKWeff_uhGxXosuU279qB+kkmXNPXJYL2kxFR2w@mail.gmail.com>
- <47e0364e0de6b9c22b21019d3d7e506defe58964.camel@rong.moe>
-In-Reply-To: <47e0364e0de6b9c22b21019d3d7e506defe58964.camel@rong.moe>
-From: Ciro Pedrini <ciro.pedrini@gmail.com>
-Date: Thu, 26 Nov 2026 22:16:15 -0300
-X-Gm-Features: Aa3M54om4nbMxSWNQWs_ctJIhvW8looc3McNT0nMJFNk8E5-YxztbEXgt1ad9pI
-Message-ID: <CAPKD0HdL19j1CuTKJT2E0mQbYxkwPzX6=m7kmVx0ZLKp-mJ1og@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] HID: lenovo-legion: Add keyboard backlight driver
- for Legion Gen 10
-To: Rong Zhang <i@rong.moe>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Werner Sembach <wse@tuxedocomputers.com>, Aaron Erhardt <aer@tuxedocomputers.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi Rong,
 
-On Thu, 2026-11-12 at 01:36 +0800, Rong Zhang wrote:
-> ...though I won't insist if you still prefer kbd_backlight, as long as
-> others are not opposed to it.
+You're right, and I'm sorry for the noise.  I re-exported v3 from the
+unamended commit instead of the corrected version I had prepared, so the
+duplicated "Reviewed-by:" tag was still in the mail even though my
+previous reply said it was fixed.
 
-Thanks. I kept kbd_backlight in v3, mostly so UPower and the desktops
-pick it up:
-https://lore.kernel.org/r/20261127-legion-lighting-rfc-v3-0-15c55d9f15b7@gmail.com
+v4 has the corrected trailer block:
 
-> In this case you don't need the pre-allocated buffer, too. Let's allocate
-> a tiny buffer on stack.
+Suggested-by: Rong Zhang <i@rong.moe>
+Link: https://lore.kernel.org/all/d776d4ca05cd2378e344881b82725fda168f6556.camel@rong.moe/
+Reviewed-by: Rong Zhang <i@rong.moe>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: huxiaoying <huxiaoying@kylinos.cn>
 
-The pre-allocated buffer is gone, but I allocate it per exchange instead
-of putting it on the stack: usbhid passes the buffer to usb_control_msg(),
-and the USB core refuses stack buffers for DMA (with VMAP_STACK they
-aren't DMA-able). Other HID drivers do the same for hid_hw_raw_request().
+I also pointed Link: at your original suggestion rather than the review
+that asked for the tag.  No code changes.
 
-The short reports are in v3 as well, without the msleep(). The rest of
-your v2 comments are done too (raw_command/simple_command, the
-static_assert, errors instead of clamping, devm, comments, Kconfig).
-
-One more thing I found while testing: the controller sends 05 02 B after
-every brightness set, the host's own ones too, and also when the level
-doesn't change (Fn+Space sends it the same way). v2 passed all of those
-to brightness_hw_changed, so v3 only reports a level that differs from
-the last one the driver knows.
+Sorry again for the noise.
 
 Thanks,
-Ciro
+Tom
