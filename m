@@ -1,100 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795742079;
-	b=5S5Fmwvy4wGyRUXL0WPQc+DZss4N8ePzV0cvxwVGTsqhGkXs9wK2QvMLprlI47H/soS5
-	 JOfg31bHI+9xf+eWNhK64qhRMJ5cZoqiKUyEOq74DvR2Cj3s7WJAB9LpVj1XJkINaoBA3
-	 gB5NyRev1diAqYv3edjslNmT3xItlS8F8MXT5lqKKcmQXuLsLpUfLn+KepOBUEgErBCVn
-	 NYzPphjHiK/NsMKaSlWrzrSiPReleimHooeYuknI7KEp1RNWiqGeg5aca/QIc8afrTnBZ
-	 TnAeR84RQUdpQ+jbB5CoLYI52fJOWkAnDUkXBokHj9i//b4yoVSNUvxE3UIXAGXGZSA==
+	t=1795742188;
+	b=gEUUkZn1TGbyntM0iqjzTPlmVEKwc13XVvetE54x7kY2vktdWp4RKbi4UJ1h6k7h0+16
+	 TAUxVZtEqOFEvx4pFKDT5NyxwO9W4RV2TAyN0KVHVJD4EmFG8giQ/45ndJsJeUEWkem4p
+	 Vk52wWpn5aTDa9M/UnzBaK3nkFpnS4+tIQ+vHABJS91YFd30sgwiWDFnnhBnDErEl4NDl
+	 Izp2Dd3eT8l/XJfVVe1fwsqPQmvc38a3O7icDTPAjH6h+TPbDLsgwp+XLeKkPMoCTagCo
+	 Q0dysmFwntlUUq/tm+gmU7AcBUJWob8KCV680hzuSbwxZI8g6+hM4xJ3M58ukmshNTQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795742079;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795742188;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=tUBA6pVGVzuWRSoOa+DeUxU1u9Vo4hxpo45FKzvoAQQ=;
-	b=EVBxLdYH2gLa9gUeh2ei+b0yPnzZ4L+xM9e5ByQq/oAqg50fB5hw2TfzBV42ancADO2O
-	 2mb+9RORm19Hhz9n8rEUsqiYjCsbpiu6Rma6/U5G8YpUolue/ble3pmklA/lJOtJ2BWI4
-	 oLNm05ajGqyS+CUaxeFIjmikEUqg6jIwUwR90EB/E/yDwEEEhspbnoCtKpKCi9M3aM3+Y
-	 XEao5cAo72fNymnb9EyYHn2ZtcgWbpEr0aui+05qPVxJ39Vg0Ute+4ZkQDppldCWQKkHx
-	 hMAPHYDbO4Sz2bLYUWRs9IMPccvSfPP53F+i0CYc65hrfuXOxQM9jFoXWfVbT2CriRw==
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
+	b=aKDVo3uJ3Q2xmGRYj8PlEgrbTBEel3jM8gCXbddBuHt9itvMBLmqjzzEc9IROi9Ye0uj
+	 R1YOlifwmamVy770bG1XWGHmf/PkJs502VDp2LzSQ5iTZ0JnDBC8AT+44A8a7Nz0cul3Z
+	 RhoB6JvMXPLdYvGg5wxxN2JEPdw89ffjO0Z1+0967oeQ9Aut7EQDIBQiBRwpXyFinRNOL
+	 31q79EZL/1jinZaB/af9o/Ah8nVZDKiQ7gxNUjVYAxym4Ac/a+Ih7NJrVOM0PFy/EpQdC
+	 3/aR6bgG7/k9JLqAkJpybznPqjmLi138YcSxK0DLRvr1ogTlxo1fTHODC/GhDyn8iCg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ffNnuWKs;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yjACiQmb;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF5E606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 01:14:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BFF5E606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37528606A326
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 01:16:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37528606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ffNnuWKs
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-15ea896ddc8so12420597c88.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 17:14:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795742078; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yjACiQmb
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-15dd124bbe7so10960722c88.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 17:16:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795742187; cv=none;
         d=google.com; s=arc-20260327;
-        b=dSprWoZgV6Ec1b6ZxbqPyJMKiN8lvC4wDtj4Z9t6zsKESipla5B5On13C0zZP9zSGp
-         YqBGFAgxGLz6M8Og4iP5sHwd7+hHSEdytvJII4LT/j0vThnnWfCGc4FRsip9dGQPaBsU
-         OwAG7vgc82snr3JrTimHB8Dv+e3nlxoIz9ATcM08syNbWMp/ccB6eptf3jrAj5aUGkFI
-         xiv+uwcpPq8vI1YMqOzSP7NU4O67zuUE9MglrKKH/JzPwOxH+zC5+LHzrxvsNNIw9pa8
-         QK0oiS06sa+BqE4q0jBqia4Mt7w3Jg8e0QjqT5+wOkf+46TC76dTJ0INR+55pb1HkSuQ
-         +BCw==
+        b=mG4RKUbINny5EKRb631w+Ubm2z/xkevmmleiFNtbPm7JNNgCOfVC/84z39Z3i53/n0
+         f1fu/+CFwKLl6rmFRhLYK847ZZVtPdmQ0k6KebNwnKwGQl34tPjNLK6E6hb/2hLaLhrU
+         Hi/Yyb3ctZ2j4ZwtoMf4RHIC5YmCaOsX6SRZ4mfmrSYcX8T/VdITRmdKxzzls/JiJEfi
+         Kkf/8mNA7OHkpKQ12ZE87oOA800VdCAWc+teIPigdeMbW904yr0pXBHeQJVfoeLZmIBL
+         DhVH0QEvkYz9PPlKg36fpDsA5pIRjrOTChkUi+yN+J9dhgJ6MrsjM0NKegogyx+//uln
+         C6ug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tUBA6pVGVzuWRSoOa+DeUxU1u9Vo4hxpo45FKzvoAQQ=;
-        fh=RbK/m7HQeZuR+HNtrkESDTRYRCqRpMO4eZ0HPNE5aX8=;
-        b=EZGFypemWwuy7cbAoxuRDx7h1OxCk6lpkr42ACncZMI1/U8nYjwM09loV+WQVIQz2V
-         j4N98o0zX2Y1xiPFzzxOMQoiuZC1lvWkmQG2Y9VenGs7hL+EGLEUd2ayG9SQ8B1cr5ib
-         k/Ck8Osl4CD5xR2yJx7aSDoEKJcBNCQBLg76YQ5GiGjUtFLT1Mwbcc4tsD/CB7mitYjf
-         X6B+YufYTlHnjCdZkbpwTnTssxb0koSbbN38gzd68KfywhT6LkGFC9d/FZhdk/k7FJAk
-         xqPZxbDoejNxfF+iWf8ygHcpz28AxsCIAf44iKiDHCFMIu/tyriCm26Cfl11myKA9gLq
-         uojA==;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
+        fh=G37UT4lrEnsKl956XIA0p+sj9CVO/pZt8YhL+ilxdws=;
+        b=EHTgJcr3auGOdxdPNvzZVBBBKaktyj4E8aMok8DVvk0G/DDdlSWooTN1qd9d7M5cTC
+         nrUMPr1G07xXSD+qh4jfY+Jpb/moqT2rXPE4O/oZERD0ZU6bHS/D3u61tzX4tyzP5Bgy
+         jton6cOToKJJIUsm2BHQ5k2y82n8cEw1ocEC6PGo4oXfZ7K4HdD8iDfX34B6jZ7WBS4Q
+         NNfLkKZWVuKX2UpzsM7UoGMrvfSSi9V44y7izHbdlpnVlkvP/9oplbX0uFO1FBifZF1J
+         J6uXsfIDf4qTXvPcKR0NZKlHbVmpQFMYSzjhD7n9P82DHQoznPlurIlEglnOHqmeRo+m
+         NZtQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795742078; x=1796346878; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=tUBA6pVGVzuWRSoOa+DeUxU1u9Vo4hxpo45FKzvoAQQ=;
-        b=ffNnuWKsKYf3sXG4mlzfQOZDnQ75A/qYCr+clralhQcT6oOXBXG0tWjZStinG/DyYN
-         bbuusKzV/KbqywIJB81kJXk9ODltskVMUuVVf7AY4vdkl0PoF2IfWcFv4XoXXbp/Nfde
-         IV/QsMH2QZ76adKWUtTDal6dwRH5Le10IH7ZtAmmPYXHKkAnuNHgxuYXRFPOE16IuGN0
-         bUprouJRbFA6+bTbtz6yXe81amUxWejn9wIi0Y3jkt65m2qI7HS0J7huABICF1Qwjl+C
-         gctpVnDwBibg2moRpmhEDlELaBEpIBIhS7hjwSEFQkRj4ZLzCS5U+Ncy+kQHIpv5LBgE
-         ATtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795742078; x=1796346878;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1795742187; x=1796346987; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tUBA6pVGVzuWRSoOa+DeUxU1u9Vo4hxpo45FKzvoAQQ=;
-        b=J26ungM3Fzdyld+hN/xUn9W8/1/It5+4oB/8VIQVSX/Tzf77PmAd2e573LeA2CCtdZ
-         JunfY2/yW3ooTY+9miM884Nra7uXJbnaBM3fkdATHcRZXsWPBYkuYoH2JEfN+Lh6D3lx
-         U7Wo1jqEynJ9+Q5AB+NIZI39VKtWH48YHDRQiKpA45KNb7FIzPYNBrBN1TTiYhTLL0GL
-         QkADgljT/lJ9fRw5fIW/aoY2GQbviiFHhRQTW9j1hhzKoJvYC5dndUyJizI17QtzQIKg
-         ukVUDzra3VV/XFi8yRT655+nFWrfMIPoETXTuy9qq+ZfDTKXT5vLNjOIJ/L3Zx5tw6tz
-         AcBA==
-X-Forwarded-Encrypted: i=1; AL+hErHSMZhJoPI2Wl56jPpyuESe+CdVOpnQ1cZ6P7bpnmnkGA22cPrBOHdIbf2cdKkVvh0Wonip8GWtBG+4REsJ5Nm0coKA@vger.kernel.org
-X-Gm-Message-State: APuU4Z+fQUjYwW4hfmBfzSm5U1AUWFfFqh/n+3TvwnTayVZbkjcyACGA
-	N5vk9G4bWbzvraqLg8LXTuYg5FBLpnr0vu19kFGX5x1WnG8iKoSlY745O0PU/ZxGnzzwiHq96+I
-	g4f9q/hBbQBnjrLAOxA8BpUi6vrXh7wU=
-X-Gm-Gg: AZFdTZfQnma/54ADiPkEvqN4lQ6hL2Wxm/i1k2G5AfYspP9yVHM49K4Z/+fxRuttJhK
-	DhlHDnOoKd5x4/Df5N84MESbte3rjF36hKr77ICCIeOZxotKoT0dkX7F7Qqka1uxEUgmudsvgLC
-	H48K+rChqqbr9ORQOS6c6+Q0hHqrj4I2QDobli8oeUkgzVGNFZTtXjclOaQX+zIG718DyfM65ll
-	hCWSc9eV+9332PV16nliRMHGJs53Pv9fdsUIGGegK1Il293pKtP3d/f3HkwfwYR6qql195nomAi
-	6TnpEONFYOrsP2N80XTYPbFP/eM2lhxSb6QSyLokuRgIELn4us5PXAsgEp0dQ3UMu0oM3EZXZ43
-	HlB8ErwEGcoCAdYEpfd+J8ycjcu9YTOLIczI9
-X-Received: by 2002:a05:701b:42c6:10b0:1b5:49da:b969 with SMTP id
- a92af1059eb24-1b5568fbf25mr23134158c88.36.1795742077731; Thu, 26 Nov 2026
- 17:14:37 -0800 (PST)
+        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
+        b=yjACiQmb/PKrdFqXS/mutr6kBPsP1vGmCYqLSE97eXboBzbviACN/BujKGlE7x1Ndf
+         mQOozTdjoXimTbRYLMcxVD47jQiA8hZkiQOi0P4Eb6fZCfLIVHeyY9KUC9NeI8Mxk1zU
+         bSQihymHqpiucthKPUf75/FDSQ83Ex6n3rizJzs4qNkLXnDjly0FppZsFGLfjU6pMT87
+         nqIa24UonGOBw/vVYYr3lRkdUvgjx8FegLKMaPkb0KpNwHPqCtP9pgPmMrkfA+MTFHnq
+         6mvNBZcWpKrM/ropu7l4jcZ3beMOaA7D1bMhEfU5kCfi8ics0H2RAp1I6fWJJZAi0b6g
+         WqFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795742187; x=1796346987;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oPod1KuFvBWGJsle2l5lTHqLGq3m5KHrsHkxQ2HP+ns=;
+        b=dcQhHA2G5RNdrppVaLxoJ8GM5trcnPtteYS02vJncHE7UfBKNl+tmqM6BBEw5iDRSt
+         cGI3SngMwkZvoVNbZvnGPxXO8aJlzLupMQXptYW/w7xmOxQ6MdKh5nC/R/jhBzZ4jv+m
+         hWpEC6sHFcVTW94Vn/5a5/4nJQ9/3eH+1KW2ti23D1uELE9pS9fpXVu6IXyXp/sp5yLl
+         o4CBVeI9xN0mI1if6x5oQFDjM6NpzaMd0x0C8R91Ua7qh+zuhNtezaGZTGIme7wzkkvz
+         sv16ZUVsfyWt6AsLovjqty/nJMzqx2a9fGMe93Dad2tzXOwrks9Wk7y8CRINRSxHnpAY
+         Lotg==
+X-Forwarded-Encrypted: i=1; AL+hErHObA1XhGYiFOrogYR5Ojrj3/stteHVtcAGILpqHpsHZu2PoDr853hSy7CL1s6ueCtxNABxb0aAJ1sPJscnQr7cSiEg@vger.kernel.org
+X-Gm-Message-State: APuU4Z+yveb4DyBi0s7zPAmurqVb49yIFc3ZxqBFiu/47cFpIadrZP9L
+	G0kLpjh4YB3y6bLmgVrVbdANUwGxh7b9Kwfvclcfto9utqlKXc7iWy18eQwg9GwpYL1gewQwOMi
+	ba/ygZlBx5LYMXcCn7CublgW+EZJCZ8U=
+X-Gm-Gg: AZFdTZfH7RCx7uJ1SxHyr2VU7V9U22WR2unajyGJ1o4tWeMj5qbu6v7wcwWdhERN0p9
+	FRUa2vB3AlLKbgGPt0we0zZWcFyCpCaUs9tuyaNM8BNKgJfHF+JkUwbDxRjDxTj45ODCPPx7Mh6
+	AfZlWWpKsFZN7PFxQyQ/c4KpeQfouCxcKWYnvfynAwosFK1VAG2gIo+5gbhoUZv9dGDPlVELYAw
+	iFHUUr5orEOYlewdXE0ZXO5n9SzDyyMWRL/IOO/nmKPmMPEjNOGS6tBvTlAeegzmnYMW5V7u9Pe
+	PJablXv5mfVEfMkj7QiBM8WIrVPWRAcnPFyw7/aifXKQpQnLvjrUiXc+/+qWu3lK8ZY45iUN6iY
+	DJpD/XlTfACJTdGAI0l0Ta4bQ+kRMvqTTgvH9
+X-Received: by 2002:a05:7022:1715:b0:144:f089:b189 with SMTP id
+ a92af1059eb24-1b55691a623mr20952158c88.36.1795742187259; Thu, 26 Nov 2026
+ 17:16:27 -0800 (PST)
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -105,77 +104,53 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 References: <20261110-legion-lighting-rfc-v2-0-845726afb71c@gmail.com>
- <20261110-legion-lighting-rfc-v2-2-845726afb71c@gmail.com> <3e8f3452-06c1-8194-2d76-524418f0194c@linux.intel.com>
-In-Reply-To: <3e8f3452-06c1-8194-2d76-524418f0194c@linux.intel.com>
+ <20261110-legion-lighting-rfc-v2-2-845726afb71c@gmail.com>
+ <9002537db845b7a0a900612fe3a4a3638f06cd37.camel@rong.moe> <CAPKD0HfHuv4vKWeff_uhGxXosuU279qB+kkmXNPXJYL2kxFR2w@mail.gmail.com>
+ <47e0364e0de6b9c22b21019d3d7e506defe58964.camel@rong.moe>
+In-Reply-To: <47e0364e0de6b9c22b21019d3d7e506defe58964.camel@rong.moe>
 From: Ciro Pedrini <ciro.pedrini@gmail.com>
-Date: Thu, 26 Nov 2026 22:14:26 -0300
-X-Gm-Features: Aa3M54ooPyM-qjfnlrGm_Sa7EwjiM7vZt76XOBAjXwxqti8qG2MPIB7IOQa6o2o
-Message-ID: <CAPKD0HcrVfvQyCTZ-1s26EO9wsLXxwJoeBRMro5jmt0BRjbAZw@mail.gmail.com>
+Date: Thu, 26 Nov 2026 22:16:15 -0300
+X-Gm-Features: Aa3M54om4nbMxSWNQWs_ctJIhvW8looc3McNT0nMJFNk8E5-YxztbEXgt1ad9pI
+Message-ID: <CAPKD0HdL19j1CuTKJT2E0mQbYxkwPzX6=m7kmVx0ZLKp-mJ1og@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] HID: lenovo-legion: Add keyboard backlight driver
  for Legion Gen 10
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Rong Zhang <i@rong.moe>
 Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
 	Werner Sembach <wse@tuxedocomputers.com>, Aaron Erhardt <aer@tuxedocomputers.com>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-input@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo,
+Hi Rong,
 
-On Wed, 11 Nov 2026, Ilpo J=C3=A4rvinen wrote:
-> Thanks for the update, this one looks much cleaner already. :-)
+On Thu, 2026-11-12 at 01:36 +0800, Rong Zhang wrote:
+> ...though I won't insist if you still prefer kbd_backlight, as long as
+> others are not opposed to it.
 
-Thanks! All of these are done in v3:
-https://lore.kernel.org/r/20261127-legion-lighting-rfc-v3-0-15c55d9f15b7@gm=
-ail.com
+Thanks. I kept kbd_backlight in v3, mostly so UPower and the desktops
+pick it up:
+https://lore.kernel.org/r/20261127-legion-lighting-rfc-v3-0-15c55d9f15b7@gmail.com
 
-> > + if (ret <=3D (int)sizeof(*msg) || msg->report_id !=3D LEGION_REPORT_I=
-D ||
->
-> Just remove this cast.
+> In this case you don't need the pre-allocated buffer, too. Let's allocate
+> a tiny buffer on stack.
 
-Removed, also the one in raw_event.
+The pre-allocated buffer is gone, but I allocate it per exchange instead
+of putting it on the stack: usbhid passes the buffer to usb_control_msg(),
+and the USB core refuses stack buffers for DMA (with VMAP_STACK they
+aren't DMA-able). Other HID drivers do the same for hid_hw_raw_request().
 
-> > + hid_warn(hdev, "unexpected answer to 0x%02x: %*ph\n", op,
-> > + min(ret, 8), msg);
->
-> Printing data like this looks more like debug level stuff.
+The short reports are in v3 as well, without the msleep(). The rest of
+your v2 comments are done too (raw_command/simple_command, the
+static_assert, errors instead of clamping, devm, comments, Kconfig).
 
-It's hid_dbg() now, without the dump.
-
-> > + WRITE_ONCE(kbd->led.brightness, level);
->
-> Please add include for this.
-
-That write is gone (brightness_get reads the hardware). The driver now
-keeps the last known level for brightness_hw_changed with
-READ_ONCE()/WRITE_ONCE(), so it includes <asm/rwonce.h>.
-
-> > + * LED_BRIGHT_HW_CHANGED: Fn+Up/Down are reported to userspace.
-> > + */
->
-> This only documents what these flags are so why a driver needs such a
-> comment?
-
-Dropped.
-
-> But could you solve this with devm_add_action_or_reset() (for hid
-> teardown) and use devm for everything?
-
-Yes: hid_hw_start()/hid_hw_open() with a devm action that closes and
-stops, then devm_led_classdev_register(). The .remove callback stays,
-empty with a comment, because without it hid-core calls hid_hw_stop()
-itself before releasing the devm resources.
-
-> > +MODULE_DESCRIPTION("Keyboard backlight of Lenovo Legion laptops (2025)=
-");
->
-> I don't think we should put year into this
-
-Removed here and in the file header.
+One more thing I found while testing: the controller sends 05 02 B after
+every brightness set, the host's own ones too, and also when the level
+doesn't change (Fn+Space sends it the same way). v2 passed all of those
+to brightness_hw_changed, so v3 only reports a level that differs from
+the last one the driver knows.
 
 Thanks,
 Ciro
