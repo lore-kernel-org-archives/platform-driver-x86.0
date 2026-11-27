@@ -1,67 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=87.98.174.144
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795771478;
-	b=kEh599VHscymN5IiB9VtV5DLWAnIKrCJD3DvQhf/4IuabiLpNqKoYHVhBftQdEH/smnb
-	 2NZo+bj70J62sIEUgzcPGKYp39Gk4Uct3qFRS2olafRxQGOhzKh/WtdZIyX0223QFGA9K
-	 fk2xL3d/yOs1rdz2G1xAiFL3U5aigQ370+sALC5QEgGRo+tIA4yNvgw5G70bCXY7NAeBw
-	 RSiiCfPpq6kXXJgvnuYX+xN12oM/tiItUhjtRFomrif/js4tLFkX2y+DW20+hm5dDDxfb
-	 P4y8kifpWI40tgfTsQW0XwH0Myq6J3wFCN8OHSC+FrYYnE4iCE5RuBoRCakLrMXBM0g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795771478;
-	h=DMARC-Filter:Received:Received:Received:X-OVh-ClientIp:From:To:Cc:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:x-ovh-tracer-id:X-VR-SPAMSTATE:
-	 X-VR-SPAMSCORE:X-VR-SPAMCAUSE:DKIM-Signature;
-	bh=O/40p9mPUJ9lzAMAARPW6FZcfYSAz2NfyvuBdIj3BtM=;
-	b=EB52uywsBLhi4na+R3XLqRof9dsobAGkAZbwDLgOaGa2SyWk6Si9XBdYxj1+Htjj5Lc6
-	 NuDgI+2MlEey+YGXKzfbrAHwMtU8BaE9HLis8mpHv8GFe0WLTFi+MbgiwFokFhSldm4WT
-	 S1WLLAZhwV+wAZe6T0YMoOyuDgLNSvqyc+eB0DAhTgPAMVLpSONCC54jENO2SFU4lbGIX
-	 9TlBqbsG+Hl+vSuLN2otCgq+dMMz6LkMiVg5Gpk0jOrVMujnd5mphJiXEKmiyyt7ys7N5
-	 fXMsfKQoZ9rKqz0bcy1iu8XytW2yXtSApozlN7fv7RiTZFRiDC0UGB8d6SIVrRYj3VQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=3mdeb.com;
-	spf=pass smtp.mailfrom=3mdeb.com;
-	dkim=pass header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=esW6lGKo;
-	arc=none smtp.remote-ip=87.98.174.144
-Received: from 16.mo583.mail-out.ovh.net (16.mo583.mail-out.ovh.net [87.98.174.144])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795777393;
+	b=H2ILfRBHHI+3jnxsc5uZDl6tNqon/qcASsPp+BDW4pJZB0r1JgpzbwOzBGcv0BdfL6vA
+	 IzdKKplxUrfjsrvUGkYB6cPfcd4lyB9XAPIC7pEJVWCJdvgVnWI+GBZCrQw8Zc+ye8iJP
+	 wd4PPjLtoQn+6CGXOOU2mgw7hJGhur23N+EzkRfpTLXn4cV2SutbicOy9h7P5HZ5FhIym
+	 pabq8zuMDLJFmo5RMo1G3ikYmv8vmycXlphXT/LBSgDZ2pPupzVFz9OW4ntQhzaArnBVX
+	 NjPe11e7+He1NKI5GD20Y4IM+CU4aTicegBuUPy0aXAEkWdUj/ED35CQnV8MuKYnqjQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795777393;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
+	b=hGJ0wHh6CgNN/DdcxB7qDwsD7KPj5dCt1cIOmyuyai4dD07wc0mLW2fHZQCfoYk+w/ge
+	 Erzcm9yFQB2ciVgEXAozAXatRi/72CnwW2u3bQFX0kavK/Gksoja4o3DE/TN3H0k5keXx
+	 KpqwVQUnv2NAP8L0OMoJbmdNoY1EvPnRfvZxb63hljciFEgwhWey1B0Fuzrtyeu3TrUJR
+	 9woQDvmQuE6tyLkMqNUQhK1pXvYuyDvU8qAVjkTZGKh78UjAxU5U8cOaa2wb1DUS3CtsE
+	 bAgGobJdKKQ5wPO3lHfOGJvsCmchp1aHpA/w8mcu4EhKLP3YHjpx2RsktNNNbDpgejQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OBXrW5vV;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD836606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:24:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD836606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91907606A31C;
+	Fri, 27 Nov 2026 11:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=3mdeb.com header.i=@3mdeb.com header.a=rsa-sha256 header.s=ovhmo3617313-selector1 header.b=esW6lGKo
-Received: from director3.ghost.mail-out.ovh.net (unknown [10.110.58.156])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4jbSfq648hz5w1v
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 09:24:35 +0000 (UTC)
-Received: from ghost-submission-7ccd8bbbb6-fkvks (unknown [10.108.42.118])
-	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 8B524C0148;
-	Fri, 27 Nov 2026 09:24:34 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.110])
-	by ghost-submission-7ccd8bbbb6-fkvks with ESMTPSA
-	id BUE8FlJMCWvH9xQAMqfShQ
-	(envelope-from <michal.kopec@3mdeb.com>); Fri, 27 Nov 2026 09:24:34 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-110S00442b59f09-659f-4e85-8f3e-1b21a2cb2032,
-                    D697370656FF9958A21AC54DA46BA3848F1D2CE7) smtp.auth=michal.kopec@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
-To: =?UTF-8?q?Filip=20Go=C5=82a=C5=9B?= <filip.golas@3mdeb.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
-Subject: Re: [PATCH v4 0/3] platform/x86: dasharo-acpi: Add fan control
-Date: Fri, 27 Nov 2026 10:23:54 +0100
-Message-ID: <20261127092354.2974097-1-michal.kopec@3mdeb.com>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261127084910.3355833-1-filip.golas@3mdeb.com>
-References: <20261127084910.3355833-1-filip.golas@3mdeb.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OBXrW5vV
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1795777392;
+	b=NsXVtEyCKMCLOtesv21AEhZhtFTFUZ50E0qG/bJ9qxUZNae2nMb5MXbW4BD1D+sxcvuT
+	 4h26LiSQlOtp3KazxBxKDgRSpfEBzFOUEe4f0SgIva+bxSfu8R8ho6A2wa4HfpwJYPBu1
+	 j8A6XEkvLQwMUkdKl/ziv8FN/2kr/OGxAlKrKs41wVPJc6YtrB9k0pjJ/Z8IQtOITVXX6
+	 9qlCzxPb32X8cc3BAWSn1b1z1CY8aMLobrY4jv6y16gjQQLLbGqr9UOVUT2hh8n4zs+Xt
+	 PyUsC8hCM5oOxC4bdXZO8peOS4HpgBwQCc6HczoKltyOIsjOPMeGQLHyG9oSF2wSlpw==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1795777392;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
+	b=KJCqUR02lSdvgVtmJaNNcT7fogXmKisJXXH45WNWfX+1mQ+4MV/pJ0yvQt3GoeCE0ODp
+	 K1Lcux9lRhasT1i+PWmV7r2owre91PL+VRAuXfc1dxVA8sNElYXVve2cPgcNz39Hk5BQc
+	 vP585SJUEZmb2mXlgGd8Kv7KcPO/waknn1twdcLET2fdocOH3hF31svQpPDQlzwpCYM3v
+	 tf4jLB0wvwjlckb88kruG+rA7wTR3+y4eb9tGiRmxNCeaAPplbqKGA6A+/r+ghdPBeAOJ
+	 /VUDOhBvAiwKx92LzuArwcMvUUACRFwS4U5v/Cr/X8Qum/W1YqCJMk3kbNWQt5vaY7A==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id 5812D1F00919;
+	Fri, 27 Nov 2026 11:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795777392;
+	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=OBXrW5vV8sm35lGzdZAo3O/hM+39bQH9O2DI6ELrZ9dzwM/mfmgZLd8g1ugSUuQWK
+	 pLaWoyk9Vc3v2kQOZqFQ5NnMPxnWYDnuzunRF0fScm4vvXD7JSxXelVB5a3qLL5yq4
+	 N6ieOp2kyt40Teu+Y9v64QHEtm1EOPMflJwz1WctuHFO88LLhvU+oiXchN/yPydkK5
+	 Tkjwnb3h4P1Of4ii5Eqi3Ledm9XEBGLFiEy+0g4kK3VmsP/BCmWXNJbJ1fQp3Mg+V0
+	 L5/XK8Bd5R/VOFJ+7/78RpUuMBNSA2M1InFxbYUa2N3HD15aaacFY915q3sSqRTcRp
+	 ioUvMqoY5rCWg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id D9AEA4B766;
+	Fri, 27 Nov 2026 11:03:04 +0000 (UTC)
+From: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>
+Date: Fri, 27 Nov 2026 19:02:52 +0800
+Subject: [PATCH v2 4/4] rust: wmi: add Buffer and Device::invoke_method()
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -71,26 +82,182 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-x-ovh-tracer-id: 5499739571757031070
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: dmFkZTERTqOI1oZsiv08VZZ6wCeuxaP5sraS596JdYbW3aVQtcM3PtH1n6tj0S+zKg2BSAqfZatgikFkAIKpsf6nZuyqPQhCTH73PD5KuYVAzbKN+8L8FjG14aWlZCaJNnyjZyP+7h3jXgEpL4dw2madG1XFT5o3xCYZKdcjr/nGTRt2DxLbgbQA7xx54zPn4tqxGsiGAhYPvPxy2FyLZGr4T8Y0SMg4ABcAFnYegGKJ59egup1qQX/yRqE+tZk541zUQ/L2c6FGGoGSNmjtif6Ep5FgJctMIclh4qhWfet2W+BDrk33M5sNdfIXYl+mL3vzY9mOVeBDot9ZxAwS01lqEJE9ipBpAap6tC5YF4V2FdClcdQCiqok4CiDIqW7B6om3SFjEjjPlkuwtD5whiZVY8ktB+zshOg1GbfsOB6QyNylmM4rSGpfEWlCuq1QQscZ/sAG6ZHgCn/tNgFiOLJDdsM6HpGdxQwdcvBGQnEYBeaqeIRkAgyFS1rf1fdi20UV+BEDJGfVliX/jW8g9949sIOtTNTrirl7UOnSZaazieQ1X6pYPHLO4jRPOAxIPm8mFPSVnXnfZJdpVzvywlzFLacTkfKnvXM5yWQHZL8kje5tqsxPzk3krX4wADtFbJ79AL7qlX+Cxw0dQ5EcXf2L6rT+1j0bbOWII9wTVj8oMBQV2g
-DKIM-Signature: a=rsa-sha256; bh=O/40p9mPUJ9lzAMAARPW6FZcfYSAz2NfyvuBdIj3BtM=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1795771475; v=1;
- b=esW6lGKoFzk7ZX1j98FQevJ9M0+jgPnC16FBKdE6gplJzE57KcA8Yk2FMIcLy3kYe3WiJQwB
- XDaSy+v8XwXasbhSA+LhnIMv+WMOZfbdxej67uAQuDiCHsn+PclsW78FD3TfcQvGUj/kT66ayY+
- 6ZL9xDl4i/jtWTdeqlqp/1AgoT5XPs/7gcj55vouaab7pGEKDJ9iX4giUEILOFvrGiV8UZUrwa/
- yQXd80zqGjOph+iCLyoyorAwxlCE/3orHQUDH4JjFo7B0d8hpusFGQ02pA3hSk3Nqzo5u28ZRbJ
- 5qNd3QbfGakxuJNhrcvi65PcZyYVfi672oqaJbEdSAxWQ==
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261127-rust-wmi-v2-4-5bfafabd6a6e@gmail.com>
+References: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
+In-Reply-To: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, 
+ =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795777382; l=5608;
+ i=nick42d@gmail.com; s=20261127; h=from:subject:message-id;
+ bh=O7obddgUP9HSPTKHNV9B4ghMFjoxhu9TL4QbXxN6nhQ=;
+ b=ILzk/2gDAqgHkX1N5roGOVEY0CXYH74RLORgX8pqavcxaa8WJXa9N0CPB4mchPQsiYHfBF5JO
+ d57RdFYPiQCDDklXsNOWs32G9eQsucnlYVg48dyuTvmcndK0OFRC4WV
+X-Developer-Key: i=nick42d@gmail.com; a=ed25519;
+ pk=rewGRrQm8GTjt8ii+wLiI2tUWP5gtTF4pntVEMNXrj8=
+X-Endpoint-Received: by B4 Relay for nick42d@gmail.com/20261127 with
+ auth_id=1660
+X-Original-From: Nick Dowsett <nick42d@gmail.com>
+Reply-To: nick42d@gmail.com
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 27, 2026 at 09:49:07AM +0100, Filip Gołaś wrote:
-> Add the capability to directly control fan PWM and configure the fan
-> curves. The initial version of the driver only supported monitoring
-> the fans.
+From: Nick Dowsett <nick42d@gmail.com>
 
-For the series:
+- Adds safe `wmi::Buffer` RAII abstraction wrapping an owned
+  `struct wmi_buffer`.
+- Implement `Device::invoke_method()` - safe abstraction for
+  `wmidev_invoke_method`.
+- Also implement `Sync` for `Device<device::Bound>`.
 
-Reviewed-by: Michał Kopeć <michal.kopec@3mdeb.com>
+Signed-off-by: Nick Dowsett <nick42d@gmail.com>
+---
+ rust/kernel/wmi.rs | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 100 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/wmi.rs b/rust/kernel/wmi.rs
+index 235c4a2cef6a..3cd5bed6066f 100644
+--- a/rust/kernel/wmi.rs
++++ b/rust/kernel/wmi.rs
+@@ -17,7 +17,9 @@
+ };
+ use core::{
+     marker::PhantomData,
+-    ptr::NonNull, //
++    ops::Deref,
++    ptr::NonNull,
++    slice, //
+ };
+ 
+ /// Type alias for [`driver::Registration<Adapter<T>>`], the registration of
+@@ -229,6 +231,11 @@ unsafe impl Send for Device<device::Normal> {}
+ // - All methods on `&device::Device<Normal>` are thread safe.
+ unsafe impl Sync for Device<device::Normal> {}
+ 
++// SAFETY:
++// - As per `&Device<Normal>`, but `&Device<Bound>` also has the method `invoke_method()`,
++//   which wraps the internally synchronised `bindings::wmidev_invoke_method()`.
++unsafe impl Sync for Device<device::Bound> {}
++
+ // SAFETY:
+ // - By the type invariant, all instances of `Device` are reference-counted.
+ // - Increments to the reference count keep the object alive in memory at least
+@@ -258,6 +265,71 @@ fn as_raw(&self) -> *mut bindings::wmi_device {
+     }
+ }
+ 
++impl Device<device::Bound> {
++    /// Calls `wmidev_invoke_method`.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::{device::Bound, prelude::*, wmi};
++    /// const METHOD_ID: u32 = 0xB105;
++    /// const METHOD_ARGS: [u8; 1] = [0];
++    /// fn method_returning_u32(wdev: &wmi::Device<Bound>) -> Result<u32> {
++    ///     let output: wmi::Buffer = wdev
++    ///         .invoke_method(0, METHOD_ID, &METHOD_ARGS, size_of::<u32>())?;
++    ///     let output_as_bytes: [u8; 4] = output
++    ///         .get(..size_of::<u32>())
++    ///         .and_then(|buf| buf.try_into().ok())
++    ///         .ok_or(ENODATA)?;
++    ///     let output_u32 = u32::from_le_bytes(output_as_bytes);
++    ///     dev_dbg!(wdev.as_ref(), "WMI output: {}\n", output_u32);
++    ///     Ok(output_u32)
++    /// }
++    /// ```
++    #[inline]
++    pub fn invoke_method(
++        &self,
++        instance: u8,
++        method_id: u32,
++        input: &[u8],
++        min_output_size: usize,
++    ) -> Result<Buffer> {
++        let mut out_buf = bindings::wmi_buffer::default();
++        let in_buf = bindings::wmi_buffer {
++            length: input.len(),
++            // NOTE1: Even if the input slice is empty, this will create a dangling pointer
++            // rather than a null pointer as Rust references are always non-null.
++            // NOTE2: The input parameter to wmidev_invoke_method is expected to be read-only,
++            // however, we cast to a mutable pointer here purely to meet the type definition of
++            // `wmi_buffer`.
++            data: input.as_ptr().cast_mut().cast::<c_void>(),
++        };
++        // SAFETY:
++        // - By type invariants, `self.as_raw()` points to a valid, live `wmi_device`.
++        // - `out_buf` and `in_buf` are pointers to valid, live `wmi_buffer`s.
++        // - `in_buf` contains a pointer to an allocation behind a Rust reference (which therefore
++        //   lives as long as this method call) with length less than or equal to the allocation
++        //   size, or contains a dangling pointer with length 0.
++        // - The allocation in `in_buf` will not be mutated - the C implementation declares the in
++        //   parameter as const.
++        let status = unsafe {
++            bindings::wmidev_invoke_method(
++                self.as_raw(),
++                instance,
++                method_id,
++                &raw const in_buf,
++                &raw mut out_buf,
++                min_output_size,
++            )
++        };
++        error::to_result(status)?;
++
++        // INVARIANT: `wmidev_invoke_method` was confirmed to succeed. On success
++        // it returns a `wmi_buffer` satisfying `Buffer`'s invariants, which we
++        // hand to the caller as the new owner.
++        Ok(Buffer(out_buf))
++    }
++}
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
+     #[inline]
+     fn as_ref(&self) -> &device::Device<Ctx> {
+@@ -274,3 +346,30 @@ fn as_ref(&self) -> &device::Device<Ctx> {
+         unsafe { device::Device::from_raw(&raw mut (*self.as_raw()).dev) }
+     }
+ }
++
++/// An owned, 8-byte aligned output buffer.
++///
++/// # Invariants
++/// - `self.0.data` is a pointer to an 8-byte aligned owned buffer of length
++///   at least `self.0.length` and freeable with `kfree()`.
++pub struct Buffer(bindings::wmi_buffer);
++impl Deref for Buffer {
++    type Target = [u8];
++    #[inline]
++    fn deref(&self) -> &[u8] {
++        if self.0.length == 0 {
++            return &[];
++        }
++        // SAFETY: By the type invariant, `self.0.length != 0` guarantees `self.0.data`
++        // points to an owned buffer of length at least `self.0.length`.
++        unsafe { slice::from_raw_parts(self.0.data.cast::<u8>(), self.0.length) }
++    }
++}
++impl Drop for Buffer {
++    #[inline]
++    fn drop(&mut self) {
++        // SAFETY: By the type invariant, `self.0.data` is exclusively owned and
++        // freeable with `kfree()`.
++        unsafe { bindings::kfree(self.0.data) };
++    }
++}
+
+-- 
+2.56.1
+
+
