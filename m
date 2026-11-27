@@ -1,110 +1,110 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.151
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795750131;
-	b=EBTVkvehSADbEPBvK2XHqvIbuOFW1agQLvNZ0tplxQ8GfeIPtyYO1/h4RHmj6vxGgsjc
-	 G39CAdnZuMIOELfpB6LLTjPvqrPZ0dfKkqhhBOgRkA+qYSS1pFAc/zQOXLs1dHc5zN7ey
-	 Qus79yY3jNiL/YqnNGiN4A0M/yAVwBXD3R0aU+insO7a7qQqfaTuOfxOMVNVUjKEm3QOM
-	 SwdRvJrBSKGnHWTd1drcT0fBEfDG60HZW/fG77tfAOFVOj5Ysp1Udvx0tFjrODW7txvsQ
-	 rt++nQkh9MnDc/5ChSpvKtg3ZcL0RAmtKWVdx89TFvPyMSoJZ/LfiqJiyHzc/gNn9TQ==
+	t=1795750532;
+	b=K01yJADkaIdc8rXEvB9JsMu7ka85JXKph7yoONWBCd/90t81r28Ab/9eVq7z2FunXja/
+	 z5cr2sFstI9JxDcR69GZJ7gr5NNLnBud4qGMyX3dKKJqNk3BoQGPK0sAfHpCFpxOFYFLU
+	 15y+lXhfroITlZWtXYQY+eM0gNvTWjU2Zc721zqRQxeBPKICeZOEjnKnKeOhyfGYFxdqA
+	 hfHwAaXnFvNN1rYK+UrQAE4EEfrJzkv4Wqcdl22zubCaql8L7lw11mB6FvAWNgc0RigIz
+	 dH1Y5Zap1YPdaTSaYmVtTT6hxkl2t8oWOvUSKvFLkeLHtdz670Rov2EDlittjW/C3uw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795750131;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795750532;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
 	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
 	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
 	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
 	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=BJAlSzI5UcEx5OP48wuU5Wx76cjwhu4AHNtHYsq6++U=;
-	b=IJckL8PusTEHUxXMT/0n33Wwoxpjv0bnMlA8L0sFP8QpaILkAz8rCqA8gAHUjh4lgU7n
-	 VldQm5gygQKwvIcRM6rpuZhi5eaLHrw9A84dFyUP4LXQH8s7mJdAq5xCbHdk3rloPVSsX
-	 4OTgLUHd9AAEUZawrCy1H8578N12wsGirbloysFY5pjBC0nEfrjov1VsB6M+bJ/w9XqJT
-	 NN0dtZKAxzQ5aH6/putHkO0aN4hm2eu8VKewlMLCPFse3ReRvt+QqiUkxaPZ6udXE5Mho
-	 PzuhNhqLbVouE6dYO/UZxFNlCId9IV41aixe+vcmeUYIukY//Qmhd2f0JdC1JKhL3WQ==
+	bh=JP5BLW8HPff1Uro95FNWjlGsV0I9sK9rR+o3aQU9vcc=;
+	b=r7vKScaG3QWvEs6Ow/IF5BsaXPq3vXb2alx7yW0tzIBWnWIoS542stauRDKUPtxOdP66
+	 xb2vKvqPcrb3jCbliB5Vmfi9j4iKSnGjxGiEIPlzA/KDZzjgv6nA+uCeqiMUjZ8Hn0+qj
+	 zBuFamXWVwd4rRtvcPrF+3Io3Jsze1rvIjb91I3VgBvh9R0U4RIZ7Txt985oq2ILzvmno
+	 Pz+k6zSKx8eN5dABxjKmfg/zhQAZK6JSEIdbYc/IFAIjVWIhDe9f7/VAYtSE9qA8rA2tv
+	 qe3z9VHNFuj2QRMEBglaNI2cg+QTh5yJhsh2UYDL4QYvdLt0Wva/AvDEeYo7WBvUVtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=squebb.ca;
 	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=WT7GFo2w;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=xotrWsQd;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=X6LXmjhA;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=mKvEfeN0;
 	arc=none smtp.remote-ip=202.12.124.151
 Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D69606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 03:28:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35D69606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8E9606A31E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 03:35:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C8E9606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=WT7GFo2w;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=xotrWsQd
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=X6LXmjhA;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=mKvEfeN0
 Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfout.stl.internal (Postfix) with ESMTP id 71E761D00541
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 22:28:49 -0500 (EST)
+	by mailfout.stl.internal (Postfix) with ESMTP id 8BB4D1D00551
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 22:35:31 -0500 (EST)
 Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Thu, 26 Nov 2026 22:28:49 -0500
+  by stl-compute-04.internal (MEProxy); Thu, 26 Nov 2026 22:35:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795750129;
-	 x=1795836529; bh=BJAlSzI5UcEx5OP48wuU5Wx76cjwhu4AHNtHYsq6++U=; b=
-	WT7GFo2w+kqLUx6NcDahsXKguYj27RccnqzFe6zvdQ7KfYK0Ul3GyX6bUuy/WaeQ
-	b5wvOmHZJ8gDCm4t519COkfZ8p0OlIAIXug1++8bkqH+XNxJo4AP8hWsmc9w3OqO
-	LTpon/pEqhMgMu/PQo8CIzcHGFDTJphku2esUDnho6HC5hN5pT4PojcubBXvxIzb
-	3cAvSnTBmpVzCCwIu2U3mBYtH3hQlQbdSxsZ6Zfh6hffcAmKG7HPUc3+PXTQXetF
-	A9fYpZnjPlscdwn2lgaBwJGX1n1vSJr95F6zFY1JP6aaKMWEcfVTAIlbFBSfBFJ/
-	rVvK2q4Sj+vfEAuEiktoyA==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1795750531;
+	 x=1795836931; bh=JP5BLW8HPff1Uro95FNWjlGsV0I9sK9rR+o3aQU9vcc=; b=
+	X6LXmjhA1SeCgxQxjrOuE/T5kAXYA5hIA20fHCU2afSiO1s4wOmBsJ91lpaz1Em8
+	drKCE6DcCMrRCCmHPQKRksoIqiwtBLUJhwH+DDPzh4/KijqCILR9/soYuJZrupQh
+	1jJUrEMp5YN43JBOepQ5L8kC7YRLhuu33kcpmzHKpOwgDTWLKNvb/J99zQEIf7Xx
+	j9yVb7t50Nlojph8H3MPN6Qo6Kblfbe5FSyEq6TIQp9R27oaSu66HygO+enZ6eqi
+	WKkP1eA2pbBkVI/nWJPGPoPQxot2SbhcIyNqE2qEN1JJ+ti+c80j9ufxcenDKTVO
+	0SDYLIczKj4kdyUNOKWvmQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795750129; x=
-	1795836529; bh=BJAlSzI5UcEx5OP48wuU5Wx76cjwhu4AHNtHYsq6++U=; b=x
-	otrWsQdom14JCw+Fzv97dpOnqCVPHK8bQ3dHISJdmWh/C5KfJsf7m26rXKKH5Uv1
-	KWsg0t5a2PB+FZu53qu4QXk4o9a6bfY4TS6WegStq0ORCo2221554nfQOWWTPpMC
-	m0Mt9l9tkG1aqPyWKD8TEZB94J2xfPxUqN9YDFrwMAV/M7n7LSK7WVAFDidkee5o
-	08qV257BY+WoFFQ3pBRtwIuI+StQtJm8er/jbaSTmkfXRS7b3Ufqw4jjlOcptXK/
-	7/x2pF1xChMbYSqP2XPp3TSjoNi8pSYCfH/NsK4ndw/mheUUHHrs3Gco6in/sJY/
-	zYRtIF3rmN3Sg+y8wn4tQ==
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795750531; x=
+	1795836931; bh=JP5BLW8HPff1Uro95FNWjlGsV0I9sK9rR+o3aQU9vcc=; b=m
+	KvEfeN0MnmTvUdtyX+Rc2Un8gjpAQehW5UWjqkgWKoZw0rZm1kEKKm1bJ9F8TPYa
+	BHUwK/BmRA1FRXXreiJecPyQuTfcPk9lV68T/b6hR/iJ/uswVWZF+MaUMu63i2ut
+	S1PbelyHENquPRorm7fPzjX7pcIqaNWYMlHvRt65zb1YCIvCMxjVDvs3BFN1BRwK
+	rqK1X0JVTNiznY4vLh6g49HuJlNRfDyjOzlIR/FyytlVu1OvFbt6Khg121HSpy24
+	+KxItlzCWDFJWs3z5dcEXnsgGik/koDiCFREiaPyXu+ZBUkQnFJs+iSFDddspBOj
+	kXmAbVOMJKsXNsCd6Scfg==
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795750129; d=squebb.ca;
+DKIM2-Signature: i=1; m=1; t=1795750531; d=squebb.ca;
 	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
 	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:Ps+hteIPa5E81PyUg/16jJqSDsDi5osep0OGCprhfGFxB5Y
-	9Vwjs7nANonwoGV0hZI6yzk+MCjKss1nvpy7Yh/k1i9H1DsgLRFevlHShjwCO8YJ
-	7VJHDgFu8J54B378K6nMkQFwplkOLEL6X1YlPkuW/Yda6EX64pDwz4oYc2NbJfGX
-	7hwqmWtLeNUoWWHZK161oOXbYMDHsP8xgLGJ3jhYAYe86pJXPDAAHNwbgEtGzwnE
-	cNAzBBSZPfS5iMtl7XRBJYN4MB09tqN5+ioPn214/t0rDHvz6I3bvD8I2mWUa1pR
-	w1wdk/xO+dW9AUzUaZm3kxHlUamxwLWci2IEMhw==;
+	s=fm1:rsa-sha256:AT5X0MV6csBPiaxCV6y7H44CxEBo7fuDcwqaLdlek0BHR/z
+	ISam9QhDDSSuZktWwoAoehBtFy97K1DYhD0KenB6mvfPhROjCgJlBwYT0GEb+q2c
+	XYk/wnNAaf4esF/uvp+gLDcTAV4gUAPTdbLupP7STQkoEotr9TLae4nK6Gktntok
+	SJGTt08N0Msq5hsdRSntL7wxu6J/leFXeFnCYGnIku56J5G3FCJAKhHIN4NdWNZd
+	vtxhv5k+ovZDCOI2l9DTFd5Hd3/Avyg+2dp0BiYJXc1+HYyPIP0h/ZaQJNpZWoT6
+	tsc/B5CG5K9xCPDzsCg8JaZMpGOH9FY0e01lEog==;
 X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
 	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
 	action=mi-m=1; hc=12;
 	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
 	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:D95H2mg59jOiOrFT89uL5ascvol8l5pfttyPizF8yic=:Upyl/7R1fGO+Fkbu3+o5xlesaHhR7inoKKSSwpwhVdY=;
-X-ME-Sender: <xms:7_gIa56tPGt48fZwGqFIt-okcbomrZdzdTtm95j7-KkqIhpu7rKOMA>
-    <xme:7_gIaxu0CBqY8bgyAfh7DtFhuSeno_OxNMw1uVMZI_9PnLMc6cqmM4wahWjCR-1xs
-    Emv2ZT6AfoogIzzJCu-JljVQuJ5Ioi0WwBaSTtx2_CK1gWQBnNX-2k_>
+Message-Instance: m=1; h=sha256:VIQIXFups4TOnzs+WzTqxhAJnOBrwMWHP+CCvrp917g=:qJXp77PR2npwMiKcOzw8gDmocse9NrPgMshD6ivTqjE=;
+X-ME-Sender: <xms:g_oIa2hLg-Z4rELxZbDlhqUMef1PniXez2eBluKOcQR9hUpYusKlaw>
+    <xme:g_oIax1fFas7y_lZP2nB6789p30k8R4ekwEptXZfSW0EmKIiQPnMY7LDYLKpkaGVi
+    4-0PpEzILgLyVf6XYs7TLvALN4Pnfq8tlhjPK0HzAYdBakKjwlnlrIK>
 X-ME-Proxy-Cause: dmFkZTG01xXJrmqprHWG8VsiOMWao6tIoBjZJv+z/tOB0VVJOQdd3wb80aBasX09ouZT8R
     VbZ4N71HPlJQEbv2QCUOk4UwYTGbXOe6kIawLe5JkXxrBASX+JerCTHUslSveUadCuygLb
     HIUFV8uf7EdIpBdgW/dH7uxlAbB+iiFoXHNxTC3Pldtjo4EqwNkxlzvCXvfZuJtjisQSVB
     UQVn/ow0PpihClCa3wUc3UmoE6dMoXhHmJIQB3quixxKlPWQkE1017XWt0JafqrXX8gbP0
-    eFMQpfkql9+IC8mvuQvO36tcNBiWHupe8BtayMU4OyRKYXYubl1mJoHcwdHH9oF4iT1NMN
-    U54jqO4CvfFJuYlqww+tjlXTYxuGC4fV2Jxhmvp1JWchpP9h4h/amBNo8/AtynuPJ1JS5p
-    Zil4yuZqR34UTGg85Gt1aS2pHaedKL5097nc/Fi/6gIHNjLs3sRukIqfeOlYwwoRPoZYt7
-    +zrV2ypXvBvo6I2noMftk5XL4eXEelRVo2axTtgZg6YG03D4s9r7Weu1UYDLZGkNQCbtX9
-    KdNmLq6y7pZbmeGYiv0u+sWVpuyvcSqy4g/kGp7iOaf8nXgbNaVCRuPOvivEXa+GRGqwVV
-    N2sTdQNcQQgp3URI2F1eypIbuf+WTG7+vw0jPr0vt675ozlM8iBkSGXEJVZQ
-X-ME-Proxy: <xmx:7_gIaykX6IZVeMMCeRaTyptGORmD_nEBbEUPGSjcBOngDyUF7KwlmA>
-    <xmx:7_gIa_0pb7YCaf0RDXrYZALiP1RazvP6aQefU3C9ccu3vD43SalUww>
-    <xmx:7_gIa7eXCjyDvDssOWe9bvm9Ewp0DNVlxajfQDSyRfE_hAcl-E0geA>
-    <xmx:7_gIa5YT92XWJouqxk8X2AZHTYdwEeSjXoq-5mh2fZYDLeA3JZ6WNg>
-    <xmx:8fgIa1faPU2RXfGaRq5grHzc9X-0tyDpmexDfZkoUcr8sjYMxlFuqe13>
+    eFMQpfkql9+IC8mvuQvO36tcNBiWHupe8BtayMU4OyRKYXYubl1mJoHcwdHH9oF4iT1NuE
+    tXCqt5bPy2sYakOBwnRtFbekEs6lqc8lQUbTl1iluksgr32dXlMGhQA2D9Uoscj6vkwqJz
+    BbxOruFr+1AYv1alGnL8J1M9LSGYFHCRWHk1t/S0M5pWkQ+R9HGp15KLXDjBtaejVbF+qd
+    shTQ+HJ7Lkh0Jt0kF6MCP4jfF95YHNxaiV9u1rfktqYN8VDNUAmSCYgNLqhfTdm7ZvpKy+
+    w63zg++fM2Y2YYSV8P2YndwrnSwv9AQ8ZtDyPlPrFtngjTa6K4jG1IvxIHguNaFTk4J3L3
+    dfBj7F6ceKms1PNXTEgTXhHz9B00Yf9OkB0BQ3goNvXam8w0lwk/C+xR1b4A
+X-ME-Proxy: <xmx:g_oIawMdARoCbANpz0AHUfc1sqr1fZ3oMEdHFsKPLDm84EHtXgCrxA>
+    <xmx:g_oIa8-DUEQURWxWn2MsgXWPjatdmyfw-h-ilxHS8pmqmGdplXqPMA>
+    <xmx:g_oIayGCSAUI7qjncLnQrjA7IypRbMM8d9Y-jzxqCXklU86GATLkfg>
+    <xmx:g_oIa7gep7sj9Hur9Bax_wWdlTx8yeEy_97-8d9_ua4R3O9MMawE7g>
+    <xmx:g_oIa9E3AxQDNSS5SnBLntMGytjKl3eotM7ulEmf-WvrAclNeGkQzmI5>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 6D56A2C0008C; Thu, 26 Nov 2026 22:28:47 -0500 (EST)
+	id 231962C00085; Thu, 26 Nov 2026 22:35:31 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -115,8 +115,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AjretoapAb9R
-Date: Thu, 26 Nov 2026 22:28:27 -0500
+X-ThreadId: A2P3tcap54Vc
+Date: Thu, 26 Nov 2026 22:35:10 -0500
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
  "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
@@ -126,164 +126,122 @@ To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
 Cc: 
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
  ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <c1fccfb9-edfd-4287-a8dd-6cd9f51170ff@app.fastmail.com>
-In-Reply-To: <20261125-thinkpad-acpi-hotkey-poll-v1-3-6dee57519c2e@gmail.com>
+Message-Id: <c741035e-efac-410d-a23e-2ca312826fbf@app.fastmail.com>
+In-Reply-To: <20261125-thinkpad-acpi-hotkey-poll-v1-6-6dee57519c2e@gmail.com>
 References: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
- <20261125-thinkpad-acpi-hotkey-poll-v1-3-6dee57519c2e@gmail.com>
-Subject: Re: [PATCH 3/8] platform/x86: thinkpad_acpi: simplify hotkey open/close and
- poll setup
+ <20261125-thinkpad-acpi-hotkey-poll-v1-6-6dee57519c2e@gmail.com>
+Subject: Re: [PATCH 6/8] platform/x86: thinkpad_acpi: convert hotkey_thread_data_mutex
+ to a spinlock
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
+
+
 On Wed, Nov 25, 2026, at 6:11 PM, Dmitry Torokhov wrote:
-> Since commit 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver
-> initialization to tpacpi_pdriver's probe."), tpacpi_subdrivers_release()
-> is registered via devm_add_action_or_reset() before tpacpi_inputdev is
-> registered. Because devres resources are unwound in reverse order,
-> tpacpi_inputdev is always unregistered (closing any open handles and
-> preventing new opens) before hotkey_exit() is called. Combined with
-> hotkey_kthread() no longer exiting early on TPACPI_LIFE_EXITING, the
-> lifecycle guards in the input callbacks are unnecessary.
+> hotkey_thread_data_mutex only protects a few in-memory integer reads
+> and updates across hotkey_kthread(), tpacpi_hotkey_driver_mask_set(),
+> and hotkey_source_mask_store(), with no sleeping calls inside any of
+> its critical sections.
 >
-> Drop the obsolete tpacpi_lifecycle checks and BUG() from
-> hotkey_inputdev_open() and hotkey_inputdev_close(), as well as the
-> redundant driver mask check in hotkey_inputdev_close() (which
-> hotkey_poll_setup() already evaluates).
->
-> Also call hotkey_poll_setup() directly inside the existing hotkey_mutex
-> critical sections in hotkey_init() and hotkey_resume(), and remove the
-> now-unused hotkey_poll_setup_safe() wrapper.
+> Convert it to a statically initialized spinlock_t
+> (hotkey_thread_data_lock), which also allows dropping the conditional
+> mutex_init() call from hotkey_init().
 >
 > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 52 +++++++++--------------------
->  1 file changed, 15 insertions(+), 37 deletions(-)
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
 >
 > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
 > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 659a2c5d1982..e5f78107bd1a 100644
+> index 58500b72d9d2..0ebaea0ab96b 100644
 > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
 > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -2546,12 +2546,6 @@ static void hotkey_poll_setup(const bool 
-> may_warn)
->  	}
->  }
+> @@ -67,6 +67,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/string.h>
+>  #include <linux/string_choices.h>
+>  #include <linux/string_helpers.h>
+> @@ -1814,19 +1815,19 @@ struct tp_nvram_state {
+>  static struct task_struct *tpacpi_hotkey_task;
 > 
-> -static void hotkey_poll_setup_safe(const bool may_warn)
-> -{
-> -	guard(mutex)(&hotkey_mutex);
-> -	hotkey_poll_setup(may_warn);
-> -}
-> -
->  static void hotkey_poll_set_freq(unsigned int freq)
->  {
->  	lockdep_assert_held(&hotkey_mutex);
-> @@ -2568,10 +2562,6 @@ static void hotkey_poll_setup(const bool __unused)
->  {
->  }
+>  /*
+> - * Acquire mutex to write poller control variables as an
+> + * Acquire spinlock to write poller control variables as an
+>   * atomic block.
+>   *
+>   * Increment hotkey_config_change when changing them if you
+>   * want the kthread to forget old state.
+>   */
+> -static struct mutex hotkey_thread_data_mutex;
+> +static DEFINE_SPINLOCK(hotkey_thread_data_lock);
+>  static unsigned int hotkey_config_change;
 > 
-> -static void hotkey_poll_setup_safe(const bool __unused)
-> -{
-> -}
-> -
->  static void hotkey_poll_stop_sync(void)
->  {
->  }
-> @@ -2579,21 +2569,12 @@ static void hotkey_poll_stop_sync(void)
-> 
->  static int hotkey_inputdev_open(struct input_dev *dev)
->  {
-> -	switch (tpacpi_lifecycle) {
-> -	case TPACPI_LIFE_INIT:
-> -	case TPACPI_LIFE_RUNNING:
-> -		scoped_guard(mutex, &hotkey_mutex) {
-> -			hotkey_input_enabled = true;
-> -			hotkey_poll_setup(false);
-> -		}
-> -		return 0;
-> -	case TPACPI_LIFE_EXITING:
-> -		return -EBUSY;
-> -	}
-> +	guard(mutex)(&hotkey_mutex);
-> +
-> +	hotkey_input_enabled = true;
-> +	hotkey_poll_setup(false);
-> 
-> -	/* Should only happen if tpacpi_lifecycle is corrupt */
-> -	BUG();
-> -	return -EBUSY;
-> +	return 0;
->  }
-> 
->  static void hotkey_inputdev_close(struct input_dev *dev)
-> @@ -2601,11 +2582,7 @@ static void hotkey_inputdev_close(struct input_dev *dev)
+>  /*
+>   * hotkey poller control variables
+>   *
+> - * Must be atomic or readers will also need to acquire mutex.
+> + * Must be atomic or readers will also need to acquire spinlock.
+>   */
+>  static u32 hotkey_source_mask;		/* bit mask 0=ACPI,1=NVRAM */
+>  static unsigned int hotkey_poll_freq = 10; /* Hz */
+> @@ -2143,7 +2144,7 @@ static int tpacpi_hotkey_driver_mask_set(const u32 mask)
 >  	guard(mutex)(&hotkey_mutex);
 > 
->  	hotkey_input_enabled = false;
-> -
-> -	/* disable hotkey polling when possible */
-> -	if (tpacpi_lifecycle != TPACPI_LIFE_EXITING &&
-> -	    !(hotkey_source_mask & hotkey_driver_mask))
-> -		hotkey_poll_setup(false);
-> +	hotkey_poll_setup(false);
->  }
+>  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+> -	scoped_guard(mutex, &hotkey_thread_data_mutex) {
+> +	scoped_guard(spinlock, &hotkey_thread_data_lock) {
+>  		hotkey_driver_mask = mask;
+>  		hotkey_source_mask |= (mask & ~hotkey_all_mask);
+>  		hotkey_config_change++;
+> @@ -2446,7 +2447,7 @@ static int hotkey_kthread(void *data)
+>  	t = 0;
 > 
->  /* sysfs hotkey enable 
-> ------------------------------------------------- */
-> @@ -3571,22 +3548,23 @@ static int __init hotkey_init(struct 
+>  	/* Initial state for compares */
+> -	scoped_guard(mutex, &hotkey_thread_data_mutex) {
+> +	scoped_guard(spinlock, &hotkey_thread_data_lock) {
+>  		change_detector = hotkey_config_change;
+>  		poll_mask = hotkey_source_mask;
+>  		event_mask = hotkey_source_mask &
+> @@ -2469,7 +2470,7 @@ static int hotkey_kthread(void *data)
+>  		if (t > 0 && !was_frozen)
+>  			continue;
+> 
+> -		scoped_guard(mutex, &hotkey_thread_data_mutex) {
+> +		scoped_guard(spinlock, &hotkey_thread_data_lock) {
+>  			if (was_frozen ||
+>  			    hotkey_config_change != change_detector) {
+>  				/* forget old state on thaw or config change */
+> @@ -2726,7 +2727,7 @@ static ssize_t hotkey_source_mask_store(struct 
+> device *dev,
+>  	if (rc)
+>  		return rc;
+> 
+> -	scoped_guard(mutex, &hotkey_thread_data_mutex) {
+> +	scoped_guard(spinlock, &hotkey_thread_data_lock) {
+>  		hotkey_source_mask = t;
+>  		hotkey_config_change++;
+>  	}
+> @@ -3329,10 +3330,6 @@ static int __init hotkey_init(struct 
 > ibm_init_struct *iibm)
->  		res = hotkey_mask_set(((hotkey_all_mask & ~hotkey_reserved_mask)
->  				       | hotkey_driver_mask)
->  				      & ~hotkey_source_mask);
-> +		if (!res) {
-> +			hotkey_user_mask = (hotkey_acpi_mask | hotkey_source_mask)
-> +						& ~hotkey_reserved_mask;
-> +			vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
-> +				    "initial masks: user=0x%08x, fw=0x%08x, poll=0x%08x\n",
-> +				    hotkey_user_mask, hotkey_acpi_mask, hotkey_source_mask);
-> +			hotkey_poll_setup(true);
-> +		}
->  	}
->  	if (res) {
->  		hotkey_exit();
->  		return res;
->  	}
-> -	hotkey_user_mask = (hotkey_acpi_mask | hotkey_source_mask)
-> -				& ~hotkey_reserved_mask;
-> -	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
-> -		"initial masks: user=0x%08x, fw=0x%08x, poll=0x%08x\n",
-> -		hotkey_user_mask, hotkey_acpi_mask, hotkey_source_mask);
+>  	TPACPI_ACPIHANDLE_INIT(hkey);
+>  	mutex_init(&hotkey_mutex);
 > 
->  	tpacpi_inputdev->open = &hotkey_inputdev_open;
->  	tpacpi_inputdev->close = &hotkey_inputdev_close;
-> 
-> -	hotkey_poll_setup_safe(true);
+> -#ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+> -	mutex_init(&hotkey_thread_data_mutex);
+> -#endif
 > -
->  	/* Enable TrackPoint doubletap event reporting by default. */
->  	tp_features.trackpoint_doubletap_enable = 1;
+>  	/* hotkey not supported on 570 */
+>  	tp_features.hotkey = hkey_handle != NULL;
 > 
-> @@ -4024,6 +4002,7 @@ static void hotkey_resume(void)
->  		if (hotkey_status_set(true) < 0 ||
->  		    hotkey_mask_set(hotkey_acpi_mask) < 0)
->  			pr_err("error while attempting to reset the event firmware interface\n");
-> +		hotkey_poll_setup(false);
->  	}
-> 
->  	tpacpi_send_radiosw_update();
-> @@ -4033,7 +4012,6 @@ static void hotkey_resume(void)
->  	keyboard_attached_on_screen_notify_change();
->  	hotkey_wakeup_reason_notify_change();
->  	hotkey_wakeup_hotunplug_complete_notify_change();
-> -	hotkey_poll_setup_safe(false);
-> 
->  	/* restore previous mode of adaptive keyboard of X1 Carbon */
->  	if (tp_features.has_adaptive_kbd) {
 >
 > -- 
 > 2.56.1.839.g22a8290db9-goog
 
-I think this is all good.
-Just to check - how much testing have you done? I'll see if I can put the series through a few platforms just in case (but I can't see any issues with the code)
+I think this is all fine and a good change. Hopefully some more experienced eyes confirm there aren't any issues that I'm not thinking of.
 
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+mark
