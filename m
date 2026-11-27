@@ -1,54 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=202.12.124.152
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795746268;
-	b=m2A7LdmvYIt+a6wtbBdB8h9bgTVnnKmT1z18Akgk28UxbbgZACaM/2DU1sxQI8YUWzMG
-	 NGb4ahWKgEyU03PtZzjQ7uTmpnTxGpdVhgpKMhaYeiI15c70WGWnrMX42nVpUPoY+puWk
-	 MztCf5BkOPneOCzmOqMbhzi+d96Xs24yDDxvH0QwKp4OA1QpRAnj+mxmBCdPzxZxtSUXV
-	 IGgnmYgSbnRlt42y5EGfvcMjnmg7XK7v6oyjOdxG+S6dTxv/UvT+MpKxSk9tdop6CWHuR
-	 qDkyORRvJ23ifTE+cfw2E1KIDDneGYUOBvS8EvEewFjLCR1z5Pa+sUAiwPJ4uAmfx1g==
+	t=1795747441;
+	b=RzqSvuCa9iX3RhDCtR2h1V4dT2im5pK6H+J4m63QYx9un2uM3Xz00vOQCY8+3fX2O8Fg
+	 n0dKK68eKRaylmFRZ738KfGdNtcC4m2pp6vSJglJpX29hQQxOGHUgl4qiHNTZX51Y+DGP
+	 kWD+WRodPGHqrhv9um4BxYrMWPoApWEbaPEkqzxapNMAwrl8f/f6wq+N8xEEouet1qOoC
+	 0zlNYD+3jV1H3O2UPZnNc71lBiO2sf7gIvecVcszYux/22Kle5tf6GpTLSQXGQl2fqbz7
+	 F/6Alv+gbPDDDrljjYiFPlaqtIqm1WTazzD6yuJMbQ2tSr4fwsXcrOjFPsrjFQdC4uA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795746268;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=9Pj+rgH0SFfagaekBhT1Ylt9JHHzTYBZguiWaQ+YrK4=;
-	b=cVoT1FHRsHZA8ZLKCb3vApuHgUL/JiRO4HguLOFc5oAXtsKuyab+MRZZ+J7Wp748rZ5s
-	 YJRawLMcqewbkB8UQT+MVX4nV5M7HxHRmbA82EG7pDYm40jl57yviJauK52ZwnZr6PJ1w
-	 TJJfRc9zaADuB/pjI0HYCU9m02sr6qlYGjAOUAJcEDOLt5R98ZgtfO5wYRMOEV4+K3l3g
-	 lcZvlt4KsWYPkoJrYrFWH1+SldR3VnMIZNv0/oSJdeCu58WGb1pEiKoPE6ewSPesZD7Jv
-	 ZBM9aXktjlD2kL84tjyJZtA2dXuJBrvql+KEK3DELixsZKM+JJATN4OzAPEpS59V2/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795747441;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=CVnqOoOkJj2EsAGsWHK+Y0rFlElUFzCwBCicLhlbIX8=;
+	b=g9EfceG9bPKM7vnIuBKCwCnqi8RPWffgUxAA1ot4EHGJYJ7FcCSjLJxPJvq3s2FXCE56
+	 HjB2LOnmL6PQTEOrYytt5a2bwKj51ytfAfijiqhEWIpr8Zgb/IaAcn1DhFLf9XKop/QAX
+	 plPjTSKeeB0ixk6dlA6orgxCwXHOBKG6s5VsOoSXJpLp5g0XnpyKLp/v/pJXgpTAQf8+2
+	 hx+P15LFflL47mz4LRyRCKv0VK1u2OhkA/NZ4KtbVBH19/YV9Y0ucUTid6CpGpY5tWVtW
+	 4aISEuhpm2MyXxa3lKaefwKLq/1O09jAl7AJuwOw4qyhg4iuay5qNecD9s6teBTcleA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=CPHM0pXy;
-	arc=none smtp.remote-ip=91.218.175.170
-Received: from mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=squebb.ca;
+	spf=pass smtp.mailfrom=squebb.ca;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=Ydm+lSya;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=2fFEHwJm;
+	arc=none smtp.remote-ip=202.12.124.152
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35798606A31C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 02:24:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35798606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67615606A31E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 02:44:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 67615606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=CPHM0pXy
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=WiLvzr5y5MgyNZzGXOtZxkxKygHCxCkqgfrX6CUoptw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795746265; v=1; x=1796351065;
- b=CPHM0pXyLrYKh5saCGlnsx5mjVOURfXKxPWBo+ncajpUyrFdh+5DJbK/d/iEhHB0YhrOX3xL
- rd/7XMlCP7HGryCFwPEYaxUi9mLZVS9WmAjIF+A6mPR0UDecLtqn3OfyQIoVbJijGalLRIej3CG
- 5iHpldNcF1nwKv6Olc6V5vvE=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 750dd8ef9f9ca9df;
-	Fri, 27 Nov 2026 02:24:25 +0000
-X-Mizu-Trace-ID: 750dd8ef9f9ca9df
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <9d749653-e1f7-4290-a043-c7458c888c9f@linux.dev>
-Date: Fri, 27 Nov 2026 03:24:24 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=Ydm+lSya;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=2fFEHwJm
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 80C357A0510
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2026 21:44:00 -0500 (EST)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Thu, 26 Nov 2026 21:44:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1795747440;
+	 x=1795833840; bh=CVnqOoOkJj2EsAGsWHK+Y0rFlElUFzCwBCicLhlbIX8=; b=
+	Ydm+lSya9Xmylj2usKK9lDrZr1XG/0oTkb6A4kGwmVXyyxdans6cIkHdxyiVerPk
+	8D2CHRJgX6Vvs9AuQTMnS1+o0/Fhe+6slVyZ/6VDMvOpFLTRka8h6Vw+D1YMcw3R
+	CU4/qFLopdZc51i6XZeIZZlZTyXjiYX7Ej0Z6loXkBBB2EMdg8bMN0YsW2Lr+spw
+	mTNk0/buuSm0pwDBHUopdDsEjtLev7zhXZ1qRcs5ohwBuwyfT/7sqH15m6HQXf66
+	puriZvFjGJNA8KPAOEXW9qBQ90O3nMnn+5lqL49EZzKn3WpKfmUzwyArbe6t+/eV
+	nDBXW6r17i6AXuTbsW/7MA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795747440; x=
+	1795833840; bh=CVnqOoOkJj2EsAGsWHK+Y0rFlElUFzCwBCicLhlbIX8=; b=2
+	fFEHwJm100NQSl5vO1DDYSJRduyoXFwYhugVlnB+oEPZu7FaCg3pd4ru93rfh04p
+	GSgU0p70Mi9sHR9N8V8hzdywqRCl13BDiQBaJNeekerYp6DQbYY+wrdqK2EVCCtQ
+	sKiBPL95erPJv7zz+9HBxAzLRBwa78uppxkgWhPeY1CPoo89OvOF8rnDM6X6B94d
+	c12uIaE60iY9eKTDrR0qOnkVsKpTjbm7wdLMkTn8UFV/vQNNXzeepj05CW5Dbgh4
+	5yHxZqmcS/zxoCoVwDQcaMBE0XsKD4zYvznIcSW0PL7VLwvTubB4Ot1LYFloFMQy
+	L+Q0A9/SiBGIYfJ/FM/8g==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795747440; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm1:rsa-sha256:R4BYsnXzcOxIpnPc5bsPBxRMHCgFLp9CfVpjUdk7Dq2GCkY
+	xqkcl7NTRbK+QL8vijSLueFELRBmmGzqu6sp3jfOSOpxirXIIQhPt4VNwmNpohrB
+	M+MtFil8qM+FPrhxYZUERwybvYvqncksd2+WwU4Tbh/GDztTXfqdAREW0LtvI3MR
+	Biv3Cr4SRdFl7nYWSIAaCOHd0pFLRKZFZ7u9v7D57PDp+gUvygQLRB6A7Pt7Lrbn
+	tRE/MpU8VTwBa3hBB7CJV90XTMINIBeBs+foiyJ+rYxoaTF/VErKwOUbrPd0b45E
+	xQQ392TVvRWM07NMHv1fAx06cDXX8kL3Bd/mfKw==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:/PThXyBYxTwqJxTEDKwMFV69hDz2y+WmJCzo+6Zny2o=:brwl2WodWDhUqgbz2Z35P6vdZwEzrHbB2tELdfsbxrA=;
+X-ME-Sender: <xms:b-4IawXqXH1JvalA0XMqm3sGMYdWO05S-CsxXsB310rpmQUYpjJchQ>
+    <xme:b-4Ia_b1-shlPb44V9DgZKVRoJzslowL_w5saiFo7WZZbGv5vBJVeVB6zROWpzucX
+    oRn4KAwVHVEYHIRi6oVOtUZ2RGTIlhnd4SjnXsoRfJXvlUMxLbfIwAq>
+X-ME-Proxy-Cause: dmFkZTF1gvqMFE0LYV4c2Rn1KtL0KfjCFOFae+Zpu6NlsCF3RpRf4YLVuCkDG/kIzovK4B
+    PRgaGkGUk42gGx/PBINnHgyVNBhoFL8T4DtsixBfGmXyfFMXxluCU+EGqGOg1eSnTtcjqY
+    ABMLV4JB5km2PVBNoXRI2V38hrTXdznMU1fKWuC/O1vXg1itZasO58tTZIYngoMdQuj5XA
+    W5FXmI1eMrXlYsEJ6Tbq/+/CjkYWdeCZUFpsL09kvfrZIV9ZIec34HiEPP1pU55H749TiN
+    JCT13F2o2yXmf+sh7gwzP092PKuZxoT37lLXYEFnsviN01wwCU68Wh+4LuiW67fNBr6VMG
+    XzTbh623vAH8HiBEbxjP9OwRigYVtAlkq1l6k1TQOXQLRgsvv0nSsZdTgHbtmAFiSEhECK
+    JIbXSqgW0jwdBRnW2akhwNHQfMk1gVQTOD1dbh/qBnKIzDOYo1G6C8iVTQjKioBwfzf5HQ
+    mOG/lXyFWBogirbomwIKFx5CekJ9UnleGrWt4EfixLwaDCglKJZEJc0hwfgDLFt6nFwYDX
+    GtLOLoKnoXX5iyG0j713usSdX7C2Ev+FZtqfAkRwSbJF1IkTJmRbsqHkDurjX5LuTgVe7h
+    oPD0I0w9Tl82B/A7no0UkBAdoAQ7BucWDlcfTzAuq0MFbbyvnG96J+WT6kEQ
+X-ME-Proxy: <xmx:b-4Ia2i65O1dfWjbGFRRnRWEHzCcjpf5Op1_3tftumR_ZZQDYEGlGw>
+    <xmx:b-4Ia9BFv6oMuoxi1TGXlJUXxcwGGa9UX0if4Pn2u125W2ny_g3ukw>
+    <xmx:b-4Ia44CqtsGlEAMcKAMM3gpCc-fqPa9LpDbKv6u6R7Jm-5uZ-A6Iw>
+    <xmx:b-4IayG7CIdL-GVtz9SybCfQW9ixwDcfK7bNd3zizA2LcFYFQuMN3A>
+    <xmx:cO4Ia4ag5jKzWsUXSf94hro4vnM68ghrJdJluZ0NgjyjcQv6-FLWcFwc>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 6D4362C00085; Thu, 26 Nov 2026 21:43:59 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -58,63 +115,66 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] MAINTAINERS: Add Ahmed Yaseen as co-maintainer for
- ASUS notebooks
-To: Ahmed Yaseen <yaseen@ghoul.dev>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: "Luke D. Jones" <luke@ljones.dev>,
- Corentin Chary <corentin.chary@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261126-asus-armoury-maintainer-v2-1-2091821519e7@ghoul.dev>
-Content-Language: en-US
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20261126-asus-armoury-maintainer-v2-1-2091821519e7@ghoul.dev>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: ArXiMeOh7T0s
+Date: Thu, 26 Nov 2026 21:43:39 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, "Rong Zhang" <i@rong.moe>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <2309e7a6-d918-45f8-86db-49eadcb1f2d0@app.fastmail.com>
+In-Reply-To: <20261125-thinkpad-acpi-hotkey-poll-v1-1-6dee57519c2e@gmail.com>
+References: <20261125-thinkpad-acpi-hotkey-poll-v1-0-6dee57519c2e@gmail.com>
+ <20261125-thinkpad-acpi-hotkey-poll-v1-1-6dee57519c2e@gmail.com>
+Subject: Re: [PATCH 1/8] platform/x86: thinkpad_acpi: remove early exit in
+ hotkey_kthread()
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
-On 11/25/26 20:53, Ahmed Yaseen wrote:
-> Add myself as maintainer for "ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS
-> DRIVERS" as privately discussed with Denis Benato.
 
-Hi all,
-
-I have no idea if Reviewed-by is appropriate here.
-
-Anyway the gist is he's tha one that has worked on
-this driver the most (especially with fans), so: yes,
-thank you!
-
-> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
+On Wed, Nov 25, 2026, at 6:11 PM, Dmitry Torokhov wrote:
+> hotkey_kthread() starts with an early return when tpacpi_lifecycle is
+> TPACPI_LIFE_EXITING. A kthread started with kthread_run() and stopped
+> via kthread_stop() must not exit before kthread_should_stop() returns
+> true, otherwise its task_struct can be freed before
+> hotkey_poll_stop_sync() calls kthread_stop().
+>
+> Remove the early return so hotkey_kthread() always waits for
+> kthread_stop().
+>
+> Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for 
+> hot keys (v9)")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
-> Changes in v2:
-> - Use "Ahmed Yaseen", matching my previous submissions
-> - Link to v1: https://patch.msgid.link/20261125-asus-armoury-maintainer-v1-1-053e67858be4@ghoul.dev
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 ---
+>  1 file changed, 3 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ba7650cb86b0..c47b29d15d15 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4223,6 +4223,7 @@ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
->  M:	Corentin Chary <corentin.chary@gmail.com>
->  M:	Luke D. Jones <luke@ljones.dev>
->  M:	Denis Benato <denis.benato@linux.dev>
-> +M:	Ahmed Yaseen <yaseen@ghoul.dev>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  W:	https://asus-linux.org/
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index 1bccc21ee29b..a586113ab1a7 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -2451,9 +2451,6 @@ static int hotkey_kthread(void *data)
+>  	unsigned int poll_freq;
+>  	bool was_frozen;
+> 
+> -	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
+> -		return 0;
+> -
+>  	set_freezable();
+> 
+>  	so = 0;
 >
-> ---
-> base-commit: 61c0dac952b9308884936d05cce97565a5c89af4
-> change-id: 20261125-asus-armoury-maintainer-59689b2f2db2
->
-> Best regards,
-> --  
-> Ahmed Yaseen <yaseen@ghoul.dev>
->
->
+> -- 
+> 2.56.1.839.g22a8290db9-goog
+
+This was implemented quite a long time ago :)
+Change looks good to me
+
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Mark
