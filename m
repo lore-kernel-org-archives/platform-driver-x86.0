@@ -1,78 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795777393;
-	b=H2ILfRBHHI+3jnxsc5uZDl6tNqon/qcASsPp+BDW4pJZB0r1JgpzbwOzBGcv0BdfL6vA
-	 IzdKKplxUrfjsrvUGkYB6cPfcd4lyB9XAPIC7pEJVWCJdvgVnWI+GBZCrQw8Zc+ye8iJP
-	 wd4PPjLtoQn+6CGXOOU2mgw7hJGhur23N+EzkRfpTLXn4cV2SutbicOy9h7P5HZ5FhIym
-	 pabq8zuMDLJFmo5RMo1G3ikYmv8vmycXlphXT/LBSgDZ2pPupzVFz9OW4ntQhzaArnBVX
-	 NjPe11e7+He1NKI5GD20Y4IM+CU4aTicegBuUPy0aXAEkWdUj/ED35CQnV8MuKYnqjQ==
+	t=1795777395;
+	b=vaZyAimay/5Qdd8QJU91tACPo4aTcJ8uPava8n/BEo+v8x674ZvLK4Yt3Ef60kZM/TxE
+	 VBr2yUAQ9vr8d7d/3CTW/rig1RvU52tDhkOe32ZtyyRAFSIK3fEoLyJUEsbY+gR92cQSM
+	 71u3aLGrtvylPRchXYKaORZLHjtpxUn5n+cGXw+manQ4baA5Z/3DtJwVAf6m7Gi1teJRn
+	 4NbjFD1A2inFDkGlFgRPPQ7vhAAHr1T5pEUTZWOHOCJxGdhcn6zh7UDh/9xNldPUQtNwd
+	 rqgWeFx4Nj/kFQgd/gZTO08V0fvCfweURLd5USXCw/KaeLG3dBrBb6908wx7nsT4rHQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795777393;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795777395;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
-	b=hGJ0wHh6CgNN/DdcxB7qDwsD7KPj5dCt1cIOmyuyai4dD07wc0mLW2fHZQCfoYk+w/ge
-	 Erzcm9yFQB2ciVgEXAozAXatRi/72CnwW2u3bQFX0kavK/Gksoja4o3DE/TN3H0k5keXx
-	 KpqwVQUnv2NAP8L0OMoJbmdNoY1EvPnRfvZxb63hljciFEgwhWey1B0Fuzrtyeu3TrUJR
-	 9woQDvmQuE6tyLkMqNUQhK1pXvYuyDvU8qAVjkTZGKh78UjAxU5U8cOaa2wb1DUS3CtsE
-	 bAgGobJdKKQ5wPO3lHfOGJvsCmchp1aHpA/w8mcu4EhKLP3YHjpx2RsktNNNbDpgejQ==
+	bh=DHEDSigtm2z1IUZ8oBLIo/Dge674DRyWFqv29yWsRoo=;
+	b=R4Ni988rD4vAFX1lUymLg/YglsaaBbV2tjvgnxTXrRnXLmNQIk+drZNhH43XsjtURjlw
+	 7KHJK66TXlarUqZ0qAtUOD91JM5PdoEFEboMncdnMkwLSFv7JiQpAPX6cHrH44kL1Nj6J
+	 K5l0XWwyF6Rh32DKKUvQfPyyuuJbRv9SliB0shZyJRDrQCBs49Fp0Xts2FZu1Y5F29g+E
+	 8mWDKFwDq06bmhqdBbjM6WCjV/a4lO/Ars34XXId+Zosa4DoREEkx6bLtdo5LQEiReGF3
+	 RUvbCz88Sk43EDNGCTrSuAtJ1vzBoTphjxhV47hfaTZujLoAMkU9FxUNSzBT5jRT8sA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OBXrW5vV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="U/n8Yw1l";
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91907606A31C;
-	Fri, 27 Nov 2026 11:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D745606A330;
+	Fri, 27 Nov 2026 11:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OBXrW5vV
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U/n8Yw1l
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795777392;
-	b=NsXVtEyCKMCLOtesv21AEhZhtFTFUZ50E0qG/bJ9qxUZNae2nMb5MXbW4BD1D+sxcvuT
-	 4h26LiSQlOtp3KazxBxKDgRSpfEBzFOUEe4f0SgIva+bxSfu8R8ho6A2wa4HfpwJYPBu1
-	 j8A6XEkvLQwMUkdKl/ziv8FN/2kr/OGxAlKrKs41wVPJc6YtrB9k0pjJ/Z8IQtOITVXX6
-	 9qlCzxPb32X8cc3BAWSn1b1z1CY8aMLobrY4jv6y16gjQQLLbGqr9UOVUT2hh8n4zs+Xt
-	 PyUsC8hCM5oOxC4bdXZO8peOS4HpgBwQCc6HczoKltyOIsjOPMeGQLHyG9oSF2wSlpw==
+	t=1795777394;
+	b=yMvKT8Yh4M3LCXq0D4cKqRg/ZzH+RH3d6LGMz99UYbskvjYgb2SZ6H1XoBcEZR9ZZGye
+	 +ZYzunBlXxfdFdqSr87vBWQvFhhO7FutvGj7i2NCay37GpXF+JVDKc+/jut+USs4Tn/q6
+	 Ix7Su39g5glUdyum6zcK2PbeMpEdLdogJQYi8RkreneKbGpN6YtaZsMZ+baaKzr1WFUU9
+	 TlL6kSgbd2yorT+pQKediFGhef3QZKmUXVLRHN2dMVzEWPsDQunaptQmeqLw0T1LQA/eR
+	 chW/J7cZ6sligp2K3v/xt5i5FZgd39mGNoobkcv4v7ALJK1gyhsnBVlJ4wMck322EfQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795777392;
+	c=relaxed/relaxed; t=1795777394;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
-	b=KJCqUR02lSdvgVtmJaNNcT7fogXmKisJXXH45WNWfX+1mQ+4MV/pJ0yvQt3GoeCE0ODp
-	 K1Lcux9lRhasT1i+PWmV7r2owre91PL+VRAuXfc1dxVA8sNElYXVve2cPgcNz39Hk5BQc
-	 vP585SJUEZmb2mXlgGd8Kv7KcPO/waknn1twdcLET2fdocOH3hF31svQpPDQlzwpCYM3v
-	 tf4jLB0wvwjlckb88kruG+rA7wTR3+y4eb9tGiRmxNCeaAPplbqKGA6A+/r+ghdPBeAOJ
-	 /VUDOhBvAiwKx92LzuArwcMvUUACRFwS4U5v/Cr/X8Qum/W1YqCJMk3kbNWQt5vaY7A==
+	bh=DHEDSigtm2z1IUZ8oBLIo/Dge674DRyWFqv29yWsRoo=;
+	b=ClqKJjNKD2rhDyeDV2V4EYTRdUElLcB/de2kZYw1p+k3Pob1ubkz6rzgvBu16/46eTaI
+	 Z9UzCfmZoKvnR1VkhRh+pUhbILNG5E+Nh7lDrhFVoTvrTNbMjrDzYFyIP4HKaGks0MfSo
+	 mJ491B24dJi1KnEgynVz4m6FTBEtCDIPf3aglO/+sp4xzk5f8jXAsY5RkCUAbJL5mVK9F
+	 JGpELYXF1/26fTPoBozBcjLjHg+IWffhTKjoGdiVsHy8vUo8Mo9fQUwUsOL6avF9aXwBT
+	 iCBpL2v1rlzWLZfBnTeZExUulISAlcJJn4c+XrgH/AFTq1Ws2AaGy+UCVWfLfhNFe3Q==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 5812D1F00919;
+	by smtp.kernel.org (Postfix) with ESMTPS id 1823A1F0089F;
 	Fri, 27 Nov 2026 11:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795777392;
-	bh=B7A358oFSEjkW+WXOoTSL18z3KDDUiMpQuX3wB/0PQM=;
+	s=k20260515; t=1795777394;
+	bh=DHEDSigtm2z1IUZ8oBLIo/Dge674DRyWFqv29yWsRoo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=OBXrW5vV8sm35lGzdZAo3O/hM+39bQH9O2DI6ELrZ9dzwM/mfmgZLd8g1ugSUuQWK
-	 pLaWoyk9Vc3v2kQOZqFQ5NnMPxnWYDnuzunRF0fScm4vvXD7JSxXelVB5a3qLL5yq4
-	 N6ieOp2kyt40Teu+Y9v64QHEtm1EOPMflJwz1WctuHFO88LLhvU+oiXchN/yPydkK5
-	 Tkjwnb3h4P1Of4ii5Eqi3Ledm9XEBGLFiEy+0g4kK3VmsP/BCmWXNJbJ1fQp3Mg+V0
-	 L5/XK8Bd5R/VOFJ+7/78RpUuMBNSA2M1InFxbYUa2N3HD15aaacFY915q3sSqRTcRp
-	 ioUvMqoY5rCWg==
+	b=U/n8Yw1lqfqxmzPIXhXZIqmOKSGCB/4frIDY9ZtQVcnKEr4ds2V4C4FjEgLB726ui
+	 6CSk719A3U4fSSjI14kXZEpTkwWi/HrbhhVEHgNdZ+tZVk9V0uiDtprgej6gIX5feH
+	 GJixzHdV1aHbwn4tOY7uJrW7UqIjv7sepXvNNQtCkf7eci9wyIEWJGY6IkY+KnBPBS
+	 +sM1PgQnfU+TzLbOy4kAUs8xWT+rQo6Dt3UHRS91DwpRA/3fJU68mFEWCTamJzrvfT
+	 iDCy5rH3qvqLQXmG01zZWPiLp9E54RNJwJsPz8gIoHXE1yVqDaGW1M1xzcSC6k6Stg
+	 AUNdx1fox9pYw==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id D9AEA4B766;
+	by lkml.kernel.org (Postfix) with ESMTP id 9B78D4B75E;
 	Fri, 27 Nov 2026 11:03:04 +0000 (UTC)
 From: Nick Dowsett via B4 Relay <devnull+nick42d.gmail.com@kernel.org>
-Date: Fri, 27 Nov 2026 19:02:52 +0800
-Subject: [PATCH v2 4/4] rust: wmi: add Buffer and Device::invoke_method()
+Date: Fri, 27 Nov 2026 19:02:50 +0800
+Subject: [PATCH v2 2/4] rust: wmi: add DeviceId and wmi_device_table! macro
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -83,7 +83,7 @@ List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261127-rust-wmi-v2-4-5bfafabd6a6e@gmail.com>
+Message-Id: <20261127-rust-wmi-v2-2-5bfafabd6a6e@gmail.com>
 References: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
 In-Reply-To: <20261127-rust-wmi-v2-0-5bfafabd6a6e@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
@@ -100,11 +100,11 @@ To: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  platform-driver-x86@vger.kernel.org, Nick Dowsett <nick42d@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795777382; l=5608;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795777382; l=2936;
  i=nick42d@gmail.com; s=20261127; h=from:subject:message-id;
- bh=O7obddgUP9HSPTKHNV9B4ghMFjoxhu9TL4QbXxN6nhQ=;
- b=ILzk/2gDAqgHkX1N5roGOVEY0CXYH74RLORgX8pqavcxaa8WJXa9N0CPB4mchPQsiYHfBF5JO
- d57RdFYPiQCDDklXsNOWs32G9eQsucnlYVg48dyuTvmcndK0OFRC4WV
+ bh=H0X1G2laYUTK70oLjzC7CZtH2UqOBWIa7sfwgkRyp88=;
+ b=trrd1YxGluSOeMtaUutG20HesIhsqNjqItJIlV1bb7cJdFlHcGdmnrRez9xl1laMIgH5e0tHv
+ K+WBIi0u9OyB9Ywq/Z3o4z0i8g85xLulzQ9LzKA8vG1xFPiN0+Rphrd
 X-Developer-Key: i=nick42d@gmail.com; a=ed25519;
  pk=rewGRrQm8GTjt8ii+wLiI2tUWP5gtTF4pntVEMNXrj8=
 X-Endpoint-Received: by B4 Relay for nick42d@gmail.com/20261127 with
@@ -115,147 +115,92 @@ Content-Transfer-Encoding: 7bit
 
 From: Nick Dowsett <nick42d@gmail.com>
 
-- Adds safe `wmi::Buffer` RAII abstraction wrapping an owned
-  `struct wmi_buffer`.
-- Implement `Device::invoke_method()` - safe abstraction for
-  `wmidev_invoke_method`.
-- Also implement `Sync` for `Device<device::Bound>`.
+- Add `wmi::DeviceId` wrapping `struct wmi_device_id`.
+- Implements `wmi::IdTable` and the `wmi_device_table!`.
 
 Signed-off-by: Nick Dowsett <nick42d@gmail.com>
 ---
- rust/kernel/wmi.rs | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
+ rust/kernel/wmi.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
 diff --git a/rust/kernel/wmi.rs b/rust/kernel/wmi.rs
-index 235c4a2cef6a..3cd5bed6066f 100644
+index f821bf35220e..f7fbde29177b 100644
 --- a/rust/kernel/wmi.rs
 +++ b/rust/kernel/wmi.rs
-@@ -17,7 +17,9 @@
+@@ -7,6 +7,8 @@
+ use crate::{
+     bindings,
+     device,
++    device_id::RawDeviceId,
++    prelude::*,
+     sync::aref::AlwaysRefCounted,
+     types::Opaque, //
  };
- use core::{
-     marker::PhantomData,
--    ptr::NonNull, //
-+    ops::Deref,
-+    ptr::NonNull,
-+    slice, //
+@@ -15,6 +17,64 @@
+     ptr::NonNull, //
  };
  
- /// Type alias for [`driver::Registration<Adapter<T>>`], the registration of
-@@ -229,6 +231,11 @@ unsafe impl Send for Device<device::Normal> {}
- // - All methods on `&device::Device<Normal>` are thread safe.
- unsafe impl Sync for Device<device::Normal> {}
- 
-+// SAFETY:
-+// - As per `&Device<Normal>`, but `&Device<Bound>` also has the method `invoke_method()`,
-+//   which wraps the internally synchronised `bindings::wmidev_invoke_method()`.
-+unsafe impl Sync for Device<device::Bound> {}
++/// IdTable type for WMI drivers.
++pub type IdTable = &'static dyn crate::device_id::IdTable<DeviceId, ()>;
 +
- // SAFETY:
- // - By the type invariant, all instances of `Device` are reference-counted.
- // - Increments to the reference count keep the object alive in memory at least
-@@ -258,6 +265,71 @@ fn as_raw(&self) -> *mut bindings::wmi_device {
-     }
- }
- 
-+impl Device<device::Bound> {
-+    /// Calls `wmidev_invoke_method`.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// # use kernel::{device::Bound, prelude::*, wmi};
-+    /// const METHOD_ID: u32 = 0xB105;
-+    /// const METHOD_ARGS: [u8; 1] = [0];
-+    /// fn method_returning_u32(wdev: &wmi::Device<Bound>) -> Result<u32> {
-+    ///     let output: wmi::Buffer = wdev
-+    ///         .invoke_method(0, METHOD_ID, &METHOD_ARGS, size_of::<u32>())?;
-+    ///     let output_as_bytes: [u8; 4] = output
-+    ///         .get(..size_of::<u32>())
-+    ///         .and_then(|buf| buf.try_into().ok())
-+    ///         .ok_or(ENODATA)?;
-+    ///     let output_u32 = u32::from_le_bytes(output_as_bytes);
-+    ///     dev_dbg!(wdev.as_ref(), "WMI output: {}\n", output_u32);
-+    ///     Ok(output_u32)
-+    /// }
-+    /// ```
-+    #[inline]
-+    pub fn invoke_method(
-+        &self,
-+        instance: u8,
-+        method_id: u32,
-+        input: &[u8],
-+        min_output_size: usize,
-+    ) -> Result<Buffer> {
-+        let mut out_buf = bindings::wmi_buffer::default();
-+        let in_buf = bindings::wmi_buffer {
-+            length: input.len(),
-+            // NOTE1: Even if the input slice is empty, this will create a dangling pointer
-+            // rather than a null pointer as Rust references are always non-null.
-+            // NOTE2: The input parameter to wmidev_invoke_method is expected to be read-only,
-+            // however, we cast to a mutable pointer here purely to meet the type definition of
-+            // `wmi_buffer`.
-+            data: input.as_ptr().cast_mut().cast::<c_void>(),
-+        };
-+        // SAFETY:
-+        // - By type invariants, `self.as_raw()` points to a valid, live `wmi_device`.
-+        // - `out_buf` and `in_buf` are pointers to valid, live `wmi_buffer`s.
-+        // - `in_buf` contains a pointer to an allocation behind a Rust reference (which therefore
-+        //   lives as long as this method call) with length less than or equal to the allocation
-+        //   size, or contains a dangling pointer with length 0.
-+        // - The allocation in `in_buf` will not be mutated - the C implementation declares the in
-+        //   parameter as const.
-+        let status = unsafe {
-+            bindings::wmidev_invoke_method(
-+                self.as_raw(),
-+                instance,
-+                method_id,
-+                &raw const in_buf,
-+                &raw mut out_buf,
-+                min_output_size,
-+            )
-+        };
-+        error::to_result(status)?;
-+
-+        // INVARIANT: `wmidev_invoke_method` was confirmed to succeed. On success
-+        // it returns a `wmi_buffer` satisfying `Buffer`'s invariants, which we
-+        // hand to the caller as the new owner.
-+        Ok(Buffer(out_buf))
-+    }
-+}
- impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
-     #[inline]
-     fn as_ref(&self) -> &device::Device<Ctx> {
-@@ -274,3 +346,30 @@ fn as_ref(&self) -> &device::Device<Ctx> {
-         unsafe { device::Device::from_raw(&raw mut (*self.as_raw()).dev) }
-     }
- }
-+
-+/// An owned, 8-byte aligned output buffer.
++/// A WMI device ID wrapping [`struct wmi_device_id`].
++///
++/// [`struct wmi_device_id`]: srctree/include/linux/device-id/wmi.h
 +///
 +/// # Invariants
-+/// - `self.0.data` is a pointer to an 8-byte aligned owned buffer of length
-+///   at least `self.0.length` and freeable with `kfree()`.
-+pub struct Buffer(bindings::wmi_buffer);
-+impl Deref for Buffer {
-+    type Target = [u8];
-+    #[inline]
-+    fn deref(&self) -> &[u8] {
-+        if self.0.length == 0 {
-+            return &[];
++/// `self.0.guid_string` is a valid, null-terminated string of length [`bindings::UUID_STRING_LEN`].
++#[repr(transparent)]
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::wmi_device_id);
++// SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `wmi_device_id`.
++// `wmi_device_id` does not have any invariants, so it's safe to transmute to it.
++unsafe impl RawDeviceId for DeviceId {
++    type RawType = bindings::wmi_device_id;
++}
++impl DeviceId {
++    const WMI_UUID_LEN: usize = crate::num::casts::u32_as_usize(bindings::UUID_STRING_LEN);
++    /// Creates a new [`DeviceId`].
++    ///
++    /// Fails at compile time if `guid.len()` is not [`bindings::UUID_STRING_LEN`].
++    #[inline(always)]
++    pub const fn new(guid: &'static CStr) -> Self {
++        let src = guid.to_bytes_with_nul();
++        // NOTE: Function is marked `#[inline(always)]` to help compiler optimise the error path.
++        build_assert!(
++            src.len() == Self::WMI_UUID_LEN + 1,
++            "WMI DeviceId length incorrect"
++        );
++        let mut id: bindings::wmi_device_id = pin_init::zeroed();
++        // TODO: Upgrade to core::slice::copy_from_slice(src) once rustc>=1.87
++        let mut i = 0;
++        while i < src.len() {
++            id.guid_string[i] = src[i];
++            i += 1;
 +        }
-+        // SAFETY: By the type invariant, `self.0.length != 0` guarantees `self.0.data`
-+        // points to an owned buffer of length at least `self.0.length`.
-+        unsafe { slice::from_raw_parts(self.0.data.cast::<u8>(), self.0.length) }
++        // INVARIANT:
++        // - All bytes were copied from a Rust `&'static CStr`.
++        // - The build assert above guarantees `id` to meet the length invariant.
++        Self(id)
 +    }
 +}
-+impl Drop for Buffer {
-+    #[inline]
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariant, `self.0.data` is exclusively owned and
-+        // freeable with `kfree()`.
-+        unsafe { bindings::kfree(self.0.data) };
-+    }
++
++/// Create a WMI [`IdTable`] with an "alias" for modpost.
++#[macro_export]
++macro_rules! wmi_device_table {
++    ($table_name:ident, [$($id:expr),* $(,)?]) => {
++        $crate::module_device_table!(
++            "wmi",
++            $crate::wmi::DeviceId,
++            $table_name,
++            @none,
++            [$($id),*]
++        );
++    };
 +}
++
+ /// A WMI bus device ([`struct wmi_device`]).
+ ///
+ /// # Invariants
 
 -- 
 2.56.1
