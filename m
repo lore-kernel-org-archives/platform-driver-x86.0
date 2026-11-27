@@ -1,158 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.51
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795794688;
-	b=QK33ZVBE4I1ot4nw4VTXFXmB+Bk3LlBgyUNN2PSp2QRluJDO8chfQOk/XsQniq3X+o/r
-	 aRV0o9/G01JFoeFFDHsG9JAV1CElSwvjn88nys9Wb+QLCh2xOm1gyu0wZuIBX1NpmskVh
-	 U2fxop48wC08kkXTI/ueRwA6clqmYvjQ4a2TQwbXcTh2Wz84RIb9HzveBoV2i+ssMAngr
-	 bz6tMahl2p8bWcHq72z8akxWK+RTNczH2ytTzmFg4p4u4GZXz5AT0gZx2mUtm81XQXftM
-	 t6LFE3+Z/UHk230+VeCBx5r7rvipcN5EpGsSjHe5uS/21CWrPqsz2h/A9vo6cO3YocQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795794688;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
-	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 msip_labels:x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:x-ms-exchange-senderadcheck:
-	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=sJ/a1N4/jr66IhWPHj6jlFeOf3BFb1x0P8XG6/YGxz4=;
-	b=rfCiVO/b9DVosjF7RdSkcbqTrIic//ApuZDsN4huO1Ypbz5qKZX8tTnZ/Ehe5pFWD9eb
-	 7Eupb/xYVg6Q0EmhU13aL9iPnACRdDYNupGHaMgCVGSs8q9qjsYOuHJ5BIlyyjLDWn/eH
-	 DM2sAWUJCdXoK7h0DcOASTmmDysvQco+timr9fV9RkIKCsWNvRlwFFD7EMdSnhGzNgIh/
-	 HjRYP6e47yhiNnA8cHq+aOzOkKA++wgOXDP17qRt+/gWzsujGy7M5lxjAGjANzlbuLsGo
-	 +kxyJC8ajHSI+aiMjvGzODVGqosaMTJlWd6XSO/xHUka+kQnuEnDcpzXgE2Ft95TeYQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b="JGlo/+zJ";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.51
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013051.outbound.protection.outlook.com [40.93.201.51])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.159
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795796803;
+	b=p9zmufVrVv8y+JcHHnhg6cAeIn9ag6yDBs2Deelj7RaI80xTnOY0WV12oISdeGYr5fB+
+	 P0zW768vN3UThiqVzTPfpUQFnqUVy4C2fUVVgD0/7ozVMDsvvUaTQmv+ePs/9dlFkhg3q
+	 7GFqiPIA/nVOp4ghaxII8q9vASuNFg1Lh9/dq+uW1C/R4uJaWMZt6xhX0lqVAzx2mvgou
+	 XmuOA3IFiSwlO2HaeGJm0yb70MzwOgIsV9FqT4h2YwMF3YZ2btkNw4CXmJ0AMbIPIE+VS
+	 Xh7nED3aXdb39SofaIAVMAoKYUuK32GMwjA+tGNEvAjDK+WeNxOwZ7kz+g0UWcN+xZw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795796803;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=;
+	b=5IKlzJ0KOi8wL3vVD7c+3FBZvoPyV8hsBi/pYUEqXliCJIEH1WYowK7UQ8dVyjOoZiQZ
+	 bBLrV6iVmc9mptMFEz/DEKprAe7BQTyQOYaC83Um34VuIun3uIJij7ibE8ymWvMgmGHoG
+	 sW9hJ7YTaSZp+aCOoVei1420WCGbaekWd0tKhazCOk4CijWQ9QJl9uLLv3MQ3sXI/e2bO
+	 KgtShPjj8nmecxEWHOBkRz3ATCrTfm4ECaK6+bOLUB+wqD6JFmWk9Peozrh8gwfNvyPKE
+	 t3DopODKNLKPPpsp0BaCJFHveJer44SguEtymhbbsmC5yIuDus1D5G9V81Trci8Ylmg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=squebb.ca;
+	spf=pass smtp.mailfrom=squebb.ca;
+	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XPAGylx3;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=0HQnoEF6;
+	arc=none smtp.remote-ip=103.168.172.159
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EF6606A31E;
-	Fri, 27 Nov 2026 15:51:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93EF6606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0731E606A31F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 16:26:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0731E606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=JGlo/+zJ
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=leH3Mn0Ik2y+3MdQ94ZJzljN/hthPtcSCfASLIqEPvYiTN8CmJHOdwa/IlQyCMDtZdWGrJlvAbi4ZpyNmaCeBEoUMV1JRuhVu6tssAlnymdL2MyR14RJ5rAWVlsrl6YPqN93hC7APATAN0cb4vxBoUy26rF+1bojpZM3oN0Sze7QOeTrIV/g0fwWpXuGsBO0xa2Q5EUGty/YF6/lY87SPKzLs7exDPnE7RTAcBQMgCHTryuehHkK0TnIpBoD4NM6Xu6sL4XErhWp/gEBsKxjaMpLFlGVJpy7FjZL1dutm/GFzVJdialG7U37rRCUjhsuNE78fNGoVEfQseBTyxpMCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sJ/a1N4/jr66IhWPHj6jlFeOf3BFb1x0P8XG6/YGxz4=;
- b=mGrlh5v2+n3GiE/aAXpBkAONScv1Kt1BU1X9S5b4UEJnG4eh9yhJW5wA9rBiZpLEqKJDpFpy7ORLaCzOau1onp/+n8NKEwcAUHSviAq6IQfwEpOHOJ675gINrKoTKYlgnCfCuLGN+lWWoxGY7i4gWmbnC8x2+BYF6JOgiYSrdUarbYpUOQofCAi9jRQha0yI66bO1SMNDbONrVanJ3XolS+ZiLquEndIWcGbL3bOCfm+trE2+L81andV14yO5yWlVFJ0mmT5IndJ1ekwRkgUMSvGYMnwyMvQpyw7qHr+rUi6o2nVPgYup7yjyBeGIHdKqRDCXO+wKFquTB0hzQ/2Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sJ/a1N4/jr66IhWPHj6jlFeOf3BFb1x0P8XG6/YGxz4=;
- b=JGlo/+zJcQlHLWTtogS2nbR9wA2AH9NpxjVDETveS87NsKuiv3ZfN/ABKb8+MVey0OegxNtbn8R9PaNfe0kLrCt86Zi2ugNMdowqkFvHaI8WyKwaftUSZxAompK5rJi+h1eMaJeDoswFFCZxfXaerdz6h/pTjnQFNj7eLlsChEJULt8/wszIo6oHjiiAzG2nHPlwDTnCncEAHJU71WYTT0JVJS3MU3ZmSrPgya3U83UGP3pGJBSF/iDtjZK0vwIODPunYElvk6+YuHNIiMiZMLs1MDPd6WAixQSHASQq4fR1VE3IOMBmrELATBMrvBCFr4fHlFWK+VBdJ0JICxKbXQ==
-Received: from DSVPR12MB664020.namprd12.prod.outlook.com (2603:10b6:8:3e5::8)
- by PH7PR12MB6936.namprd12.prod.outlook.com (2603:10b6:510:1ba::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.10; Fri, 27 Nov
- 2026 15:51:24 +0000
-Received: from DSVPR12MB664020.namprd12.prod.outlook.com
- ([fe80::76b4:63e0:3d27:bacf]) by DSVPR12MB664020.namprd12.prod.outlook.com
- ([fe80::76b4:63e0:3d27:bacf%4]) with mapi id 15.21.0662.007; Fri, 27 Nov 2026
- 15:51:23 +0000
-From: Daniel Dadap <ddadap@nvidia.com>
-To: =?iso-8859-1?Q?Riccardo_Zangh=ED?= <riccardo.z.dev@gmail.com>
-CC: Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"hansg@kernel.org" <hansg@kernel.org>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "luke@ljones.dev" <luke@ljones.dev>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
- differs between MUX modes
-Thread-Topic: [BUG] ASUS TUF Gaming A16 FA608UM: working backlight device
- differs between MUX modes
-Thread-Index:
- AQHde6JUor2pzzw0bk6vTAdpIU+OBbc9kZMAgAAYzQCAADA4gIAA68eygABQ2wCAAETHuoAABKiAgAA1ITeAAHizgIACB5rZ
-Date: Fri, 27 Nov 2026 15:51:23 +0000
-Message-ID:
- <DSVPR12MB664020095EBBA5F6B374BE97E4BC412@DSVPR12MB664020.namprd12.prod.outlook.com>
-References:
- <CAMnz_-Dgg2eCgZxcCaGuKPV=3-kCfg7ajd9w=vs2fGL-Cb6hvw@mail.gmail.com>
- <f1b7d729-771a-4fba-89c0-996a8a168126@linux.dev>
- <ce46d69f-2a3e-45fe-abe2-f643f683d09f@gmx.de>
- <CAMnz_-Dztuj3CRsxcVnfe2=OCB3tTJzK6Lu7-AKfkbuqn5N-UQ@mail.gmail.com>
- <DSVPR12MB66402023AE5250384B26515942BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
- <CAMnz_-C02J6CznPD68GgWCPCWEDSGsq6hoC+AJhsZjw39H+hhQ@mail.gmail.com>
- <DSVPR12MB66402044074D6A8B1EDC584825BC432@DSVPR12MB664020.namprd12.prod.outlook.com>
- <94785b4d-c807-4465-84a1-25ae317df4b8@linux.dev>
- <20A82893-B458-43A0-A3B9-0C090BAF7F00@nvidia.com>
- <CAMnz_-Bah1bg9mR-t+oTnDVMXBwwm9n3GJ3cPB=q-X2y+_=YUQ@mail.gmail.com>
-In-Reply-To:
- <CAMnz_-Bah1bg9mR-t+oTnDVMXBwwm9n3GJ3cPB=q-X2y+_=YUQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DSVPR12MB664020:EE_|PH7PR12MB6936:EE_
-x-ms-office365-filtering-correlation-id: 11a790ab-403e-429b-6916-08df4c9e49e5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|10070799003|23010399003|38070700021|10067099003|56012099006|261026121527099003|261026140227099003|261022105027099003|261022075727099003|261021123027099003|261021121427099003|261028144727099003|261102123227099003|261009223027099003|18002099003|22082099003|5023799004|11063799006|4143699003;
-x-microsoft-antispam-message-info:
- Q/n2zhiis9MoMb7vnAbDcDydU7UHcPTMykALKL93zXczsKbBCO4aa9y1c9DXcryTTcGzB/WlTTD/ri3suQu/MJ1vFEcUsKdOU5RGK96jSCr55WQ2RKVOxpeayqkJ2xJHMIn2HuS4ZFvWnYtYcbuoNrYjUD/fnAnlNLPKfHR8R6Qt6E8GoQUta9/CFaJCETsYTrCFDG0IOqrKJQM9vDO9QvFROCE1yYScUpEOvDBM3H64Luu7a8fovULYxIyqILrD3G2k4Jn+yQXBz6GaCITW+TkGM7BJ7MxexrTQ1JGXIWmFX9Hkih99VwMX2sIGGt7JQUYD0/tmhgDUpwhpMmraN3un5zhoQHFgsRTJDYUPzX8Le7reGtBR37mhJqyvpGZKUfyETKgZxTmd0PRiAEZjK0/lualIgxQk5DLcuRm9/0yQs0SMwAEbUrGifJu+EGvsOy40EC0IoiEIPXd0vAyBYXRI+0wJrehfCea271hamqiH0/iBiTT3Xi0Ow7UcUOxPp/CvemQtDOCBUc27X3BsJiuQHdOMI/VIBiq9QpSdKJMuks5z+l7iavofVP7F1Upsb5Xs0/YIP/qn3priIGoU0RrMWGaD8s/Pfs53+kqXd6L0RkLNqEuSf4J0bxYXjAO8Uur+zJ5gW8SHozoHtzMvMb4eWBaYSVmumnxqe5fUuYTdz9Tijb3JdRLEg/V5bNtPhB7eSTvFLFU/xrVvtEMpCdlxZwTsjl6ddX3J0zbS5Iw=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR12MB664020.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(10070799003)(23010399003)(38070700021)(10067099003)(56012099006)(261026121527099003)(261026140227099003)(261022105027099003)(261022075727099003)(261021123027099003)(261021121427099003)(261028144727099003)(261102123227099003)(261009223027099003)(18002099003)(22082099003)(5023799004)(11063799006)(4143699003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?gobMP2JnIvr6Ck8Pp7C04pwaoLi+mkjoKioSkKuOBWp7ORw38DGCTEIK7n?=
- =?iso-8859-1?Q?YVl5d4LsSkepL415E2hAW7Z2uRqVbM6eWiUVN1JzNSoOMMNuDJ5Fg8F6tD?=
- =?iso-8859-1?Q?q1QvvaosnONKWr38iQfQztP961FAZ4HGNkc4xftN02bDsOK+m9ILNStAiF?=
- =?iso-8859-1?Q?BzcFzqipK8oM6wv2qWIUE/lHjjAeysaD5pkZgEtjRYnz9W21yrcqbHF8I+?=
- =?iso-8859-1?Q?Zpw4Ckxy7jX9bx00r0oMRGHDcYhSgOl4nL/z+rzdJq38O0asZGKxjmbB+T?=
- =?iso-8859-1?Q?3UHXGuRHSqPKa9HHjlW4Y7yT951P9+dSUbOCEgloUJup18IVB24xWUNbuU?=
- =?iso-8859-1?Q?OGVS5qfFzdnVAt/z+IUP/Oz4B5hBcoeYFxbFOKqubv5GWVqorjdgXq19Fd?=
- =?iso-8859-1?Q?0c56gELH4fqn3SZm6ZLmxocAA51maRM83RArZa0+o5KYQvR9/CuvepEATU?=
- =?iso-8859-1?Q?okf2PD99DU3WoUzp+TrAtKUxm0oGyN5yaGWgqkKWxFrBlMu6EkPf4A2KHU?=
- =?iso-8859-1?Q?uKdDj5Bq1XwPpQt34XD9/CcCqhfxBk8k/7jJppSmTakOr992vWg9Ll2JLJ?=
- =?iso-8859-1?Q?/gRUWO/91DJ0fumWSDZ0TyVp2D2UStjqyLtCA2m0EZXDKklOTRlrMgGQnd?=
- =?iso-8859-1?Q?UbrA2M8D8DM7brl16g0rJ6+MLys0wyy9fLa6/GGuZ0FGUdreeo2QSWyCuO?=
- =?iso-8859-1?Q?z2i6jvPNOyMVHb1aOd2a5YszHcYxrjlH6e3L/3BbF8Axoh7QtSlyg1DQzY?=
- =?iso-8859-1?Q?/PU3u7TupzjojbRuBf2aFqgOCVhdj3DTPxkPtdfVeU/3UUenh/8n6E6zg+?=
- =?iso-8859-1?Q?FNQ+APdQLUmwJbvMfVkUqq0qFUpOKeUm9hv8cRfr/lAjoa3AeqSTk6Q8Pb?=
- =?iso-8859-1?Q?TRIKbYFO2EEpgLQI+ROXWBeJ+R2LkyIGNdgyxSrvisPO+OgsVHqloiAPEl?=
- =?iso-8859-1?Q?r7uAM4iiGfFkssN0j0CzjRdmltyE2J4YSSeYqeID9zT7JG9w69LRAHZ/X2?=
- =?iso-8859-1?Q?Y7F5bZTHstuKU5hZ9gMkAkObmtbMoBKbnvUfMS+zFH22L+pDjXBaTrcZ2V?=
- =?iso-8859-1?Q?mThu7CtaB0S0w+k1YnNIw1LwbX5vQ8Gdx/MGCW+kd8A9i46txNkRUE4kBy?=
- =?iso-8859-1?Q?Yoq7iCmqpTsM6bxf6QPUAPFlLFsZej/EkUYOKzoMEbMmhitBp9zySlPKsU?=
- =?iso-8859-1?Q?qOgUcinrqIhcCXf+t3s0JTPR/S5XeaCRGpUowtUaiYuSvG5GBez8UCG9Eh?=
- =?iso-8859-1?Q?jzU8l1Ccg0+T2imna2rRA+Jq7PUzfKfUvCu0xq1wo1aF3MC/3P/fhNZSBy?=
- =?iso-8859-1?Q?RQ8JwnSjm+5g+JqWz0TKmh/LwBEFxjZOeowywsUn4mK1HX4QWW6eGKoYq2?=
- =?iso-8859-1?Q?UGRuUapyBXWnTsSx7zSHHXEdmRrOtizHk+UXXx5AQGX1HQQQDAVDqsIvsI?=
- =?iso-8859-1?Q?szuabldoDt5H8AWdqd85u48qgjVwXszyfkRpdg2stSg+WSUWPxDvWam3/c?=
- =?iso-8859-1?Q?1w3y+7InORZTDiYvuJu+QYWZ3VCljspGTD0e3JdOZ48ZFG7u0+Du4DrsAm?=
- =?iso-8859-1?Q?cgO0JShtQU9/gSEPMzjjxYxV3P5sr2NW+VZsqeZKh9QbpWamlpW7mHGRil?=
- =?iso-8859-1?Q?0Z/qDEa4Wa1oBXA+nU9oBmeu21eAMXAP9Ghar9dRGcNaTpKYWnL6sy1Qwb?=
- =?iso-8859-1?Q?6BScvD8+BCY60+uWe0ShYDlkd8tM5QtaVB6zlX4kiBHeCQ7C+bjakC3GJg?=
- =?iso-8859-1?Q?/8Gxsxx4pQWyV+OHBVtaTdtms9KU1zWn5xCgkIR2pIZVJS6GCt6Y4zA5/a?=
- =?iso-8859-1?Q?NZ9OMhgJhxO0SWD2T5XfGtUPflW4oRasghiwO2ZRV5U6yRDl7cob?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XPAGylx3;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=0HQnoEF6
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 19FC11400378
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 11:26:42 -0500 (EST)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Fri, 27 Nov 2026 11:26:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1795796800;
+	 x=1795883200; bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=; b=
+	XPAGylx3FowjOkHFD+3ga31bBe61vz4leMsfYdG1TYrro+uSpjUQN0QiwxSnfHll
+	WMV3WHQPJDMgNQ9PY60gKaoye81uNfnzW2oc8u6CDI78DCSXO5Xt2P6ZswA3eles
+	ZqpNPhFXFLCVHxSj4UZsq2/ug3IwdsbvKjZ0UyV6d8XzN+/Zb5LtAkuyiYojSBs3
+	DRWXW10NS7JFFcWOR9AWNVlUVSmVuymhFdxp9qrlbcGLnpY7PVUKS2ThW6mDvMKs
+	axvV1pT2KGCiYCNaBv6vbAhlJ6I5XATVhzyM1uYrkTz3UNY+Vbmd0HcUE6PFocH6
+	ZujMopCyGU7BW0/fwYRbJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795796800; x=
+	1795883200; bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=; b=0
+	HQnoEF62xi8YjVEwT3Hzia5QUslH5hON1Ia0y3goUsDRcUiUhcBRgLTQGmhrRNTM
+	eh8Eg+xZa+NEjwlk9CzsPK/eWXw8JrptCXxpVbihaCEDnSSgChRTzm+iOEiYjGdv
+	wL93uR3SWQHqsVoI6qH0skmXx1b9OR0Y9IQWElpVhC6g7ffwM66ZDeoKAAkCovEu
+	t6M5Mn5tVBYgIb4+aepdsTLuOV7F8bOq2K1C9vgUY3uoXd8vzZBGaYd2sZXwRX42
+	932CqydUhhVyr7dEFmPhFlNMP6HjHwcV0LFLgETpMjS126hQLpb1w/vyQtueFP06
+	BNHGsCXz+QQSgqGacJuow==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=squebb.ca a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795796800; d=squebb.ca;
+	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
+	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm1:rsa-sha256:FAoyUUkuODt2cmqoRquI2LvYhb3H0u1cMY7VNnc+GwMx41p
+	AeqPngJryQVKmxopKREojlhgdAbBUD7LtPBHL+SBBddbGyTHRd0bnc+itZ+ws1Cr
+	EUT2lZA6I+nGm9EWOhBuati+p0ugK7/h6CkOPzaom3z9FeN+kwCCH9jUigaXpfiy
+	dyHqdAmvcwQyNqkjD0J1p4+22eS5kb56jL4Mfi1M34J+vL8jmPgmHlNV4lst0JVd
+	y2Vu+XDLT6EiGAgmFLPkrRf3Gt++0foRhhS+JFBbM21B5c0ju9vOKOCOWBkeqFzF
+	TE/wcsDJmCl2KGcGvzZn9TboyxlDR53xHqmKgyA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:sJ8/PCe8bxwAuWDfEmXJa1HqcnvthlPCGqfNhRsZzqk=:mdcrcvrvqZw73NmlsPdQTWh03G1h1pz2HZUUze7g9uw=;
+X-ME-Sender: <xms:P68Ja_1XP-Z577VLMoxnak1v82m5XkKGZWdJULFPVvRp55UYiwgLSA>
+    <xme:P68Ja46Y0FAPqkMCiYy7af_UDAG-5dlq-W6HSMxJUuu6HplUfi8UlJ5bMo6V43Gf9
+    xbFrPXDjOxgdEna51ZPp0fXE6puxAKtHErUX_L6af4ypeFCrg-1dDcTAA>
+X-ME-Proxy-Cause: dmFkZTFdz1p+Y6l3yr9DyoeIlXfM5u0CnR1C8drPyM3JhkhAsWBImUlP3omG0EEpWhSmOX
+    oMCUPI9yCckaxm01Th+fPaibQRFYtGcJJlbJGJzaWMdsBwKR4wBSDMvb+i+Lh/e8uqN5yQ
+    qvmcvcLWpooY4PGHauGUIMAZyp94PTUqD7UpFVZJMVWTzDL86VaIIQ/39Uc1YQ3N1Fw8Xe
+    QzlNo/iBv7XAspmtCpLdOxyMT+vHuwux71TX96gWVayKf4LauQaH30yuojRCCEXqLODj0m
+    F9NIyxJboNFoOhavYxTTbMd7lORr5yiGecsAwpEPmziAM0p2fC86cG0uD8gIQJKyRw2lQb
+    XXmyAFbzG5qzSLjfdHQcP6AJFa4ykeuGUVIpBqW59YJhp+Kxp0Gr/g0MFYM1h1gFWCyScU
+    lk7cJ373tBGgMhH4R+eXep/Si+WBktNMFOt3WPpYHtQWMOZkYejKhXjy3WfMgIBj+S1sgP
+    ZlWw2kM8MDiiG/5PT0KZaK9v3nz6oMRsRRuB6ndTIbZY7+HcUPQUs7lTu3E7crOmLH/moM
+    MrQD3/RloVK5R5kH/InIw3Al9bAoGdMMqHRkyzlOiDWDD3gz1TlUKIhymsTIwDbzChZFvI
+    WjwrFdLsDzpczATA4SgBIEyf6C73Z9KQXOVIvCAgNYJY7HKWWkW8aHCJD1/A
+X-ME-Proxy: <xmx:P68JawaQQBR2h1-i_m0GLWVOhXGTvHY6MCi_kRcy8cZsZOrdMabzQg>
+    <xmx:P68JaznH3Fwu4sCyxqB1lUYttjNoaZFIJPL7tjaewIKSVtYrcSC0aQ>
+    <xmx:P68Ja2jLBIWPUPgxrNJ53UhJWxa3LVqOZ7EWD4aZTpZn72pkVFXHFg>
+    <xmx:P68Ja1SRIgh0e2fNn8LNWhmDIJ7lby7o2Vq1lSYKu1G1pfh1b-BO0w>
+    <xmx:QK8Ja5U0nHYIqOZ4Fio2R2aXoCERdv1JKf2MPntJzWIvG4L-bevH8YUV>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 46ABB2C00085; Fri, 27 Nov 2026 11:26:39 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -162,123 +115,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DSVPR12MB664020.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11a790ab-403e-429b-6916-08df4c9e49e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Nov 2026 15:51:23.7659
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RgJwBvAouBgJRSH8umCeqT5WW/qVwzEJQnmr85BuOF8y25vrZfcCQP1UguqrcUfpl3KkxXfHOE6rVUVXyvH3ug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6936
+X-ThreadId: AIp_4MIr7l0Z
+Date: Fri, 27 Nov 2026 11:26:19 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Arnav Kapoor" <kapoorarnav43@gmail.com>
+Cc: "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Ike Panhc" <ikepanhc@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Stuart Hayhurst" <stuart.a.hayhurst@gmail.com>,
+ "Punnay Sharma" <punnaysharma805@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <77bf62de-fa48-4549-bfb8-d99eee863342@app.fastmail.com>
+In-Reply-To: <11bf638c620500f8c042de6d1f2bf3f1d7225820.camel@rong.moe>
+References: <20261126073107.765676-1-kapoorarnav43@gmail.com>
+ <3e932924940536878264c1ab46d24bd6db362183.camel@rong.moe>
+ <20261126152448.847538-1-kapoorarnav43@gmail.com>
+ <20261126161131.962234-1-kapoorarnav43@gmail.com>
+ <11bf638c620500f8c042de6d1f2bf3f1d7225820.camel@rong.moe>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: don't warn about keyboard backlight
+ type 0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Thanks, Riccardo, for testing, and for the very detailed report, which made=
-=0A=
-it easier to debug by inspection, since I don't have this system available=
-=0A=
-for direct testing.=0A=
-=0A=
-On Thu, Nov 26, 2026 at 09:48:17AM +0100, Riccardo Zangh=ED wrote:=0A=
-> On Wed, Nov 25, 2026 at 23:14, Daniel Dadap <ddadap@nvidia.com> wrote:=0A=
-> > You could also try patching the kernel instead, maybe with something=0A=
-> > along these lines [...]=0A=
-> =0A=
-> Hi Daniel,=0A=
-> =0A=
-> I tested your kernel patch (the later version using=0A=
-> acpi_evaluate_integer), with these DMI matches filled in:=0A=
-> =0A=
->   DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),=0A=
->   DMI_MATCH(DMI_PRODUCT_NAME, "ASUS TUF Gaming A16 FA608UM_FA608UM"),=0A=
-=0A=
-Okay, great. I will add these into my local copy of the patch.=0A=
-=0A=
-> =0A=
-> Kernel: 7.3.6-1-cachyos-a16test (CachyOS tree plus this patch),=0A=
-> no acpi_backlight parameter in the command line.=0A=
-> =0A=
-> dGPU (gpu_mux_mode =3D 0, G40C byte 0x07):=0A=
->   /sys/class/backlight: nvidia_0 (raw, max 100)=0A=
->   brightness control works, no "Unable to read" warning=0A=
-> =0A=
-> Integrated (gpu_mux_mode =3D 1, G40C byte 0x4a):=0A=
->   /sys/class/backlight: nvidia_wmi_ec_backlight (firmware, max 200)=0A=
->   brightness control works=0A=
-> =0A=
-> Hybrid (gpu_mux_mode =3D 1, G40C byte 0x4a):=0A=
->   /sys/class/backlight: nvidia_wmi_ec_backlight (firmware, max 200)=0A=
->   brightness control works=0A=
->   dmesg still has "ACPI reported no NVIDIA native backlight=0A=
->   available; attempting to use ACPI backlight." and two=0A=
->   "Unable to read EDID for display device DP-0" warnings=0A=
-> =0A=
-=0A=
-These are all coming from the NVIDIA driver (nvidia-modeset.ko).=0A=
-=0A=
-The "ACPI reported no NVIDIA native backlight available; attempting to use=
-=0A=
-ACPI backlight" one is because acpi_video_backlight_use_native() returned=
-=0A=
-false, but explicitly falling back to the ACPI video backlight driver seems=
-=0A=
-wrong in this case, since it's supposed to be handled by the EC backlight=
-=0A=
-driver. Probably the acpi_video_register_backlight() call should be wrapped=
-=0A=
-in a test around acpi_video_get_backlight_type() =3D=3D acpi_backlight_vide=
-o. I=0A=
-think it should be harmless for the driver to call this, since the call to=
-=0A=
-acpi_video_register_backlight() wraps acpi_video_bus_register_backlight(),=
-=0A=
-which has an explicit early return case when the ACPI video driver is not=
-=0A=
-the correct one for backlight on the system. But it's probably still worth=
-=0A=
-avoiding the extra call from the NVIDIA driver, even if it ends up being a=
-=0A=
-no-op, like it appears to be.=0A=
-=0A=
-The 2x "Unable to read EDID" is probably because the mux is switched to the=
-=0A=
-iGPU, meaning that the panel isn't connected to the dGPU, so normal EDID=0A=
-reading fails, and then the fallback to read the EDID over ACPI also failed=
-=0A=
-since it's not fully implemented in the driver. So I wouldn't be concerned=
-=0A=
-about any of those messages, since it seems that both display and backlight=
-=0A=
-are working as expected.=0A=
-=0A=
-In any case, nothing that this patch touches would have any effect on these=
-=0A=
-most likely harmless messages, so there wouldn't be any changes needed to=
-=0A=
-the patch on account of them.=0A=
-=0A=
-> Happy to test an updated version.=0A=
-> =0A=
-> If this becomes a formal patch, I'd be happy to have a Tested-by (and=0A=
-> Reported-by, if appropriate) tag with the name and address I used on=0A=
-> this thread. This is my first kernel contribution (I'm 17, if that=0A=
-> matters :) ), so I'd appreciate it!=0A=
-=0A=
-Sure thing, I was actually planning to ask if you'd like to be attributed=
-=0A=
-in exactly this way, once I had the DMI ID information from your system.=0A=
-Since you've explicitly requested the attribution, that makes it pretty=0A=
-clear to me that you'd be alright with it. :)=0A=
-=0A=
-I think what I will do, before sending it out for formal upstream review,=
-=0A=
-is to share the patch at the places where you mentioned similar reports,=0A=
-to see if there are any additional variations of DMI information (e.g.=0A=
-slightly different SKUs of the same basic model) and/or ACPI details=0A=
-(e.g., different ACPI path name for the relevant EC register, different=0A=
-polarity of the test, completely unrelated issue where it's not the same=0A=
-"both sides of a conditional return the same value" situation like what=0A=
-we are observing here) that we need to take into account. If additional=0A=
-variants don't pop up after a little while, I'll go ahead with just the=0A=
-one set of DMI ID strings you tested.=
+On Thu, Nov 26, 2026, at 11:26 AM, Rong Zhang wrote:
+> Hi Arnav,
+>
+> On Thu, 2026-11-26 at 21:41 +0530, Arnav Kapoor wrote:
+>> Correction, sorry: I replied before reading Punnay's patch closely. It
+>> only skips the warning for type 1 (KBD_BL_NONE_TYPE); this V14 G2 ITL
+>> returns 0, so the warning stays with it applied.
+>> 
+>> Type 0 is a separate case: no bits set, and KBLC also returns 0 when
+>> the EC or LFCM is unavailable, so it can't mean any backlight type.
+>> 
+>> Hans, Ilpo, please ignore my earlier request to drop this patch. I'm
+>> happy to rebase it on top of Punnay's patch, or to fold both cases into
+>> a single check, whichever you prefer.
+>
+> IIRC the KBLC methods of devices I've seen always return (whatever | 1).
+>
+> So I guess it should be safe to assume 0 as stubbed. I'd still like to
+> defer to Mark's opinion, though.
+>
+I don't have any internal documentation on this I'm afraid. I'll see if I can get some.
+
+The patch looks reasonable to me though.
+
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
