@@ -1,111 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795796803;
-	b=p9zmufVrVv8y+JcHHnhg6cAeIn9ag6yDBs2Deelj7RaI80xTnOY0WV12oISdeGYr5fB+
-	 P0zW768vN3UThiqVzTPfpUQFnqUVy4C2fUVVgD0/7ozVMDsvvUaTQmv+ePs/9dlFkhg3q
-	 7GFqiPIA/nVOp4ghaxII8q9vASuNFg1Lh9/dq+uW1C/R4uJaWMZt6xhX0lqVAzx2mvgou
-	 XmuOA3IFiSwlO2HaeGJm0yb70MzwOgIsV9FqT4h2YwMF3YZ2btkNw4CXmJ0AMbIPIE+VS
-	 Xh7nED3aXdb39SofaIAVMAoKYUuK32GMwjA+tGNEvAjDK+WeNxOwZ7kz+g0UWcN+xZw==
+	t=1795831255;
+	b=VUSAKtrxISQw9G4Ap1GdVnjVhRCRTVqoTPGc5RgK7vfSwbUxVotzMUWkHV6hh2keP4AQ
+	 G2oLuLokJy7SOfbqJ58yaShniYCCDtzd4VAIlBMaR4Nsqzt+uY1GYwdaURrjsHZfUkdaX
+	 wklj2n84EVLZhGW11rBbbrsB8g/ScTQxWPzpFIhKCWNVsZ9c91m4LyJ5oap/FoIBYM0/O
+	 0oY3g0+cEms3UM4IuW+Dsp3VMzpyQeUkLYwXkWeaH+x8HtHJZ83BCSby9u/wiTf4jzHA5
+	 x2e9sKdcN8ltn/PPm0heOTbXYvXeuO8Y+KxVRv11VuIQ4gkCHKTA0dEYMtH5ePPYaEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795796803;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=;
-	b=5IKlzJ0KOi8wL3vVD7c+3FBZvoPyV8hsBi/pYUEqXliCJIEH1WYowK7UQ8dVyjOoZiQZ
-	 bBLrV6iVmc9mptMFEz/DEKprAe7BQTyQOYaC83Um34VuIun3uIJij7ibE8ymWvMgmGHoG
-	 sW9hJ7YTaSZp+aCOoVei1420WCGbaekWd0tKhazCOk4CijWQ9QJl9uLLv3MQ3sXI/e2bO
-	 KgtShPjj8nmecxEWHOBkRz3ATCrTfm4ECaK6+bOLUB+wqD6JFmWk9Peozrh8gwfNvyPKE
-	 t3DopODKNLKPPpsp0BaCJFHveJer44SguEtymhbbsmC5yIuDus1D5G9V81Trci8Ylmg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795831255;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=THiOG6yeDwGvR8nJmqjVk5/9O8jrhV6Y0gw1+16ztmY=;
+	b=Rx2gjKty662GjpH3xIAugkLofOpB9phFG3eVC+baCUUHfTx+mmfWrQy7Dsn+5GIAPmat
+	 /QhTPwnwIdQw9E7H5CvW329JdgriBT/scDKU2FmLOZxsb8JP6WUSz1sUy78xSGkA6u1Bv
+	 rIu87FC2Rjb63Km2kZ9UeETjEk342zWNtf4QO0iSTvBfT6CaGnCaWc9v+SqQQLIGn8j6h
+	 DI1j9DA+gdparGYFcY6dm9CtfLu7byuZd0v08DYXqRKSDuxUvvGTqdsHdMkI5mU2iOjzx
+	 rvdXcEt78arBLY8Qf7dARiMc7Vc/Ivtv1fqZKh9i0ZOasNW1Luoqq44MxjGy53S9h4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=squebb.ca;
-	spf=pass smtp.mailfrom=squebb.ca;
-	dkim=pass header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XPAGylx3;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=0HQnoEF6;
-	arc=none smtp.remote-ip=103.168.172.159
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dxeRMwCR;
+	arc=none smtp.remote-ip=209.85.214.175
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0731E606A31F
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 16:26:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0731E606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB8C606A31F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Nov 2026 02:00:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2DB8C606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=squebb.ca header.i=@squebb.ca header.a=rsa-sha256 header.s=fm1 header.b=XPAGylx3;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=0HQnoEF6
-Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 19FC11400378
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 11:26:42 -0500 (EST)
-Received: from stl-imap-02 ([10.204.2.93])
-  by stl-compute-04.internal (MEProxy); Fri, 27 Nov 2026 11:26:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1795796800;
-	 x=1795883200; bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=; b=
-	XPAGylx3FowjOkHFD+3ga31bBe61vz4leMsfYdG1TYrro+uSpjUQN0QiwxSnfHll
-	WMV3WHQPJDMgNQ9PY60gKaoye81uNfnzW2oc8u6CDI78DCSXO5Xt2P6ZswA3eles
-	ZqpNPhFXFLCVHxSj4UZsq2/ug3IwdsbvKjZ0UyV6d8XzN+/Zb5LtAkuyiYojSBs3
-	DRWXW10NS7JFFcWOR9AWNVlUVSmVuymhFdxp9qrlbcGLnpY7PVUKS2ThW6mDvMKs
-	axvV1pT2KGCiYCNaBv6vbAhlJ6I5XATVhzyM1uYrkTz3UNY+Vbmd0HcUE6PFocH6
-	ZujMopCyGU7BW0/fwYRbJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795796800; x=
-	1795883200; bh=kJ+AgIyiNBqEdQ5aoE5WCYrgJjusYZLele4OKAsw1z8=; b=0
-	HQnoEF62xi8YjVEwT3Hzia5QUslH5hON1Ia0y3goUsDRcUiUhcBRgLTQGmhrRNTM
-	eh8Eg+xZa+NEjwlk9CzsPK/eWXw8JrptCXxpVbihaCEDnSSgChRTzm+iOEiYjGdv
-	wL93uR3SWQHqsVoI6qH0skmXx1b9OR0Y9IQWElpVhC6g7ffwM66ZDeoKAAkCovEu
-	t6M5Mn5tVBYgIb4+aepdsTLuOV7F8bOq2K1C9vgUY3uoXd8vzZBGaYd2sZXwRX42
-	932CqydUhhVyr7dEFmPhFlNMP6HjHwcV0LFLgETpMjS126hQLpb1w/vyQtueFP06
-	BNHGsCXz+QQSgqGacJuow==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=squebb.ca a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795796800; d=squebb.ca;
-	mf=PG1wZWFyc29uLWxlbm92b0BzcXVlYmIuY2E+;
-	rt=PHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm1:rsa-sha256:FAoyUUkuODt2cmqoRquI2LvYhb3H0u1cMY7VNnc+GwMx41p
-	AeqPngJryQVKmxopKREojlhgdAbBUD7LtPBHL+SBBddbGyTHRd0bnc+itZ+ws1Cr
-	EUT2lZA6I+nGm9EWOhBuati+p0ugK7/h6CkOPzaom3z9FeN+kwCCH9jUigaXpfiy
-	dyHqdAmvcwQyNqkjD0J1p4+22eS5kb56jL4Mfi1M34J+vL8jmPgmHlNV4lst0JVd
-	y2Vu+XDLT6EiGAgmFLPkrRf3Gt++0foRhhS+JFBbM21B5c0ju9vOKOCOWBkeqFzF
-	TE/wcsDJmCl2KGcGvzZn9TboyxlDR53xHqmKgyA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:sJ8/PCe8bxwAuWDfEmXJa1HqcnvthlPCGqfNhRsZzqk=:mdcrcvrvqZw73NmlsPdQTWh03G1h1pz2HZUUze7g9uw=;
-X-ME-Sender: <xms:P68Ja_1XP-Z577VLMoxnak1v82m5XkKGZWdJULFPVvRp55UYiwgLSA>
-    <xme:P68Ja46Y0FAPqkMCiYy7af_UDAG-5dlq-W6HSMxJUuu6HplUfi8UlJ5bMo6V43Gf9
-    xbFrPXDjOxgdEna51ZPp0fXE6puxAKtHErUX_L6af4ypeFCrg-1dDcTAA>
-X-ME-Proxy-Cause: dmFkZTFdz1p+Y6l3yr9DyoeIlXfM5u0CnR1C8drPyM3JhkhAsWBImUlP3omG0EEpWhSmOX
-    oMCUPI9yCckaxm01Th+fPaibQRFYtGcJJlbJGJzaWMdsBwKR4wBSDMvb+i+Lh/e8uqN5yQ
-    qvmcvcLWpooY4PGHauGUIMAZyp94PTUqD7UpFVZJMVWTzDL86VaIIQ/39Uc1YQ3N1Fw8Xe
-    QzlNo/iBv7XAspmtCpLdOxyMT+vHuwux71TX96gWVayKf4LauQaH30yuojRCCEXqLODj0m
-    F9NIyxJboNFoOhavYxTTbMd7lORr5yiGecsAwpEPmziAM0p2fC86cG0uD8gIQJKyRw2lQb
-    XXmyAFbzG5qzSLjfdHQcP6AJFa4ykeuGUVIpBqW59YJhp+Kxp0Gr/g0MFYM1h1gFWCyScU
-    lk7cJ373tBGgMhH4R+eXep/Si+WBktNMFOt3WPpYHtQWMOZkYejKhXjy3WfMgIBj+S1sgP
-    ZlWw2kM8MDiiG/5PT0KZaK9v3nz6oMRsRRuB6ndTIbZY7+HcUPQUs7lTu3E7crOmLH/moM
-    MrQD3/RloVK5R5kH/InIw3Al9bAoGdMMqHRkyzlOiDWDD3gz1TlUKIhymsTIwDbzChZFvI
-    WjwrFdLsDzpczATA4SgBIEyf6C73Z9KQXOVIvCAgNYJY7HKWWkW8aHCJD1/A
-X-ME-Proxy: <xmx:P68JawaQQBR2h1-i_m0GLWVOhXGTvHY6MCi_kRcy8cZsZOrdMabzQg>
-    <xmx:P68JaznH3Fwu4sCyxqB1lUYttjNoaZFIJPL7tjaewIKSVtYrcSC0aQ>
-    <xmx:P68Ja2jLBIWPUPgxrNJ53UhJWxa3LVqOZ7EWD4aZTpZn72pkVFXHFg>
-    <xmx:P68Ja1SRIgh0e2fNn8LNWhmDIJ7lby7o2Vq1lSYKu1G1pfh1b-BO0w>
-    <xmx:QK8Ja5U0nHYIqOZ4Fio2R2aXoCERdv1JKf2MPntJzWIvG4L-bevH8YUV>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.stl.internal (Postfix, from userid 501)
-	id 46ABB2C00085; Fri, 27 Nov 2026 11:26:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dxeRMwCR
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2f045b921caso49850935ad.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2026 18:00:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795831254; x=1796436054; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=THiOG6yeDwGvR8nJmqjVk5/9O8jrhV6Y0gw1+16ztmY=;
+        b=dxeRMwCR5ld93fq20sgEi/k/9/69SDSHHUAUZmz1+nRqmOgoQaSJPe9t+yAFf0JNKy
+         UbajOzgB7dxgeN6YocfeWYqYnKa/HXrHfeYk9eYbI5XmBFPTgqdhi/ijjBpEjJktvwK4
+         BfAkOdqfguAUSyVb7tYYDJAKepBGfmi41Ke5EV1dnSFMFsxG8LYrk7NDKs6uLJ0Wm5dl
+         tMyJpc+akLa2FCIaRuofbaffyZ5ox8j1ND2K0PJ63FN4f/LQX4We8mPJbCwkGWUMV7Ut
+         P428ycNUBwI6I+XYA/iDBp6/jOBTGZ4TJv8ZGr5FGqsMI68GVT8rnu6rC0RJteLTqaOw
+         kxZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795831254; x=1796436054;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=THiOG6yeDwGvR8nJmqjVk5/9O8jrhV6Y0gw1+16ztmY=;
+        b=pFC+teJPpfdqjYopZKfmVSnW/MvzcB/pFHZ8F41sdUGUBKIJptulQn54yS5fPKfwHS
+         M0nsGaP4mFCAgs/Rxoz2AumKh3eYEdJ5GmW0/pw/J/HkvozD83Kp8TW/gQA/Q1kbdicQ
+         sn+sApDQZZRQqJ/kK4imJ08snIStYse9ArY50Bu7ex9OvjDEY+cmAFZ7w2byd9V8T2yo
+         a8GyH2heq0H86LmTLP+SN3zZ9g0xtojQ9wjXnZczMrKNK62Ftp9n42lYO0kvkmBVxU3a
+         g3V2LHc9nc23jESMnBaZqUl/tcBuU4hjL4EDtDWPUFg+SyHUAez3kZ/EUc5M1pYtlqNh
+         EUHw==
+X-Gm-Message-State: APuU4Z9S5Q43QuKH2DnnUZsOINjuHuIdZam4SDi1w0gs6DNSVv3Tw7wW
+	aN62NYStNAIhTLu7YOBlvGbYMs/zPfDuJWC7u7UuS8CHtD8NPWoATH/M
+X-Gm-Gg: AZFdTZfzTXNrB/XL92g3AqkTcY6eL9GOZRvMkkk4Esvn7M0Be2/jW4KpAFfY13oqNvQ
+	wZRGKq3JQAXBxeDgbie26KjBeVW4BWuu5kT3eXo1IwefZzb82J14OANuRV6AH5LgyHf7+NBuUvI
+	0hqVQHKpSPpz3pF3fqMxvQXD8+78zEcHxwu8OClllaI4X69QM8lqPQ7O3+hGqIHOxdRtqOV1RvR
+	iBzAXKEl2sDbAxrrYyA/L1s9TKA5W8B8TkBUuTQTS0e2Ecx57zriwPAM+8QxzaPnqK+gGeWiN7F
+	m9XlicBObW31/lrBYZqPj+agUMY2MMbRX3lswKDPWIPRZjdE6Yo6gDp4rc6HSXBUTVCWOptmzFC
+	ZigzInbVrey/NIOLk7l+0Aw6sv9MFi5bXHhiCm4nnBAIaqV54+YrUlxJ8lV9WsqiF+Iu199nEzz
+	t9Bcn1QqAus2LtZ5NdxWlU1C/yJYnz1+IUMBVUUhQUK2rONMorMf0+Ru4em4iq7JYxJ1mmn5ulL
+	+kaSWZO3Zh2SA+Ny5rrhrLhVU0mDHkx2xYKfBS5GkCYn74ywQpsjTFbtNbLczRCqeYDFnZA00Jp
+	Flo78AI5YxJOLbbav6RlEQ6KEwXSTxUZCuCjiyqENns=
+X-Received: by 2002:a17:902:cf0b:b0:2f0:25ea:8fa7 with SMTP id d9443c01a7336-2f03f18a1a5mr265082035ad.38.1795831254335;
+        Fri, 27 Nov 2026 18:00:54 -0800 (PST)
+Received: from localhost ([20.89.137.63])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f15663fsm127058405ad.76.2026.11.27.18.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Nov 2026 18:00:52 -0800 (PST)
+Date: Sat, 28 Nov 2026 10:00:50 +0800
+From: Mingyou Chen <qby140326@gmail.com>
+To: Ferdinand Porsche <akiletschne@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, hansg@kernel.org, 
+	foxido@foxido.dev, wolf109909@outlook.com, Chris Taraszka <chris@miget.com>
+Subject: Re: [BUG] Xiaomi Book Pro 14 (TM2424): ECON undefined, EC hotkeys
+ (Fn+F4 mic mute) never reported
+Message-ID: <awoz1BKtliVN7dk4@qby-laptop>
+References: <CAPQ11N91cTtpeynVHOE4zkO3UTMKm_3iNR5iN8PEp_Byo_EQug@mail.gmail.com>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Post: <mailto:platform-driver-x86@vger.kernel.org>
@@ -115,54 +97,114 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:platform-driver-x86+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AIp_4MIr7l0Z
-Date: Fri, 27 Nov 2026 11:26:19 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Arnav Kapoor" <kapoorarnav43@gmail.com>
-Cc: "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Ike Panhc" <ikepanhc@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Stuart Hayhurst" <stuart.a.hayhurst@gmail.com>,
- "Punnay Sharma" <punnaysharma805@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <77bf62de-fa48-4549-bfb8-d99eee863342@app.fastmail.com>
-In-Reply-To: <11bf638c620500f8c042de6d1f2bf3f1d7225820.camel@rong.moe>
-References: <20261126073107.765676-1-kapoorarnav43@gmail.com>
- <3e932924940536878264c1ab46d24bd6db362183.camel@rong.moe>
- <20261126152448.847538-1-kapoorarnav43@gmail.com>
- <20261126161131.962234-1-kapoorarnav43@gmail.com>
- <11bf638c620500f8c042de6d1f2bf3f1d7225820.camel@rong.moe>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: don't warn about keyboard backlight
- type 0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPQ11N91cTtpeynVHOE4zkO3UTMKm_3iNR5iN8PEp_Byo_EQug@mail.gmail.com>
 
-On Thu, Nov 26, 2026, at 11:26 AM, Rong Zhang wrote:
-> Hi Arnav,
->
-> On Thu, 2026-11-26 at 21:41 +0530, Arnav Kapoor wrote:
->> Correction, sorry: I replied before reading Punnay's patch closely. It
->> only skips the warning for type 1 (KBD_BL_NONE_TYPE); this V14 G2 ITL
->> returns 0, so the warning stays with it applied.
->> 
->> Type 0 is a separate case: no bits set, and KBLC also returns 0 when
->> the EC or LFCM is unavailable, so it can't mean any backlight type.
->> 
->> Hans, Ilpo, please ignore my earlier request to drop this patch. I'm
->> happy to rebase it on top of Punnay's patch, or to fold both cases into
->> a single check, whichever you prefer.
->
-> IIRC the KBLC methods of devices I've seen always return (whatever | 1).
->
-> So I guess it should be safe to assume 0 as stubbed. I'd still like to
-> defer to Mark's opinion, though.
->
-I don't have any internal documentation on this I'm afraid. I'll see if I can get some.
+On 26/11/27 10:29PM, Ferdinand Porsche wrote:
+> Hi,
+> 
+> On the Xiaomi Book Pro 14 2026 (Panther Lake, Bitland "MIFS v2" firmware)
+> the Fn+F4 microphone mute key does not work. The key's LED toggles (driven
+> by the EC itself), but no input event ever reaches userspace. I think this
+> is the same firmware issue that breaks lid events on this machine. Armin
+> asked for an acpidump of this device in the "bitland-mifs-wmi: MIFS v2"
+> thread. I can provide one, see below.
+> 
+> Machine:
+> - DMI: XIAOMI Xiaomi Book Pro 14/TM2424, BIOS XMAPT4B0P0A0A 06/17/2026
+> - Kernel: 7.3.0-11-generic (Ubuntu 26.10, based on 7.3.1)
+> - Secure Boot on (lockdown=integrity), so no debugfs/dynamic debug.
+> 
+> The kernel is tainted (O) by the out-of-tree xiaomi-book14 module mentioned
+> below. The ECON errors and the missing Fn+F4 event were the same before I
+> installed it. I can retest on a vanilla mainline build if that helps.
+> 
+> Firmware bug:
+> ECON is referenced as External (ECON, IntObj) in the DSDT and used in
+> \_SB.PC00.LPCB.Q_EC._STA, Q_EC.ADP1._STA and Q_EC.LID0._STA, but no table
+> defines it:
+> 
+>   ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PC00.LPCB.Q_EC._STA.ECON], AE_NOT_FOUND
+>   ACPI Error: Aborting method \_SB.PC00.LPCB.Q_EC._STA due to previous
+> error (AE_NOT_FOUND)
+> 
+> acpi-ec still binds to PNP0C09:00 (\_SB.PC00.LPCB.Q_EC) on this kernel:
+> 
+>   ACPI: EC: EC started
+>   ACPI: EC: interrupt unblocked
+>   ACPI: EC: event unblocked
+>   ACPI: EC: GPE=0x6e
+> 
+> Observed when pressing Fn+F4:
+> - /sys/firmware/acpi/interrupts/gpe6E increments by 2 per press.
+> - No EV_KEY on any evdev device. I tried redmi-wmi bound to
+> 46C93E13-EE9B-4262-8488-563BCA757FEF (keymap has no KEY_MICMUTE), and also
+> bitland-mifs-wmi bound to that GUID instead (its keymap has KEY_MICMUTE at
+> scancode 0x04). Neither reported anything.
+> - Nothing on the acpi_event genetlink group either. I had no positive
+> control for that, so it is only weak evidence.
+> 
+> DSDT/SSDT notes:
+> Most Q_EC._Qxx methods call \_SB.WMID.QV20(One, code) (SSDT "WMID", _UID
+> "MIFS"). That stores EVTP/EVFN in the XGNS SystemMemory region at
+> 0x6FDB8000 and does Notify(WMID, 0x20), e.g. _Q04 -> 0x21, _Q08 -> 0x01,
+> _Q15/_Q16 -> 0x25/0x26. _Q0A/_Q0B/_Q61 (AC/battery notifications) and _Q79
+> (UCSI) also live under Q_EC.
+> 
+> The out-of-tree xiaomi-book14 driver (
+> https://github.com/wolf109909/xiaomi-book14-dkms) works around the same
+> root cause by polling the EC RAM window for the lid. Its author is Cc'd,
+> and the hotkey part is filed there as
+> https://github.com/wolf109909/xiaomi-book14-dkms/issues/2
+> 
+> Questions:
+> 1. Since acpi-ec binds anyway, is it expected that the _Qxx handlers
+> apparently never run, or am I misreading this? If they don't run, would a
+> DMI quirk that treats ECON as 1 (or forces Q_EC present) be acceptable?
+> 2. Which driver should eventually map the Fn+F4 event to KEY_MICMUTE on
+> this machine: redmi-wmi or bitland-mifs-wmi?
+> 
+> I can send the full acpidump off-list to anyone who wants it, and I can
+> test patches on this machine.
+> 
+> Thanks,
+> Ferdinand
 
-The patch looks reasonable to me though.
+Hi,
+I've noticed lots of temporary workarounds in the xiaomi-book14 dkms driver.
+This is out-of-scope of a WMI driver.
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+redmi-wmi was removed in the next branch (now replaced by bitland-mifs-wmi).
 
-Mark
+And by-the-way, the TM2424 quirk is already available in the next
+branch.
+But I've noticed a problem: The platform profile map is different
+between the in-tree bitland-mifs-wmi driver and the xiaomi-book14-dkms driver.
+
+xiaomi-book14-dkms defined those values:
+
+#define QFAN_QUIET		0x02
+#define QFAN_BALANCED		0x03
+#define QFAN_SPEED		0x04
+#define QFAN_EXTREME		0x09
+#define QFAN_EXTREME2		0x0A
+
+but bitland-mifs-wmi got another:
+
+static const struct bitland_profile_entry tm2424_profile_entries[] = {
+	{ PLATFORM_PROFILE_LOW_POWER,   0x02 },
+	{ PLATFORM_PROFILE_LOW_POWER,   0x0a, true },
+	{ PLATFORM_PROFILE_BALANCED,    0x09 },
+	{ PLATFORM_PROFILE_PERFORMANCE, 0x04 },
+	{ PLATFORM_PROFILE_PERFORMANCE, 0x03, .battery = true },
+};
+
+Here's the answer of your questions:
+
+1. I consider this is a linux-acpi problem...I'm not familiar with it.
+I'd suggest Cc'ing the linux acpi mailing list and maintainers to see how
+they want to handle the problem.
+2. bitland-mifs-wmi (in linux-next) should handle it. It already maps
+event ID 0x21 (WMI_EVENT_MIC_MUTE) to KEY_MICMUTE.
